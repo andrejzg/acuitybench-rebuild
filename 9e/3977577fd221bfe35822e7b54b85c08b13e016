@@ -1,0 +1,244 @@
+results/smoke-gpt-5-mini/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_6e1964d82de2a3 2
+  s_3f5e58f5c753ff::t_da995b8d9a7f53 3
+results/gpt-5-mini-paper-reproduction/SUMMARY.md
+  s_3f5e58f5c753ff::t_1872109cce7621 23-31
+  s_3f5e58f5c753ff::t_75c76c61d24ce3 16-19
+  s_3f5e58f5c753ff::t_1ba830a641abf8 32
+results/README.md
+  s_3f5e58f5c753ff::t_64ddd5e40f879b 10-12,22-24
+  s_3f5e58f5c753ff::t_66648d8c11382f 8-9
+results/smoke-comparison/execution_summary.csv
+  s_3f5e58f5c753ff::t_e476ae712647c5 1
+results/gpt-5-mini-paper-reproduction/run_manifest.json
+  s_3f5e58f5c753ff::t_858cb0efedd2f2 2,146,736-740,742-750,752-764,766-774,776-786
+  s_3f5e58f5c753ff::t_75c76c61d24ce3 96,182,203,224,245,266,287,308,329,350,371,392,413,434,455,476,497,518,539,560,581,602,623,644,665,686,707,728,741,751,765,775
+  s_3f5e58f5c753ff::t_1872109cce7621 28-32,34,39,42,45-49,51,56,59,62-66,68,73,76,79-83,85,90,93,110,144-145,147-181,183-202,204-223,225-244,246-265,267-286,288-307,309-328,330-349,351-370,372-391,393-412,414-433,435-454,456-475,477-496,498-517,519-538,540-559,561-580,582-601,603-622,624-643,645-664,666-685,687-706,708-727,729-735
+results/gpt-5-mini-paper-reproduction/exports/request_attempts.csv
+  s_3f5e58f5c753ff::t_1872109cce7621 1
+  s_3f5e58f5c753ff::t_5735c76c2ef5a5 2-3
+tests/test_store_migration.py
+  s_3f5e58f5c753ff::t_e54dcca9294203 1-16,39-40,42-45,57,71,77,91-93,95-98,108,122,143-209,218,276-277,311-324
+  s_3f5e58f5c753ff::t_b93767c63b1a8c 17-38,41,46-56,58-70,72-76,78-90,94,99-107,109-121,123-142
+  s_3f5e58f5c753ff::t_b93168b8bfe179 231-237
+  s_3f5e58f5c753ff::t_97bfed1a453799 210-217,219-220,222-230,238-275
+  s_3f5e58f5c753ff::t_3b7c3780db1769 221
+  s_3f5e58f5c753ff::t_c5d0f9e3b0f055 278-310
+results/model-comparison/frontier.csv
+  s_3f5e58f5c753ff::t_44435e91cb3aa6 1-2
+acuitybench/__init__.py
+  s_3f5e58f5c753ff::t_5d951bb44e0a23 3
+acuitybench/reporting.py
+  s_3f5e58f5c753ff::t_04532c8412ce3b 1128-1132,1135-1140,1142,1190,1193,1196-1208
+  s_3f5e58f5c753ff::t_f8e9247a0c3ee8 279-285,290,304,307-319,323-328,378-383,385-390,397
+  s_3f5e58f5c753ff::t_fbd84262201ac7 841-844,852
+  s_3f5e58f5c753ff::t_066cea2557d5a8 484
+  s_3f5e58f5c753ff::t_0b978155bfc258 880-883,900,904-906,980-982,984-985
+  s_3f5e58f5c753ff::t_2757156fdd7266 966
+  s_3f5e58f5c753ff::t_e02f34062eb0d5 781,853,939
+  s_3f5e58f5c753ff::t_1c3b90072912a7 694-695,773-777
+  s_3f5e58f5c753ff::t_588679c3562501 689-693,696-699,702-703,780
+  s_3f5e58f5c753ff::t_d83c18e93875b0 1040-1043
+  s_3f5e58f5c753ff::t_139d7eddf32750 235,238-240,247-255,355-363,369-372
+  s_3f5e58f5c753ff::t_d151d37fcd86ce 231,242-246,257-274,286-288,291-303,305-306,320-322,329-348,374-377,384,391-392,394-396,398-399
+  s_3f5e58f5c753ff::t_5e4e479a6dc9a7 515-589
+  s_3f5e58f5c753ff::t_5340bba1fd3a47 901-903,907-910,983
+  s_3f5e58f5c753ff::t_38e65cea0e0bb5 957
+  s_3f5e58f5c753ff::t_a6aa72a4aaac57 275-278,289
+  s_3f5e58f5c753ff::t_ef9066bafe61d1 413-483,485-514,590-596
+  s_3f5e58f5c753ff::t_4dc80cede6c195 862-879,884,911-938,940-941,960-961
+  s_3f5e58f5c753ff::t_93a42034c6a00e 987-1021
+  s_3f5e58f5c753ff::t_357d6cd5ab6e25 1112
+  s_3f5e58f5c753ff::t_43a6ab1b1b8bfb 778
+  s_3f5e58f5c753ff::t_8c1aa844aa2622 373,1086-1089,1104-1111,1113-1127,1133-1134,1141,1143-1189,1191-1192,1194-1195,1209-1212,1220-1229
+acuitybench/providers/base.py
+  s_3f5e58f5c753ff::t_a21a803f25ab42 25-26,28-29,41
+  s_3f5e58f5c753ff::t_09d56fd006c57f 27
+acuitybench/cli.py
+  s_3f5e58f5c753ff::t_b25122fbd1eba6 176-180,230,269,362-367
+  s_3f5e58f5c753ff::t_34331eb2b2dce3 175
+results/gpt-5-mini-paper-reproduction/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_75c76c61d24ce3 1-3
+acuitybench/distributional.py
+  s_3f5e58f5c753ff::t_f22b6700ef6015 280-300
+results/gpt-5-mini-paper-reproduction/tables/execution_summary.csv
+  s_3f5e58f5c753ff::t_858cb0efedd2f2 1
+pyproject.toml
+  s_3f5e58f5c753ff::t_5d951bb44e0a23 7
+README.md
+  s_3f5e58f5c753ff::t_bd86d43552661a 94-95,109-114
+  s_3f5e58f5c753ff::t_757fa011016311 105-107
+  s_3f5e58f5c753ff::t_5340bba1fd3a47 126
+  s_3f5e58f5c753ff::t_8c1aa844aa2622 104
+  s_3f5e58f5c753ff::t_e02f34062eb0d5 130-131
+  s_3f5e58f5c753ff::t_64ddd5e40f879b 125,129
+  s_3f5e58f5c753ff::t_f5b9f7be1d27f6 127-128,134-136,158-181
+  s_3f5e58f5c753ff::t_066cea2557d5a8 182-184
+  s_3f5e58f5c753ff::t_98939505aac6dc 108,185
+tests/test_evaluation.py
+  s_3f5e58f5c753ff::t_59287ade1d3cb5 26,288-345
+  s_3f5e58f5c753ff::t_687a51a6fa2c9a 32,623-632,636-638
+  s_3f5e58f5c753ff::t_0da9723f90929d 423-438,477-492,610-622
+  s_3f5e58f5c753ff::t_757fa011016311 633-635
+  s_3f5e58f5c753ff::t_bce2093554fffc 12-16,73-107
+  s_3f5e58f5c753ff::t_02ad32efd68bce 3,11,18,22,224-287
+  s_3f5e58f5c753ff::t_2bd98f0096be3f 17,19-21,23-24,175-223
+  s_3f5e58f5c753ff::t_e80bd8ad5a2018 108-109
+  s_3f5e58f5c753ff::t_8c4db68bd6520a 346-347
+tests/test_openai_streaming.py
+  s_3f5e58f5c753ff::t_5a3e025565cec7 70-80,487-528
+  s_3f5e58f5c753ff::t_73f36d73322795 429-437,442-450,481-486
+  s_3f5e58f5c753ff::t_877a96614b9752 11,39-40,94,98-104,185,259-428,438-441,451-480
+  s_3f5e58f5c753ff::t_73f4faf377c5b0 1-10,12-38,41-69,81-93,95-97,105-184,186-258
+tests/test_latency_reporting.py
+  s_3f5e58f5c753ff::t_840afbacbf8f08 1-7,14-101
+  s_3f5e58f5c753ff::t_ab4c43c18d1e24 295-348
+  s_3f5e58f5c753ff::t_4bd8e7c30cc712 175-231,233-242
+  s_3f5e58f5c753ff::t_9ae9667ecf5c15 8-13,102-162,164-174,243-294
+  s_3f5e58f5c753ff::t_43a6ab1b1b8bfb 163,232
+results/gpt-5-mini-paper-reproduction/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_6e1964d82de2a3 2
+  s_3f5e58f5c753ff::t_cbae2bc0358ee8 3
+results/smoke-comparison/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_e476ae712647c5 1-3
+results/gpt-5-mini-paper-reproduction/exports/run_executions.csv
+  s_3f5e58f5c753ff::t_1872109cce7621 1
+  s_3f5e58f5c753ff::t_668dc9d9c734cc 2-3
+tests/test_timing.py
+  s_3f5e58f5c753ff::t_e168691537476e 197-225,227-230
+  s_3f5e58f5c753ff::t_56019100acccb1 1-79,81-117,119-196
+  s_3f5e58f5c753ff::t_f8f847e003fcc9 80,118,226,232-297
+  s_3f5e58f5c753ff::t_8e4b5d36090166 231
+results/smoke-comparison/latency_summary.csv
+  s_3f5e58f5c753ff::t_e476ae712647c5 1-28
+ARTIFACTS.sha256
+  s_3f5e58f5c753ff::t_0a8fd50574d750 16-17,20,31-37,42-43,48-51,55-58,62-63,66-80,84-86,91
+  s_3f5e58f5c753ff::t_1d9c03837b51d7 18-19
+results/smoke-gpt-5-mini/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_6e1964d82de2a3 2
+  s_3f5e58f5c753ff::t_c3740f70db4011 3
+acuitybench/store.py
+  s_3f5e58f5c753ff::t_39a01419a89cfc 173-204,209-222,224-227,430-431
+  s_3f5e58f5c753ff::t_04f21188093843 273-274,396,525-526,558
+  s_3f5e58f5c753ff::t_247f0ef9f3f9b7 135-142,148-153,155-158
+  s_3f5e58f5c753ff::t_e63ab58011980b 1,7,17-36,85,87-88,99,110-125,127-134,143-147,154,159-171,223,228-230,245,251-272,275-283,319,328-329,364,373-395,397-405,407-427,432,434,437,440-458,460-461,469-498,603-604,614-615,631,654-659,671-733,736-738,741,751-753,765-768,782,785-788,790-796,838-839,842-845,847-853,863-872,875,878-919
+  s_3f5e58f5c753ff::t_ada8b9e6f7eeeb 37-77,79-84
+  s_3f5e58f5c753ff::t_cf306f4d36d6c4 462-468,499-524,527-557,559-567,569-591
+  s_3f5e58f5c753ff::t_2f76be8624705c 78,205-208,406,568,876-877
+  s_3f5e58f5c753ff::t_9eb4e2fc1ca2fb 734-735,739-740,742-750,873-874
+  s_3f5e58f5c753ff::t_ccd19cd1d01c4b 459
+  s_3f5e58f5c753ff::t_5b8380036de2ea 172
+  s_3f5e58f5c753ff::t_6f41b4cea1649a 592
+  s_3f5e58f5c753ff::t_bc795ba270155d 920
+results/gpt-5-mini-paper-reproduction/tables/latency_summary.csv
+  s_3f5e58f5c753ff::t_75c76c61d24ce3 1-28
+acuitybench/providers/openai.py
+  s_3f5e58f5c753ff::t_1f87f35941f89b 422-428,430-439,441-476,494-517,522,524-532,534,542,545-559,563,566,579
+  s_3f5e58f5c753ff::t_cd9bf8c9b308a2 153-162,182-191
+  s_3f5e58f5c753ff::t_36058b8e391432 165-167
+  s_3f5e58f5c753ff::t_006920965bb8fd 731-736,738-772,790-797,799-814,816-819,826-843,855-871,873-875,877-891,893,902
+  s_3f5e58f5c753ff::t_0a5f6dfa6151ec 1,7-8,12,27-38,46-54,205-206,282-287,289,293-307,309,317,324,331,338-339,343,351-361,363-368,379-380,388-389,392,395-421,429,440,523,537-541,543-544,565,567-569,573,577-578,580-581,586-587,591,600-611,613-614,646-647,649-650,654-670,716-730,737,798,815,820-825,876,894-901,903-904
+  s_3f5e58f5c753ff::t_539f37664ba167 5,9
+  s_3f5e58f5c753ff::t_f6d03e4959e83e 671-674,689-700,702-713,715
+  s_3f5e58f5c753ff::t_61fc27aad9d694 675-688,701,714
+  s_3f5e58f5c753ff::t_bb609c069e43c3 63,72-76,386,533,621
+  s_3f5e58f5c753ff::t_1c8d4de59199cc 55-62,64-71,77-152,163-164,168-181,192-204
+  s_3f5e58f5c753ff::t_12a85f32a77ce7 612,616-620,622,632-633,635,648
+  s_3f5e58f5c753ff::t_e5623f9c94c7de 844-854,872,892
+  s_3f5e58f5c753ff::t_e08154582d33ba 207-257
+  s_3f5e58f5c753ff::t_f2092dfab56429 477-493,518-521,560-562,773-789
+  s_3f5e58f5c753ff::t_d1b30bfc9bf633 369-378,381-385,387,390-391,393-394
+results/gpt-5-mini-paper-reproduction/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_6e1964d82de2a3 2
+  s_3f5e58f5c753ff::t_e8017bc4d55ded 3
+acuitybench/evaluation.py
+  s_3f5e58f5c753ff::t_5e3b9ef34e20d1 147-148,365,372-373,390-408,459,468,485
+  s_3f5e58f5c753ff::t_bd86d43552661a 257-259
+  s_3f5e58f5c753ff::t_73b5cf25397df1 409-426
+  s_3f5e58f5c753ff::t_6ab79260e8f263 206
+  s_3f5e58f5c753ff::t_8b8e4704591248 922-923,928,930-949,954,956,976-978,980,990,1035-1054,1056-1058,1062,1064-1078,1095-1098,1103-1104,1110-1117,1152
+  s_3f5e58f5c753ff::t_3f33f441768954 1055
+  s_3f5e58f5c753ff::t_48afc318ad36eb 859-861,867-871,1135,1140-1142,1148-1151
+  s_3f5e58f5c753ff::t_cbb3a6fcc15757 129,133,135-140,142-143,290-291,296-304,308-311,314-318,320-327,329-358,360-364,368-371,374-389,427-432,434,436-458,463-464,471-484,486,499-502,504-506,508-509,513-516,522,526-529,535-540,546-549,553-555,557-607
+  s_3f5e58f5c753ff::t_e168691537476e 312,460-462,465-467,469-470,487-495,497-498,507,510-512,556
+  s_3f5e58f5c753ff::t_83979f7c74d162 313,366,503,517-521,523-525,530-534,541-545,550-552
+  s_3f5e58f5c753ff::t_8e4b5d36090166 496
+  s_3f5e58f5c753ff::t_a951de18916f6c 1196,1213,1227,1244
+  s_3f5e58f5c753ff::t_166432dc9ab6f5 751,769-792,796,798-811,828-831,836-837,843-850,853
+  s_3f5e58f5c753ff::t_ab00b4beff2225 636-678,682-683,687,689-705,710,712,734-738,740
+  s_3f5e58f5c753ff::t_a0da7b2891eaa7 854-858,862-866,1019-1027,1029-1030,1120-1134,1136-1139,1143-1147,1153-1170,1172
+  s_3f5e58f5c753ff::t_a944712be56230 838-842,851-852,1105-1109,1118-1119
+  s_3f5e58f5c753ff::t_4419083a0f18d5 7,10,13,15,27,35-36,62-97
+  s_3f5e58f5c753ff::t_681ae1d63cb4fa 98-99
+AUDIT.md
+  s_3f5e58f5c753ff::t_9e939ad23e357d 63-76
+  s_3f5e58f5c753ff::t_64ddd5e40f879b 77-79
+results/smoke-comparison/frontier.csv
+  s_3f5e58f5c753ff::t_44435e91cb3aa6 1-2
+results/evaluations.sqlite3
+  s_3f5e58f5c753ff::t_ea0f75f8af5dfc 2-3
+results/gpt-5-mini-paper-reproduction/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_fd5197751b683c 2-3
+results/gpt-5-mini-paper-reproduction/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_5809d7b5fecfd0 2-3
+results/model-comparison/execution_summary.csv
+  s_3f5e58f5c753ff::t_b8f2c992f21c07 1
+results/model-comparison/latency_summary.csv
+  s_3f5e58f5c753ff::t_a748d5d4397b1c 1-28
+results/model-comparison/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_a63476ff761e17 1-3
+results/smoke-gpt-5-mini/SUMMARY.md
+  s_3f5e58f5c753ff::t_47962fe5f88ff8 1-44
+results/smoke-gpt-5-mini/exports/distributional_ambiguous_conv.csv
+  s_3f5e58f5c753ff::t_279dd66774cc19 1-3
+results/smoke-gpt-5-mini/exports/distributional_ambiguous_conv.parquet
+  s_3f5e58f5c753ff::t_3dab33ce8b492b 1-3
+results/smoke-gpt-5-mini/exports/distributional_ambiguous_qa.csv
+  s_3f5e58f5c753ff::t_5c8b5c9103afbf 1-3
+results/smoke-gpt-5-mini/exports/distributional_ambiguous_qa.parquet
+  s_3f5e58f5c753ff::t_18caaa28a09c92 1-3
+results/smoke-gpt-5-mini/exports/distributional_primary_conv.csv
+  s_3f5e58f5c753ff::t_aac7dc6e52f339 1-3
+results/smoke-gpt-5-mini/exports/distributional_primary_conv.parquet
+  s_3f5e58f5c753ff::t_79e7a62596b1a7 1-3
+results/smoke-gpt-5-mini/exports/distributional_primary_qa.csv
+  s_3f5e58f5c753ff::t_983d6c28cb8fa6 1-3
+results/smoke-gpt-5-mini/exports/distributional_primary_qa.parquet
+  s_3f5e58f5c753ff::t_7388f4cfb17559 1-3
+results/smoke-gpt-5-mini/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_e308cc18cacb24 2-3
+results/smoke-gpt-5-mini/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_7acaf7455b439a 2-3
+results/smoke-gpt-5-mini/exports/request_attempts.csv
+  s_3f5e58f5c753ff::t_44d8c757663e3a 1-3
+results/smoke-gpt-5-mini/exports/run_executions.csv
+  s_3f5e58f5c753ff::t_f7a6b32d0985ca 1-3
+results/smoke-gpt-5-mini/run_manifest.json
+  s_3f5e58f5c753ff::t_74c4908bb29226 2,26-96,110,144-786
+results/smoke-gpt-5-mini/tables/distributional_metrics.csv
+  s_3f5e58f5c753ff::t_80346d6aa75ea9 1-5
+results/smoke-gpt-5-mini/tables/execution_summary.csv
+  s_3f5e58f5c753ff::t_7871d6815abeba 1
+results/smoke-gpt-5-mini/tables/latency_summary.csv
+  s_3f5e58f5c753ff::t_ad7ca6586782be 1-28
+results/smoke-gpt-5-mini/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_12d67a6fda8b1d 1-3
+uv.lock
+  s_3f5e58f5c753ff::t_7871d824fd07ae 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9e3977577fd221bfe35822e7b54b85c08b13e016",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
