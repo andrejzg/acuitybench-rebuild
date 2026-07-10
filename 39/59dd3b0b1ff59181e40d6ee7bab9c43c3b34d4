@@ -1,0 +1,156 @@
+data/README.md
+  s_3f5e58f5c753ff::t_bffaf805fc8600 1-34
+NOTICE.md
+  s_3f5e58f5c753ff::t_bffaf805fc8600 3-6,23-26
+results/README.md
+  s_3f5e58f5c753ff::t_bffaf805fc8600 1-20
+ARTIFACTS.sha256
+  s_3f5e58f5c753ff::t_cbbc8b7b465033 18
+  s_3f5e58f5c753ff::t_1d0aa2a15944d2 1-17,19-63
+data/processed/acuitybench_transformed.csv
+  s_3f5e58f5c753ff::t_ce451d4d6993ea 1-3
+data/processed/acuitybench.csv
+  s_3f5e58f5c753ff::t_ce451d4d6993ea 1-3
+.gitignore
+  s_3f5e58f5c753ff::t_bffaf805fc8600 11-13
+README.md
+  s_3f5e58f5c753ff::t_bffaf805fc8600 7-11,38-43,137-164
+  s_3f5e58f5c753ff::t_49796a05636e5a 12-19
+  s_3f5e58f5c753ff::t_305b428c8d2727 165
+data/processed/README.md
+  s_3f5e58f5c753ff::t_bffaf805fc8600 4-7
+.gitattributes
+  s_3f5e58f5c753ff::t_157e74e0df634e 1-12
+data/processed/build_report.json
+  s_3f5e58f5c753ff::t_ce451d4d6993ea 1-183
+results/gpt-5-mini-paper-reproduction/SUMMARY.md
+  s_3f5e58f5c753ff::t_1d8add4d26db42 1-43
+data/cache/sources/healthbench_consensus.jsonl
+  s_3f5e58f5c753ff::t_1ba5dc85a04fa0 1-3
+data/cache/sources/physician_labels.csv
+  s_3f5e58f5c753ff::t_99165ccd3c7be7 1-3
+data/cache/sources/pmr_reddit_test.parquet
+  s_3f5e58f5c753ff::t_a3b0d8fcfc6ec5 1-3
+data/cache/sources/pmr_synth_a.parquet
+  s_3f5e58f5c753ff::t_66cc4f545856d3 1-3
+data/cache/sources/pmr_synth_b.parquet
+  s_3f5e58f5c753ff::t_8ca1d67e49b4c8 1-3
+data/cache/sources/reference_case_ids.txt
+  s_3f5e58f5c753ff::t_0220801051163b 1-914
+data/cache/sources/semigran_edits.csv
+  s_3f5e58f5c753ff::t_1aa3adeced032e 1-3
+data/cache/sources/semigran_vignettes.jsonl
+  s_3f5e58f5c753ff::t_07bb786f9485ab 1-3
+data/cache/sources/structured_triage.csv
+  s_3f5e58f5c753ff::t_6244314f87c17c 1-3
+data/processed/acuitybench.parquet
+  s_3f5e58f5c753ff::t_20c479c890362d 1-3
+results/evaluations.sqlite3
+  s_3f5e58f5c753ff::t_f7cabad9ec7af3 1-3
+results/gpt-5-mini-paper-reproduction/exports/case_predictions.csv
+  s_3f5e58f5c753ff::t_1c73e428fddff8 1-3
+results/gpt-5-mini-paper-reproduction/exports/case_predictions.parquet
+  s_3f5e58f5c753ff::t_f391c98de1c574 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_ambiguous_conv.csv
+  s_3f5e58f5c753ff::t_10619e95abd626 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_ambiguous_conv.parquet
+  s_3f5e58f5c753ff::t_3d778530785b11 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_ambiguous_qa.csv
+  s_3f5e58f5c753ff::t_9a262a466a3f40 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_ambiguous_qa.parquet
+  s_3f5e58f5c753ff::t_9ff96de8bc26b7 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_primary_conv.csv
+  s_3f5e58f5c753ff::t_9c1c3517d08153 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_primary_conv.parquet
+  s_3f5e58f5c753ff::t_f5340c5e85a5a7 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_primary_qa.csv
+  s_3f5e58f5c753ff::t_e8166398426834 1-3
+results/gpt-5-mini-paper-reproduction/exports/distributional_primary_qa.parquet
+  s_3f5e58f5c753ff::t_db1cfc319b77dd 1-3
+results/gpt-5-mini-paper-reproduction/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_1aeabb471af3d9 1-3
+results/gpt-5-mini-paper-reproduction/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_14ccbc7e6bbf17 1-3
+results/gpt-5-mini-paper-reproduction/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_2f7cfe47157e31 1-3
+results/gpt-5-mini-paper-reproduction/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_ac463362468aa5 1-3
+results/gpt-5-mini-paper-reproduction/run_manifest.json
+  s_3f5e58f5c753ff::t_f98dfaa597414f 1-143
+results/gpt-5-mini-paper-reproduction/tables/boundary_metrics.csv
+  s_3f5e58f5c753ff::t_a86eb50fb48764 1-7
+results/gpt-5-mini-paper-reproduction/tables/confusion_conv.csv
+  s_3f5e58f5c753ff::t_87e3706cf56ead 1-5
+results/gpt-5-mini-paper-reproduction/tables/confusion_qa.csv
+  s_3f5e58f5c753ff::t_da8ccf8746ca12 1-5
+results/gpt-5-mini-paper-reproduction/tables/distributional_metrics.csv
+  s_3f5e58f5c753ff::t_bdaec94f7d7145 1-5
+results/gpt-5-mini-paper-reproduction/tables/metrics_long.csv
+  s_3f5e58f5c753ff::t_1a0a982ab6c6ab 1-21
+results/gpt-5-mini-paper-reproduction/tables/published_comparison.csv
+  s_3f5e58f5c753ff::t_f54c3ba89d9da7 1-7
+results/gpt-5-mini-paper-reproduction/tables/table2.csv
+  s_3f5e58f5c753ff::t_ecd8b0320b2286 1-2
+results/gpt-5-mini-paper-reproduction/tables/table2.md
+  s_3f5e58f5c753ff::t_37f4ff91267dde 1-3
+results/gpt-5-mini-paper-reproduction/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_7a6d0f28e062cb 1-3
+results/model-comparison/metrics_long.csv
+  s_3f5e58f5c753ff::t_a4b69cfc85b942 1-21
+results/model-comparison/table2.csv
+  s_3f5e58f5c753ff::t_08afa8743cb7f7 1-2
+results/model-comparison/table2.md
+  s_3f5e58f5c753ff::t_cfce6b27d18e40 1-3
+results/smoke-comparison/metrics_long.csv
+  s_3f5e58f5c753ff::t_2e4ad0fc2a8893 1-7
+results/smoke-comparison/table2.csv
+  s_3f5e58f5c753ff::t_53df2af3799b19 1-2
+results/smoke-comparison/table2.md
+  s_3f5e58f5c753ff::t_96913bcde69e0e 1-3
+results/smoke-gpt-5-mini/exports/case_predictions.csv
+  s_3f5e58f5c753ff::t_60f320e1d3d83c 1-3
+results/smoke-gpt-5-mini/exports/case_predictions.parquet
+  s_3f5e58f5c753ff::t_4d4a0c08ef1f82 1-3
+results/smoke-gpt-5-mini/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_a1e75e52833e8e 1-3
+results/smoke-gpt-5-mini/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_5a0209459eec39 1-3
+results/smoke-gpt-5-mini/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_5b04153d46255d 1-3
+results/smoke-gpt-5-mini/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_9fb08c13641816 1-3
+results/smoke-gpt-5-mini/run_manifest.json
+  s_3f5e58f5c753ff::t_62e31c8c266f85 1-73
+results/smoke-gpt-5-mini/tables/boundary_metrics.csv
+  s_3f5e58f5c753ff::t_6adcec682a327f 1
+results/smoke-gpt-5-mini/tables/confusion_conv.csv
+  s_3f5e58f5c753ff::t_4c84bde29aa9ba 1-5
+results/smoke-gpt-5-mini/tables/confusion_qa.csv
+  s_3f5e58f5c753ff::t_8296110faefd24 1-5
+results/smoke-gpt-5-mini/tables/metrics_long.csv
+  s_3f5e58f5c753ff::t_e8247541e66426 1-7
+results/smoke-gpt-5-mini/tables/published_comparison.csv
+  s_3f5e58f5c753ff::t_92e2148f70296a 1-7
+results/smoke-gpt-5-mini/tables/table2.csv
+  s_3f5e58f5c753ff::t_3013bb20bed748 1-2
+results/smoke-gpt-5-mini/tables/table2.md
+  s_3f5e58f5c753ff::t_860acd8e454523 1-3
+results/smoke-gpt-5-mini/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_d19db47891b64d 1-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3959dd3b0b1ff59181e40d6ee7bab9c43c3b34d4",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
