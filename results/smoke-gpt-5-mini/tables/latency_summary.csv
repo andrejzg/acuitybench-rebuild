@@ -1,0 +1,28 @@
+phase,task_type,metric,source,definition,population,unit,n_total,n_success,n_measured,coverage,timing_sources,mean_ms,p50_ms,p90_ms,p95_ms,p99_ms,min_ms,max_ms
+target,conv,service_latency_ms,client,All provider requests plus retry backoff; excludes local semaphore queue.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,request_wall_ms,client,Terminal provider request from dispatch through stream EOF.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,request_wall_total_ms,client,Cumulative provider request wall time across all attempts.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,ttft_ms,client_stream,Terminal request dispatch to first non-empty visible text delta.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,time_after_first_token_ms,client_stream,First visible text delta through stream EOF.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,server_processing_ms,provider_header,Provider-reported processing duration; not pure model compute.,latest_parent_rows_with_status_ok,ms,2,2,2,1.0,legacy_aggregate,11390.0,11390.0,13373.2,13621.1,13819.42,8911.0,13869.0
+target,conv,queue_wait_ms,client,Cumulative local semaphore wait across attempts.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,retry_backoff_ms,client,Cumulative actual retry sleep.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,conv,total_duration_ms,client,"Logical task residence time including local queue, provider calls, and backoff.",latest_parent_rows_with_status_ok,ms,2,2,2,1.0,legacy_aggregate,18141.84791649859,18141.84791649859,20723.044116099118,21045.693641049183,21303.813261009236,14915.352666997933,21368.34316599925
+target,qa,service_latency_ms,client,All provider requests plus retry backoff; excludes local semaphore queue.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,request_wall_ms,client,Terminal provider request from dispatch through stream EOF.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,request_wall_total_ms,client,Cumulative provider request wall time across all attempts.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,ttft_ms,client_stream,Terminal request dispatch to first non-empty visible text delta.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,time_after_first_token_ms,client_stream,First visible text delta through stream EOF.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,server_processing_ms,provider_header,Provider-reported processing duration; not pure model compute.,latest_parent_rows_with_status_ok,ms,2,2,2,1.0,legacy_aggregate,5473.0,5473.0,6349.8,6459.4,6547.08,4377.0,6569.0
+target,qa,queue_wait_ms,client,Cumulative local semaphore wait across attempts.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,retry_backoff_ms,client,Cumulative actual retry sleep.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+target,qa,total_duration_ms,client,"Logical task residence time including local queue, provider calls, and backoff.",latest_parent_rows_with_status_ok,ms,2,2,2,1.0,legacy_aggregate,10266.39239600081,10266.39239600081,11825.51341280232,12020.403539902509,12176.31564158266,8317.491124998924,12215.293667002697
+judge,conv,service_latency_ms,client,All provider requests plus retry backoff; excludes local semaphore queue.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,request_wall_ms,client,Terminal provider request from dispatch through stream EOF.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,request_wall_total_ms,client,Cumulative provider request wall time across all attempts.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,ttft_ms,client_stream,Terminal request dispatch to first non-empty visible text delta.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,time_after_first_token_ms,client_stream,First visible text delta through stream EOF.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,server_processing_ms,provider_header,Provider-reported processing duration; not pure model compute.,latest_parent_rows_with_status_ok,ms,2,2,2,1.0,legacy_aggregate,2173.5,2173.5,2480.3,2518.65,2549.33,1790.0,2557.0
+judge,conv,queue_wait_ms,client,Cumulative local semaphore wait across attempts.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,retry_backoff_ms,client,Cumulative actual retry sleep.,latest_parent_rows_with_status_ok,ms,2,2,0,0.0,legacy_aggregate,,,,,,,
+judge,conv,total_duration_ms,client,"Logical task residence time including local queue, provider calls, and backoff.",latest_parent_rows_with_status_ok,ms,2,2,2,1.0,legacy_aggregate,2622.638958500829,2622.638958500829,3052.530491700236,3106.2669333501617,3149.2560866701024,2085.274542001571,3160.0033750000875

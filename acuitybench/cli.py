@@ -173,6 +173,12 @@ def _add_evaluation_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--run-id", help="Explicit resumable run ID")
     parser.add_argument("--concurrency", type=int, default=20)
     parser.add_argument(
+        "--no-stream",
+        action="store_false",
+        dest="stream",
+        help="Disable streaming (TTFT will be unavailable)",
+    )
+    parser.add_argument(
         "--judge", default="paper-gpt-4.1", help="Judge ID from configs/models.yaml"
     )
     parser.add_argument("--judge-concurrency", type=int, default=20)
@@ -221,6 +227,7 @@ def _evaluation_kwargs(args: argparse.Namespace) -> dict[str, object]:
         "limit": args.limit,
         "run_id": args.run_id,
         "concurrency": args.concurrency,
+        "stream": args.stream,
         "judge_id": args.judge,
         "judge_concurrency": args.judge_concurrency,
         "store_path": _path(args.store, default_store_path()),
@@ -259,6 +266,7 @@ def _run_judge(args: argparse.Namespace) -> int:
                 run_id=args.run_id,
                 judge=judge,
                 concurrency=args.concurrency,
+                stream=args.stream,
             )
         )
     print(json.dumps(result, indent=2, sort_keys=True))
@@ -351,6 +359,12 @@ def make_parser() -> argparse.ArgumentParser:
     judge_parser.add_argument("--run-id", required=True)
     judge_parser.add_argument("--judge", default="paper-gpt-4.1")
     judge_parser.add_argument("--concurrency", type=int, default=20)
+    judge_parser.add_argument(
+        "--no-stream",
+        action="store_false",
+        dest="stream",
+        help="Disable streaming (TTFT will be unavailable)",
+    )
     judge_parser.add_argument("--store", help="SQLite result store")
     judge_parser.set_defaults(handler=_run_judge)
 

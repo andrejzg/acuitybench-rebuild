@@ -13,12 +13,22 @@ The main table scores only primary cases with clear A/B/C/D gold labels; valid s
 
 ## Usage and estimated cost
 
-| phase  | configured_model | returned_models       | calls | input_tokens | cached_input_tokens | output_tokens | reasoning_tokens | estimated_cost_usd | input_cost_per_million | cached_input_cost_per_million | output_cost_per_million |
-| ------ | ---------------- | --------------------- | ----- | ------------ | ------------------- | ------------- | ---------------- | ------------------ | ---------------------- | ----------------------------- | ----------------------- |
-| target | gpt-5-mini       | gpt-5-mini-2025-08-07 | 9140  | 3107920      | 7296                | 9091918       | 5379840          | 18.9592            | 0.25                   | 0.025                         | 2.0                     |
-| judge  | gpt-4.1          | gpt-4.1-2025-04-14    | 4570  | 5945034      | 0                   | 696370        | 0                | 17.461             | 2.0                    | 0.5                           | 8.0                     |
+| phase  | configured_model | returned_models       | calls | attempts_tracked | legacy_parent_records | usage_records_expected | usage_records_complete | missing_usage_records | missing_cache_breakdown_records | usage_coverage | cache_breakdown_coverage | cost_completeness | billing_basis                                   | input_tokens | cached_input_tokens | output_tokens | reasoning_tokens | estimated_cost_usd | input_cost_per_million | cached_input_cost_per_million | output_cost_per_million |
+| ------ | ---------------- | --------------------- | ----- | ---------------- | --------------------- | ---------------------- | ---------------------- | --------------------- | ------------------------------- | -------------- | ------------------------ | ----------------- | ----------------------------------------------- | ------------ | ------------------- | ------------- | ---------------- | ------------------ | ---------------------- | ----------------------------- | ----------------------- |
+| target | gpt-5-mini       | gpt-5-mini-2025-08-07 | 9140  | 0                | 9140                  | 9140                   | 9140                   | 0                     | 0                               | 1.0            | 1.0                      | complete          | all_tracked_attempts_plus_untracked_parent_rows | 3107920      | 7296                | 9091918       | 5379840          | 18.9592            | 0.25                   | 0.025                         | 2.0                     |
+| judge  | gpt-4.1          | gpt-4.1-2025-04-14    | 4570  | 0                | 4570                  | 4570                   | 4570                   | 0                     | 0                               | 1.0            | 1.0                      | complete          | all_tracked_attempts_plus_untracked_parent_rows | 5945034      | 0                   | 696370        | 0                | 17.461             | 2.0                    | 0.5                           | 8.0                     |
 
 Estimated total: $36.4202 USD.
+
+## Latency
+
+| phase  | task_type | metric               | n_measured | coverage | p50_ms  | p95_ms  |
+| ------ | --------- | -------------------- | ---------- | -------- | ------- | ------- |
+| target | conv      | server_processing_ms | 4570       | 100.0%   | 17456.0 | 30684.0 |
+| target | qa        | server_processing_ms | 4570       | 100.0%   | 7820.5  | 13032.2 |
+| judge  | conv      | server_processing_ms | 4570       | 100.0%   | 1788.0  | 3670.7  |
+
+The primary serving metric is p95 `service_latency_ms`; TTFT is the first non-empty visible text delta. Provider processing is reported separately and is not pure model compute.
 
 ## Published comparison
 

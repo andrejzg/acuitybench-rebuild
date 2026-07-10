@@ -60,3 +60,20 @@ The public release is sufficient to verify all five votes, exclusions,
 aggregates, splits, texts, and reference case IDs. It is not sufficient to
 replay Qualtrics decoding, independently establish physician identities, or
 reproduce the original recruitment process. Those require private inputs.
+
+## Legacy evaluation latency
+
+The original evaluation runner started `latency_ms` before acquiring its local
+concurrency semaphore. In the completed GPT-5-mini run that field therefore
+contains scheduler queueing, every provider attempt, and retry backoff; it is
+not API request latency. The OpenAI `openai-processing-ms` header remains
+available for every successful legacy call, but it is provider-defined and
+cannot reconstruct request wall time or TTFT.
+
+Schema-v2 runs stream responses and separately record local queue wait,
+terminal and cumulative request wall time, retry sleep, first visible-token
+time, stream tail, total logical duration, and provider processing. Reports
+retain legacy totals under `total_duration_ms` and leave unrecoverable fields
+null rather than estimating them. Billing summaries sum every tracked attempt,
+including length retries, and expose usage coverage whenever a terminated
+stream did not deliver final token accounting.

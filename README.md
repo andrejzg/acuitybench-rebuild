@@ -91,7 +91,8 @@ uv run python -m acuitybench evaluate \
   --samples 5 \
   --run-id gpt-5-mini-paper-reproduction \
   --concurrency 100 \
-  --judge-concurrency 100
+  --judge-concurrency 100 \
+  --no-stream
 ```
 
 This makes 9,140 target-model calls (914 cases × two formats × five samples)
@@ -100,6 +101,17 @@ and 4,570 GPT-4.1 rubric-judge calls. Every result is committed immediately to
 work. Use `acuitybench infer`, `acuitybench judge`, and `acuitybench report` to
 run those stages separately, `acuitybench runs` to inspect cached runs, or
 `acuitybench compare --run-ids <run-a> <run-b>` to build a cross-model table.
+The comparison output includes `frontier.csv`, with average exact accuracy,
+target-model cost per 1,000 tasks, task-specific latency, and explicitly
+labelled macro-averages of QA and conversational p50/p95 service latency, TTFT,
+and provider processing ready for the cost and latency frontier plots.
+
+The historical paper-reproduction run above used the original non-streaming
+transport. New calls stream by default so true time to first visible token
+(TTFT) can be measured. Transport is recorded per invocation, but is not part
+of the output-cache identity; use a new run ID when deliberately rerunning
+cached samples under a different transport. Pass `--no-stream` for a provider
+or model that cannot stream; TTFT will then be null.
 
 Reports are written to `results/<run-id>/`:
 
@@ -110,9 +122,18 @@ Reports are written to `results/<run-id>/`:
   Wasserstein, consensus leave-one-out, and reported custom alpha metrics for
   the 450 panel-consensus and 217 ambiguous cases.
 - `tables/confusion_*.csv`: QA and conversational confusion matrices.
-- `tables/usage_and_cost.csv`: token usage and price-based cost estimate.
+- `tables/usage_and_cost.csv`: attempt-aware token usage, price-based cost,
+  explicit token/cache-detail coverage, and labeled partial estimates.
+- `tables/latency_summary.csv`: p50/p90/p95/p99 service latency, terminal
+  request time, TTFT, stream tail, provider processing, queueing, and backoff,
+  with measurement coverage and clock source kept explicit.
+- `tables/execution_summary.csv`: per-invocation elapsed time, throughput,
+  concurrency, retry rate, failures, cancellations, and unpersisted work.
 - `exports/raw_samples.*`, `judged_samples.*`, and `case_predictions.*`:
   auditable sample- and case-level results.
+- `exports/run_executions.csv` and `request_attempts.*`: invocation concurrency,
+  runtime metadata, every API attempt, retries, response headers, and attempt
+  usage for latency and billing audits.
 - `run_manifest.json`: exact configuration, data digest, returned model
   snapshots, completeness, and aggregation contract.
 - `SUMMARY.md`: compact main results, cost, paper comparison, and ambiguous-case
@@ -133,6 +154,34 @@ Model aliases are not immutable. The runner records both the requested alias
 and the exact model string returned by the API; a new run should be described
 as a fresh replication rather than assumed byte-for-byte identical to the
 authors' April 2026 run.
+
+### Latency contract
+
+Latency fields deliberately separate clocks that must not be conflated:
+
+- `ttft_ms`: terminal request dispatch to the first non-empty visible text
+  delta. It is only available for streaming calls.
+- `request_wall_ms`: terminal attempt from dispatch through stream EOF.
+- `request_wall_total_ms`: provider time summed across all attempts.
+- `service_latency_ms`: all provider request time plus retry backoff, excluding
+  the benchmark runner's local concurrency queue. This is the primary serving
+  metric for latency comparisons.
+- `queue_wait_ms`: cumulative local semaphore wait. This describes benchmark
+  load, not intrinsic model latency.
+- `total_duration_ms` (and compatibility alias `latency_ms`): full logical task
+  residence time including queueing, requests, and backoff.
+- `server_processing_ms`: the provider's `openai-processing-ms` response header
+  when present. It is provider-defined and is not treated as TTFT, end-to-end
+  latency, or pure GPU inference time.
+
+Each inference or judge invocation records its configured concurrency and
+streaming mode. Each request attempt records its own timing, outcome, retry
+sleep, IDs, usage, and allowlisted server metadata. Legacy rows retain their
+historical queue-inclusive duration and OpenAI processing header, but reporting
+marks request-wall, queue, backoff, and TTFT as unavailable rather than
+reconstructing them. Latency percentiles describe the latest successful parent
+row for each logical request; the execution and attempt exports separately show
+failed work, retries, cancellations, and whole-batch throughput.
 
 ## Data, provenance, and licensing
 
