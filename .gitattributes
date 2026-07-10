@@ -1,0 +1,12 @@
+# Immutable source snapshots and reconstructed tabular data.
+data/cache/sources/*.csv filter=lfs diff=lfs merge=lfs -text
+data/cache/sources/*.jsonl filter=lfs diff=lfs merge=lfs -text
+data/cache/sources/*.parquet filter=lfs diff=lfs merge=lfs -text
+data/processed/*.csv filter=lfs diff=lfs merge=lfs -text
+data/processed/*.parquet filter=lfs diff=lfs merge=lfs -text
+
+# Durable evaluation database and sample-level exports. Small manifests and
+# summary tables remain ordinary Git files for readable review diffs.
+results/*.sqlite3 filter=lfs diff=lfs merge=lfs -text
+results/**/exports/*.csv filter=lfs diff=lfs merge=lfs -text
+results/**/exports/*.parquet filter=lfs diff=lfs merge=lfs -text

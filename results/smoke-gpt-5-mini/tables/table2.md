@@ -1,0 +1,3 @@
+| Model      | Scope               | QA N | QA Exact | QA Over | QA Under | Conv N | Conv Exact | Conv Over | Conv Under |
+| ---------- | ------------------- | ---- | -------- | ------- | -------- | ------ | ---------- | --------- | ---------- |
+| gpt-5-mini | selected 2-case run | 2    | 1.000    | 0.000   | 0.000    | 2      | 1.000      | 0.000     | 0.000      |

@@ -1,8 +1,9 @@
 # Data and licence notice
 
-This repository contains original reconstruction code. It does not grant a
-licence to any downloaded source dataset, physician annotation, or generated
-benchmark artifact.
+This repository contains original reconstruction code together with pinned
+source snapshots, physician annotations, reconstructed benchmark files, and
+model-evaluation artifacts. Inclusion in this private repository does not grant
+a licence to any third-party dataset, annotation, or generated derivative.
 
 The build downloads immutable, checksum-verified snapshots from these sources:
 
@@ -19,3 +20,7 @@ Accordingly, generated data is intended for local, non-commercial research
 until the AcuityBench authors publish final terms. Do not redistribute the
 downloaded annotations or benchmark without reviewing every upstream licence.
 The benchmark is an evaluation artifact, not a clinical decision system.
+
+Keep the GitHub repository private while upstream annotation terms remain
+pending. `sources.lock.json` identifies the origin, revision, checksum, and
+known licence status of every source snapshot.

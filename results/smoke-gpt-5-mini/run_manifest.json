@@ -1,0 +1,73 @@
+{
+  "estimated_total_cost_usd": 0.0114605,
+  "generation_status": {
+    "expected": 4,
+    "ok": 4
+  },
+  "judge_status": {
+    "expected": 2,
+    "ok": 2
+  },
+  "paper_contract": {
+    "aggregation": "valid-label mode; ties resolve to higher acuity",
+    "all_527_cases_evaluable": null,
+    "evaluable_cases": {
+      "conv": 2,
+      "qa": 2
+    },
+    "full_contract_run": false,
+    "judge_id": "paper-gpt-4.1",
+    "main_table_expected_n": null,
+    "main_table_filter": "split=primary and gold in A/B/C/D",
+    "parser": "first ACUITY\\s*[:\\-]\\s*([A-D]) match, case-insensitive",
+    "samples_per_case": 1
+  },
+  "pricing_note": "Estimate from token usage and prices recorded in configs/models.yaml at report time.",
+  "report_complete": true,
+  "report_scope": "selected 2-case run",
+  "returned_judge_models": [
+    "gpt-4.1-2025-04-14"
+  ],
+  "returned_target_models": [
+    "gpt-5-mini-2025-08-07"
+  ],
+  "run": {
+    "api_model": "gpt-5-mini",
+    "benchmark_path": "/Users/agregoric/Documents/acuity bench/data/processed/acuitybench_transformed.csv",
+    "benchmark_sha256": "47010d1c7a27f97c4c5100929715e9a56d0cb5d6cde82f0e8441821defac5956",
+    "created_at": "2026-07-10T16:59:40.820988+00:00",
+    "expected_generations": 4,
+    "manifest_fingerprint": "66e60fb0ad4460f8b4865dbf3ee8481e95e037ff12676564768c679dcdc45d32",
+    "model_config": {
+      "api_key_env": "OPENAI_API_KEY",
+      "api_model": "gpt-5-mini",
+      "cached_input_cost_per_million": 0.025,
+      "display_name": "GPT-5 mini",
+      "endpoint": "chat_completions",
+      "id": "gpt-5-mini",
+      "input_cost_per_million": 0.25,
+      "max_output_tokens": 4096,
+      "output_cost_per_million": 2.0,
+      "provider": "openai",
+      "send_temperature": false,
+      "temperature": 1.0,
+      "token_parameter": "max_completion_tokens"
+    },
+    "model_id": "gpt-5-mini",
+    "provider": "openai",
+    "run_id": "smoke-gpt-5-mini",
+    "samples": 1,
+    "selected_cases": 2,
+    "selection": {
+      "case_ids_sha256": "da3494d4183cb3df243c5625c0fe7569892fc0607055785c97a31b3e0514081d",
+      "datasets": null,
+      "limit": 2
+    },
+    "status": "complete",
+    "tasks": [
+      "qa",
+      "conv"
+    ],
+    "updated_at": "2026-07-10T17:00:06.990514+00:00"
+  }
+}

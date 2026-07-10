@@ -1,0 +1,183 @@
+{
+  "annotation_audit": {
+    "accepted_panel_cases": 667,
+    "ambiguous_cases": 217,
+    "ambiguous_threshold": "avg_sd > 0.75",
+    "consensus_cases": 450,
+    "consensus_threshold": "avg_sd <= 0.75",
+    "manual_exclusions": 76,
+    "rater_id_note": "The release contains 22 anonymized rater identifiers while the paper reports 20 unique physicians; treat identifiers as aliases until the authors clarify the discrepancy.",
+    "released_anonymized_rater_ids": 22,
+    "released_rows": 751,
+    "remove_vote_exclusions": 8,
+    "surveyed_cases": 675
+  },
+  "builder_version": "0.2.0",
+  "outputs": [
+    {
+      "bytes": 1706818,
+      "filename": "acuitybench.csv",
+      "sha256": "c9f4d423a2f16e431c3fd961d56da6ecaf6387fc45e4eef243b3fd6220b0083b"
+    },
+    {
+      "bytes": 4503310,
+      "filename": "acuitybench_transformed.csv",
+      "sha256": "47010d1c7a27f97c4c5100929715e9a56d0cb5d6cde82f0e8441821defac5956"
+    },
+    {
+      "bytes": 2002459,
+      "filename": "acuitybench.parquet",
+      "sha256": "90ef2d3b15e968f68372d728de392b3ed46d58e3786fb6e1aa01807678d193d7"
+    }
+  ],
+  "raw_counts": {
+    "healthbench": 453,
+    "pmr_reddit": 362,
+    "pmr_synth": 60,
+    "semigran": 45,
+    "structured_triage": 78
+  },
+  "sources": [
+    {
+      "bytes": 36921504,
+      "filename": "healthbench_consensus.jsonl",
+      "homepage": "https://huggingface.co/datasets/openai/healthbench",
+      "license": "MIT",
+      "name": "healthbench_consensus",
+      "revision": "40ee1968852fc57f625934251ac22be47077a8fb",
+      "sha256": "fabe37553327238928b05357d8b309737b5d426d6dee432a3376da618d0969d6",
+      "url": "https://huggingface.co/datasets/openai/healthbench/resolve/40ee1968852fc57f625934251ac22be47077a8fb/consensus_2025-05-09-20-00-46.jsonl"
+    },
+    {
+      "bytes": 90855,
+      "filename": "physician_labels.csv",
+      "homepage": "https://anonymous.4open.science/r/acuity-bench-C9CD/README.md",
+      "license": "Pending in upstream README",
+      "name": "physician_labels",
+      "revision": "anonymous review snapshot acuity-bench-C9CD",
+      "sha256": "72bcc30407f2d59f8434f2f898a1d83cf7f314f02dd69740d7be0cc524a4422d",
+      "url": "https://anonymous.4open.science/api/repo/acuity-bench-C9CD/file/data/02_normalized/review/normalized_survey_labels.csv"
+    },
+    {
+      "bytes": 454779,
+      "filename": "pmr_reddit_test.parquet",
+      "homepage": "https://huggingface.co/datasets/PortalPal-AI/PMR-Reddit-Test-Pairs",
+      "license": "CC-BY-NC-4.0",
+      "name": "pmr_reddit_test",
+      "revision": "f72f5fe3d322397505ebc3bcb216c5f86af14c04",
+      "sha256": "119bedb8636dc7cc72489c337c7a75c94d89290bffae8fb90efc781f11566202",
+      "url": "https://huggingface.co/datasets/PortalPal-AI/PMR-Reddit-Test-Pairs/resolve/f72f5fe3d322397505ebc3bcb216c5f86af14c04/data/test-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 30194,
+      "filename": "pmr_synth_a.parquet",
+      "homepage": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes",
+      "license": "CC-BY-NC-4.0",
+      "name": "pmr_synth_a",
+      "revision": "31d7eafc34f3ce1b1edd5684fc909f9c5c821067",
+      "sha256": "eefef8fb4b8f28fe7903cadfbef29eef0bf37ea5e15b36b666c998ef3842e362",
+      "url": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes/resolve/31d7eafc34f3ce1b1edd5684fc909f9c5c821067/data/INBOX_A-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 31626,
+      "filename": "pmr_synth_b.parquet",
+      "homepage": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes",
+      "license": "CC-BY-NC-4.0",
+      "name": "pmr_synth_b",
+      "revision": "31d7eafc34f3ce1b1edd5684fc909f9c5c821067",
+      "sha256": "db2db6aa3fd367da32567653dc828c05a910ebbc1c1e7b536f64f71e658fcc48",
+      "url": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes/resolve/31d7eafc34f3ce1b1edd5684fc909f9c5c821067/data/INBOX_B-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 31194,
+      "filename": "reference_case_ids.txt",
+      "homepage": "https://anonymous.4open.science/r/acuity-bench-C9CD/README.md",
+      "license": "Pending in upstream README",
+      "name": "reference_case_ids",
+      "revision": "anonymous review snapshot acuity-bench-C9CD",
+      "sha256": "52324d8ed5fcf068eb02fbc4ebdbf303580c6982b08b189d49a390148ed25d09",
+      "url": "https://anonymous.4open.science/api/repo/acuity-bench-C9CD/file/configs/reference_case_ids.txt"
+    },
+    {
+      "bytes": 29715,
+      "filename": "semigran_edits.csv",
+      "homepage": "https://anonymous.4open.science/r/acuity-bench-C9CD/README.md",
+      "license": "Pending in upstream README",
+      "name": "semigran_edits",
+      "revision": "anonymous review snapshot acuity-bench-C9CD",
+      "sha256": "7b34e5dcb9f42966d3f3a1e21202ffec2659b4ab1a374cd92269339023876c03",
+      "url": "https://anonymous.4open.science/api/repo/acuity-bench-C9CD/file/data/02_normalized/review/edits/semigran_edits.csv"
+    },
+    {
+      "bytes": 25827,
+      "filename": "semigran_vignettes.jsonl",
+      "homepage": "https://github.com/medaks/medask-benchmarks",
+      "license": "MIT convenience repository; underlying article CC-BY-NC-4.0",
+      "name": "semigran_vignettes",
+      "revision": "36c80b44fee77da271d97d38c43e49926dc95b8e",
+      "sha256": "09121a577d5ed4291fac94e7829979b762dc1735ea4fa15eddd1d7f2f4b82013",
+      "url": "https://raw.githubusercontent.com/medaks/medask-benchmarks/36c80b44fee77da271d97d38c43e49926dc95b8e/triage_bench/vignettes/semigran_vignettes.jsonl"
+    },
+    {
+      "bytes": 7152794,
+      "filename": "structured_triage.csv",
+      "homepage": "https://github.com/ashwinra-code/gpt-health-eval",
+      "license": "MIT repository; verify data terms",
+      "name": "structured_triage",
+      "revision": "61bce8ade678aeb5eead4429fe5df48a85bf1905",
+      "sha256": "31861575a5eaa7b9cc001b4c90af814dc09fc4fcdec453022a2fdb8773ffa741",
+      "url": "https://raw.githubusercontent.com/ashwinra-code/gpt-health-eval/61bce8ade678aeb5eead4429fe5df48a85bf1905/data/DataExpanded_FINAL.csv"
+    }
+  ],
+  "validation": {
+    "ambiguous_label_counts": {
+      "A": 31,
+      "A|B": 17,
+      "B": 30,
+      "B|C": 26,
+      "C": 57,
+      "C|D": 32,
+      "D": 24
+    },
+    "boundary_primary_cases": 170,
+    "clear_primary_cases": 527,
+    "dataset_counts": {
+      "healthbench": 369,
+      "pmr_reddit": 362,
+      "pmr_synth": 60,
+      "semigran": 45,
+      "structured_triage": 78
+    },
+    "label_counts": {
+      "A": 108,
+      "A|B": 48,
+      "B": 140,
+      "B|C": 74,
+      "C": 135,
+      "C|D": 123,
+      "D": 286
+    },
+    "mapping_method_counts": {
+      "direct": 247,
+      "excluded_disagreement": 217,
+      "median": 450
+    },
+    "physician_panel_cases": 667,
+    "primary_label_counts": {
+      "A": 77,
+      "A|B": 31,
+      "B": 110,
+      "B|C": 48,
+      "C": 78,
+      "C|D": 91,
+      "D": 262
+    },
+    "raw_source_cases": 998,
+    "reference_ids": 914,
+    "rows": 914,
+    "split_counts": {
+      "ambiguous": 217,
+      "primary": 697
+    }
+  }
+}
