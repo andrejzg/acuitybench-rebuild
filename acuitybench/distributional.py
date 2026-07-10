@@ -277,7 +277,27 @@ def evaluate_panel_distribution(
                 "consensus_loo_mean_delta": mean_delta,
             }
         )
-    result = pd.DataFrame(records)
+    result = pd.DataFrame.from_records(
+        records,
+        columns=[
+            "dataset",
+            "source_id",
+            "normalized_label",
+            "task_type",
+            "split",
+            "mode_prediction",
+            "n_samples",
+            "n_valid",
+            "has_rater_labels",
+            "human_distribution",
+            "model_distribution",
+            "jsd_natural_log",
+            "wasserstein_1",
+            "rater_probability_of_mode",
+            "consensus_loo_change_rate",
+            "consensus_loo_mean_delta",
+        ],
+    )
     alpha = _alpha_loo(selected_cases, mode_predictions)
     summary = {
         "task_type": task_type,

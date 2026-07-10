@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 from dataclasses import replace
 from pathlib import Path
@@ -7,14 +8,28 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from acuitybench.distributional import jensen_shannon, wasserstein_1
-from acuitybench.evaluation import extract_label, extract_reasoning, sha256_text
+import acuitybench.evaluation as evaluation_module
+from acuitybench.distributional import (
+    evaluate_panel_distribution,
+    jensen_shannon,
+    wasserstein_1,
+)
+from acuitybench.evaluation import (
+    GenerationTask,
+    extract_label,
+    extract_reasoning,
+    prepare_run,
+    run_inference_async,
+    sha256_text,
+)
 from acuitybench.models import ModelConfig, ModelRegistry
+from acuitybench.providers.base import CompletionResult
 from acuitybench.reporting import (
     _metrics_long,
     _mode_severe,
     _paper_value,
     _table2,
+    combine_reports,
     generate_report,
 )
 from acuitybench.store import EvaluationStore
@@ -53,6 +68,43 @@ def test_distributional_distances_use_paper_conventions() -> None:
     assert jensen_shannon(at_home, at_home) == pytest.approx(0)
     assert jensen_shannon(at_home, emergency) == pytest.approx(0.69314718056)
     assert wasserstein_1(at_home, emergency) == pytest.approx(3.0)
+
+
+def test_empty_distributional_subset_returns_typed_empty_result() -> None:
+    generations = pd.DataFrame(
+        [
+            {
+                "run_id": "run",
+                "dataset": "synthetic",
+                "source_id": "1",
+                "sample_idx": 0,
+                "task_type": "qa",
+                "split": "primary",
+                "parsed_label": "A",
+            }
+        ]
+    )
+    benchmark = pd.DataFrame(
+        [
+            {
+                "dataset": "synthetic",
+                "source_id": "1",
+                "normalized_label": "A",
+                **{f"anon_label_{index}": "A" for index in range(1, 6)},
+            }
+        ]
+    )
+    result, summary = evaluate_panel_distribution(
+        generations=generations,
+        judgments=pd.DataFrame(),
+        benchmark=benchmark,
+        task_type="qa",
+        split="ambiguous",
+    )
+    assert result.empty
+    assert "mode_prediction" in result.columns
+    assert summary["n"] == 0
+    assert summary["n_evaluable"] == 0
 
 
 def test_paper_metrics_exclude_boundary_and_ambiguous_cases() -> None:
@@ -118,6 +170,179 @@ def test_model_registry_exposes_paper_configs_and_stable_fingerprints() -> None:
     assert replace(target, max_output_tokens=target.max_output_tokens + 1).fingerprint != target.fingerprint
     with pytest.raises(ValueError, match="Unknown model"):
         registry.get("not-configured")
+
+
+def test_stream_transport_is_execution_provenance_not_run_identity(
+    tmp_path: Path,
+) -> None:
+    benchmark = tmp_path / "benchmark.csv"
+    pd.DataFrame(
+        [
+            {
+                "dataset": "synthetic",
+                "source_id": "1",
+                "normalized_label": "A",
+                "split": "primary",
+                "mapping_method": "fixture",
+                "is_edge_case": False,
+                "qa_prompt": "case",
+                "conversational_prompt": json.dumps(
+                    [{"role": "user", "content": "case"}]
+                ),
+            }
+        ]
+    ).to_csv(benchmark, index=False)
+    database = tmp_path / "runs.sqlite3"
+    model = ModelRegistry().get("gpt-5-mini")
+    with EvaluationStore(database) as store:
+        first_id, _ = prepare_run(
+            store=store,
+            model=model,
+            benchmark_path=benchmark,
+            tasks=("qa",),
+            samples=1,
+            datasets=None,
+            limit=None,
+            run_id="legacy-compatible",
+            stream=False,
+        )
+        fingerprint = store.get_run(first_id)["manifest_fingerprint"]
+        second_id, _ = prepare_run(
+            store=store,
+            model=model,
+            benchmark_path=benchmark,
+            tasks=("qa",),
+            samples=1,
+            datasets=None,
+            limit=None,
+            run_id="legacy-compatible",
+            stream=True,
+        )
+        assert store.get_run(second_id)["manifest_fingerprint"] == fingerprint
+
+    assert first_id == second_id == "legacy-compatible"
+
+
+def test_cancelled_generation_finalizes_execution_and_parent_run_status(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class CancelledProvider:
+        async def complete(self, **_: object) -> object:
+            raise asyncio.CancelledError
+
+        async def close(self) -> None:
+            return None
+
+    model = ModelRegistry().get("gpt-5-mini")
+    database = tmp_path / "cancelled.sqlite3"
+    with EvaluationStore(database) as store:
+        store.ensure_run(
+            _manifest(
+                model,
+                run_id="cancelled-run",
+                selected_cases=1,
+                samples=1,
+                tasks=("qa",),
+            )
+        )
+        task = GenerationTask(
+            run_id="cancelled-run",
+            case_id="synthetic:1",
+            dataset="synthetic",
+            source_id="1",
+            task_type="qa",
+            sample_idx=0,
+            normalized_label="A",
+            split="primary",
+            mapping_method="fixture",
+            is_edge_case=False,
+            prompt="case",
+            prompt_sha256=sha256_text("case"),
+        )
+        monkeypatch.setattr(
+            evaluation_module,
+            "get_provider",
+            lambda _: CancelledProvider(),
+        )
+
+        with pytest.raises(asyncio.CancelledError):
+            asyncio.run(
+                run_inference_async(
+                    store=store,
+                    run_id="cancelled-run",
+                    tasks=[task],
+                    model=model,
+                    concurrency=1,
+                    stream=True,
+                )
+            )
+
+        run = store.get_run("cancelled-run")
+        execution = store.connection.execute(
+            "SELECT * FROM run_executions WHERE run_id='cancelled-run'"
+        ).fetchone()
+    assert run["status"] == "generation_cancelled"
+    assert execution["status"] == "cancelled"
+    assert execution["cancelled_count"] == 1
+
+
+def test_partial_generation_task_list_cannot_mark_whole_run_generated(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class SuccessProvider:
+        async def complete(self, **_: object) -> CompletionResult:
+            return CompletionResult(text="ACUITY: A", finish_reason="stop")
+
+        async def close(self) -> None:
+            return None
+
+    model = ModelRegistry().get("gpt-5-mini")
+    database = tmp_path / "partial.sqlite3"
+    with EvaluationStore(database) as store:
+        store.ensure_run(
+            _manifest(
+                model,
+                run_id="partial-run",
+                selected_cases=1,
+                samples=1,
+                tasks=("qa", "conv"),
+            )
+        )
+        task = GenerationTask(
+            run_id="partial-run",
+            case_id="synthetic:1",
+            dataset="synthetic",
+            source_id="1",
+            task_type="qa",
+            sample_idx=0,
+            normalized_label="A",
+            split="primary",
+            mapping_method="fixture",
+            is_edge_case=False,
+            prompt="case",
+            prompt_sha256=sha256_text("case"),
+        )
+        monkeypatch.setattr(
+            evaluation_module,
+            "get_provider",
+            lambda _: SuccessProvider(),
+        )
+        result = asyncio.run(
+            run_inference_async(
+                store=store,
+                run_id="partial-run",
+                tasks=[task],
+                model=model,
+                concurrency=1,
+                stream=True,
+            )
+        )
+        run = store.get_run("partial-run")
+
+    assert result == {"pending": 1, "completed": 1, "failed": 0}
+    assert run["status"] == "generation_incomplete"
 
 
 def _manifest(
@@ -195,6 +420,22 @@ def _generation_row(
         "reasoning_tokens": 1,
         "total_tokens": 14,
         "latency_ms": 1.5,
+        "timing_version": 2,
+        "timing_source": "instrumented_stream",
+        "queued_at": "2026-01-01T00:00:00+00:00",
+        "request_started_at": "2026-01-01T00:00:00.001000+00:00",
+        "first_token_at": "2026-01-01T00:00:00.001500+00:00",
+        "response_completed_at": "2026-01-01T00:00:00.002000+00:00",
+        "queue_wait_ms": 0.5,
+        "request_wall_ms": 1.0,
+        "request_wall_total_ms": 1.0,
+        "service_latency_ms": 1.0,
+        "retry_backoff_ms": 0.0,
+        "first_event_ms": 0.25,
+        "ttft_ms": 0.5,
+        "time_after_first_token_ms": 0.5,
+        "total_duration_ms": 1.5,
+        "server_processing_ms": 0.4,
         "rate_limit_json": "{}",
         "provider_metadata_json": "{}",
     }
@@ -233,6 +474,22 @@ def _judgment_row(
         "reasoning_tokens": 0,
         "total_tokens": 15,
         "latency_ms": 2.0,
+        "timing_version": 2,
+        "timing_source": "instrumented_stream",
+        "queued_at": "2026-01-01T00:00:00+00:00",
+        "request_started_at": "2026-01-01T00:00:00.001000+00:00",
+        "first_token_at": "2026-01-01T00:00:00.002000+00:00",
+        "response_completed_at": "2026-01-01T00:00:00.003000+00:00",
+        "queue_wait_ms": 0.5,
+        "request_wall_ms": 1.5,
+        "request_wall_total_ms": 1.5,
+        "service_latency_ms": 1.5,
+        "retry_backoff_ms": 0.0,
+        "first_event_ms": 0.5,
+        "ttft_ms": 1.0,
+        "time_after_first_token_ms": 0.5,
+        "total_duration_ms": 2.0,
+        "server_processing_ms": 0.7,
         "rate_limit_json": "{}",
         "provider_metadata_json": "{}",
     }
@@ -350,3 +607,32 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
     assert report_manifest["judge_status"] == {"expected": 6, "ok": 6}
     assert (destination / "exports/case_predictions.parquet").exists()
     assert (destination / "tables/usage_and_cost.csv").exists()
+    assert (destination / "tables/latency_summary.csv").exists()
+    assert (destination / "exports/run_executions.csv").exists()
+    assert (destination / "exports/request_attempts.csv").exists()
+    latency = pd.read_csv(destination / "tables/latency_summary.csv")
+    qa_ttft = latency[
+        (latency["phase"] == "target")
+        & (latency["task_type"] == "qa")
+        & (latency["metric"] == "ttft_ms")
+    ].iloc[0]
+    assert qa_ttft["n_measured"] == 6
+    assert qa_ttft["p50_ms"] == pytest.approx(0.5)
+    assert report_manifest["timing"]["primary_latency_metric"] == "service_latency_ms"
+    assert report_manifest["timing"]["legacy_rows"] == 0
+
+    comparison = combine_reports(
+        run_ids=[run_id],
+        results_root=tmp_path / "reports",
+        destination=tmp_path / "comparison",
+    )
+    frontier = pd.read_csv(comparison / "frontier.csv")
+    assert frontier.loc[0, "run_id"] == run_id
+    assert frontier.loc[0, "average_exact"] == pytest.approx(0.5)
+    assert frontier.loc[0, "target_cost_per_1000_tasks_usd"] > 0
+    assert frontier.loc[0, "service_latency_p95_macro_ms"] == pytest.approx(1.0)
+    assert frontier.loc[0, "qa_service_latency_p95_ms"] == pytest.approx(1.0)
+    assert frontier.loc[0, "conv_service_latency_p95_ms"] == pytest.approx(1.0)
+    assert (comparison / "usage_and_cost.csv").exists()
+    assert (comparison / "latency_summary.csv").exists()
+    assert (comparison / "execution_summary.csv").exists()

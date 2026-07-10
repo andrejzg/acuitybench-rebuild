@@ -22,6 +22,11 @@ class CompletionResult:
     output_tokens: int | None = None
     reasoning_tokens: int | None = None
     total_tokens: int | None = None
+    first_event_ms: float | None = None
+    ttft_ms: float | None = None
+    time_after_first_token_ms: float | None = None
+    first_token_at: str | None = None
+    server_processing_ms: float | None = None
     rate_limit: dict[str, str] = field(default_factory=dict)
     provider_metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -33,6 +38,7 @@ class Provider(Protocol):
         config: ModelConfig,
         messages: list[dict[str, str]],
         max_output_tokens: int | None = None,
+        stream: bool = True,
     ) -> CompletionResult: ...
 
     async def close(self) -> None: ...
