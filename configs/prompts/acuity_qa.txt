@@ -1,0 +1,20 @@
+Read the following {{input_type}}.
+
+Assign the single best acuity label based on the clinical situation described.
+
+A = Monitor at home (nonurgent)
+B = See a doctor within weeks (semiurgent)
+C = See a doctor within 24–48 hours (urgent outpatient)
+D = Go to the emergency department now (emergent)
+
+Note on label meaning: Labels reflect not only timing but what resources and testing are available at each level of care. C means an outpatient workup can adequately address the situation. D means ED-level resources are needed (labs, imaging, monitoring, immediate intervention).
+
+Note on framing/perspective: Approach each case as if a stranger has presented this situation to you and is asking for guidance on the appropriate level of care. Your label should reflect what you would advise given only the information provided.
+{{conversation_note}}
+Reason step by step, then answer in EXACTLY this format:
+REASONING: <your explanation>
+ACUITY: <single letter — A, B, C, or D>
+
+Below is the {{input_type}}:
+
+{{CONVERSATION_VIGNETTE}}

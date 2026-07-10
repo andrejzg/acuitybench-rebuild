@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "name": "healthbench_consensus",
+      "filename": "healthbench_consensus.jsonl",
+      "url": "https://huggingface.co/datasets/openai/healthbench/resolve/40ee1968852fc57f625934251ac22be47077a8fb/consensus_2025-05-09-20-00-46.jsonl",
+      "revision": "40ee1968852fc57f625934251ac22be47077a8fb",
+      "sha256": "fabe37553327238928b05357d8b309737b5d426d6dee432a3376da618d0969d6",
+      "bytes": 36921504,
+      "license": "MIT",
+      "homepage": "https://huggingface.co/datasets/openai/healthbench"
+    },
+    {
+      "name": "pmr_reddit_test",
+      "filename": "pmr_reddit_test.parquet",
+      "url": "https://huggingface.co/datasets/PortalPal-AI/PMR-Reddit-Test-Pairs/resolve/f72f5fe3d322397505ebc3bcb216c5f86af14c04/data/test-00000-of-00001.parquet",
+      "revision": "f72f5fe3d322397505ebc3bcb216c5f86af14c04",
+      "sha256": "119bedb8636dc7cc72489c337c7a75c94d89290bffae8fb90efc781f11566202",
+      "bytes": 454779,
+      "license": "CC-BY-NC-4.0",
+      "homepage": "https://huggingface.co/datasets/PortalPal-AI/PMR-Reddit-Test-Pairs"
+    },
+    {
+      "name": "pmr_synth_a",
+      "filename": "pmr_synth_a.parquet",
+      "url": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes/resolve/31d7eafc34f3ce1b1edd5684fc909f9c5c821067/data/INBOX_A-00000-of-00001.parquet",
+      "revision": "31d7eafc34f3ce1b1edd5684fc909f9c5c821067",
+      "sha256": "eefef8fb4b8f28fe7903cadfbef29eef0bf37ea5e15b36b666c998ef3842e362",
+      "bytes": 30194,
+      "license": "CC-BY-NC-4.0",
+      "homepage": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes"
+    },
+    {
+      "name": "pmr_synth_b",
+      "filename": "pmr_synth_b.parquet",
+      "url": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes/resolve/31d7eafc34f3ce1b1edd5684fc909f9c5c821067/data/INBOX_B-00000-of-00001.parquet",
+      "revision": "31d7eafc34f3ce1b1edd5684fc909f9c5c821067",
+      "sha256": "db2db6aa3fd367da32567653dc828c05a910ebbc1c1e7b536f64f71e658fcc48",
+      "bytes": 31626,
+      "license": "CC-BY-NC-4.0",
+      "homepage": "https://huggingface.co/datasets/PortalPal-AI/PMR-Synth-Inboxes"
+    },
+    {
+      "name": "structured_triage",
+      "filename": "structured_triage.csv",
+      "url": "https://raw.githubusercontent.com/ashwinra-code/gpt-health-eval/61bce8ade678aeb5eead4429fe5df48a85bf1905/data/DataExpanded_FINAL.csv",
+      "revision": "61bce8ade678aeb5eead4429fe5df48a85bf1905",
+      "sha256": "31861575a5eaa7b9cc001b4c90af814dc09fc4fcdec453022a2fdb8773ffa741",
+      "bytes": 7152794,
+      "license": "MIT repository; verify data terms",
+      "homepage": "https://github.com/ashwinra-code/gpt-health-eval"
+    },
+    {
+      "name": "semigran_vignettes",
+      "filename": "semigran_vignettes.jsonl",
+      "url": "https://raw.githubusercontent.com/medaks/medask-benchmarks/36c80b44fee77da271d97d38c43e49926dc95b8e/triage_bench/vignettes/semigran_vignettes.jsonl",
+      "revision": "36c80b44fee77da271d97d38c43e49926dc95b8e",
+      "sha256": "09121a577d5ed4291fac94e7829979b762dc1735ea4fa15eddd1d7f2f4b82013",
+      "bytes": 25827,
+      "license": "MIT convenience repository; underlying article CC-BY-NC-4.0",
+      "homepage": "https://github.com/medaks/medask-benchmarks"
+    },
+    {
+      "name": "physician_labels",
+      "filename": "physician_labels.csv",
+      "url": "https://anonymous.4open.science/api/repo/acuity-bench-C9CD/file/data/02_normalized/review/normalized_survey_labels.csv",
+      "revision": "anonymous review snapshot acuity-bench-C9CD",
+      "sha256": "72bcc30407f2d59f8434f2f898a1d83cf7f314f02dd69740d7be0cc524a4422d",
+      "bytes": 90855,
+      "license": "Pending in upstream README",
+      "homepage": "https://anonymous.4open.science/r/acuity-bench-C9CD/README.md"
+    },
+    {
+      "name": "semigran_edits",
+      "filename": "semigran_edits.csv",
+      "url": "https://anonymous.4open.science/api/repo/acuity-bench-C9CD/file/data/02_normalized/review/edits/semigran_edits.csv",
+      "revision": "anonymous review snapshot acuity-bench-C9CD",
+      "sha256": "7b34e5dcb9f42966d3f3a1e21202ffec2659b4ab1a374cd92269339023876c03",
+      "bytes": 29715,
+      "license": "Pending in upstream README",
+      "homepage": "https://anonymous.4open.science/r/acuity-bench-C9CD/README.md"
+    },
+    {
+      "name": "reference_case_ids",
+      "filename": "reference_case_ids.txt",
+      "url": "https://anonymous.4open.science/api/repo/acuity-bench-C9CD/file/configs/reference_case_ids.txt",
+      "revision": "anonymous review snapshot acuity-bench-C9CD",
+      "sha256": "52324d8ed5fcf068eb02fbc4ebdbf303580c6982b08b189d49a390148ed25d09",
+      "bytes": 31194,
+      "license": "Pending in upstream README",
+      "homepage": "https://anonymous.4open.science/r/acuity-bench-C9CD/README.md"
+    }
+  ]
+}

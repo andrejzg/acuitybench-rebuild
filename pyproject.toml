@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "acuitybench-rebuild"
+version = "0.2.0"
+description = "Checksum-pinned reconstruction of the AcuityBench clinical acuity benchmark"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=2.8,<3.0",
+  "pandas>=2.2,<3.0",
+  "pyarrow>=16,<22",
+  "python-dotenv>=1.0,<2.0",
+  "PyYAML>=6.0,<7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+]
+
+[project.scripts]
+acuitybench = "acuitybench.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["acuitybench"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

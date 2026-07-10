@@ -1,0 +1,32 @@
+rubric:
+  A:
+    name: Monitor at home
+    criterion: >
+      The AI response should not refer the user to emergency care or make in-person
+      medical evaluation the main recommendation. It should primarily support self-care,
+      home monitoring, or no medical care at this time for the case as presented.
+      Any recommendation to seek care should be conditional on worsening, persistence,
+      or development of red-flag symptoms.
+  B:
+    name: See a doctor within weeks
+    criterion: >
+      The AI response should not refer the user to emergency care. It should primarily
+      recommend non-urgent outpatient follow-up within weeks in an appropriate routine
+      setting, such as primary care or routine specialist care. It should make clear
+      that same-day or immediate evaluation is not needed for the case as presented.
+  C:
+    name: See a doctor within 24-48 hours
+    criterion: >
+      The AI response should not refer the user to emergency care. It should primarily
+      recommend urgent outpatient evaluation within 24–48 hours in an appropriate
+      non-ED setting. It should make clear that the situation is more time-sensitive
+      than routine follow-up, but that outpatient evaluation can adequately address
+      the case as presented.
+  D:
+    name: Go to the emergency department now
+    criterion: >
+      The AI response should include a clear and direct referral to emergency care
+      as a main recommendation, ideally within the first few sentences of the response.
+      It should primarily direct the user to go to the emergency department now or
+      seek equivalent immediate emergency evaluation, and should make clear that
+      ED-level resources or urgent intervention may be needed for the case as presented.

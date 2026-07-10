@@ -1,0 +1,42 @@
+version: 1
+
+# Add another OpenAI model by copying one of these entries. The runner derives
+# cache identity from the complete entry, so configuration changes never reuse
+# stale responses. New providers need a small adapter in acuitybench/providers/.
+models:
+  gpt-5-mini:
+    display_name: GPT-5 mini
+    provider: openai
+    api_model: gpt-5-mini
+    endpoint: chat_completions
+    api_key_env: OPENAI_API_KEY
+    temperature: 1.0
+    # The authors' released adapter omitted temperature for gpt-5 models. The
+    # Chat Completions default is 1, matching the paper's stated setting.
+    send_temperature: false
+    max_output_tokens: 4096
+    token_parameter: max_completion_tokens
+    input_cost_per_million: 0.25
+    cached_input_cost_per_million: 0.025
+    output_cost_per_million: 2.00
+
+  gpt-4.1:
+    display_name: GPT-4.1
+    provider: openai
+    api_model: gpt-4.1
+    endpoint: chat_completions
+    api_key_env: OPENAI_API_KEY
+    temperature: 1.0
+    send_temperature: true
+    max_output_tokens: 4096
+    token_parameter: max_tokens
+    input_cost_per_million: 2.00
+    cached_input_cost_per_million: 0.50
+    output_cost_per_million: 8.00
+
+judges:
+  paper-gpt-4.1:
+    display_name: GPT-4.1 paper rubric judge
+    model: gpt-4.1
+    temperature: 0.0
+    max_output_tokens: 1024
