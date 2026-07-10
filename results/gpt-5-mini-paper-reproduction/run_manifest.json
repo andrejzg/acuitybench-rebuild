@@ -1,0 +1,143 @@
+{
+  "estimated_total_cost_usd": 36.420202399999994,
+  "generation_status": {
+    "expected": 9140,
+    "ok": 9140
+  },
+  "judge_status": {
+    "expected": 4570,
+    "ok": 4570
+  },
+  "paper_contract": {
+    "aggregation": "valid-label mode; ties resolve to higher acuity",
+    "all_527_cases_evaluable": true,
+    "evaluable_cases": {
+      "conv": 527,
+      "qa": 527
+    },
+    "full_contract_run": true,
+    "judge_id": "paper-gpt-4.1",
+    "main_table_expected_n": 527,
+    "main_table_filter": "split=primary and gold in A/B/C/D",
+    "parser": "first ACUITY\\s*[:\\-]\\s*([A-D]) match, case-insensitive",
+    "samples_per_case": 5
+  },
+  "physician_panel_distributional_metrics": [
+    {
+      "alpha_delta": -0.04986901902282592,
+      "baseline_human_alpha": 0.863404432777001,
+      "consensus_loo_change_rate_mean": 0.1982962962962963,
+      "consensus_loo_mean_delta_mean": 0.11929629629629629,
+      "jsd_mean": 0.18152887737828158,
+      "loo_alphas_per_slot": "[0.812602,0.815360,0.800896,0.816662,0.822157]",
+      "mean_loo_alpha": 0.813535413754175,
+      "model_id": "gpt-5-mini",
+      "n": 697,
+      "n_evaluable": 697,
+      "n_with_rater_labels": 450,
+      "rater_probability_mean": 0.5522592592592592,
+      "split": "primary",
+      "task_type": "qa",
+      "wasserstein_mean": 0.4990370370370371
+    },
+    {
+      "alpha_delta": -0.16650913100428322,
+      "baseline_human_alpha": 0.863404432777001,
+      "consensus_loo_change_rate_mean": 0.20792592592592593,
+      "consensus_loo_mean_delta_mean": 0.12946296296296297,
+      "jsd_mean": 0.2568693523531072,
+      "loo_alphas_per_slot": "[0.698205,0.700450,0.683856,0.698988,0.702977]",
+      "mean_loo_alpha": 0.6968953017727177,
+      "model_id": "gpt-5-mini",
+      "n": 697,
+      "n_evaluable": 697,
+      "n_with_rater_labels": 450,
+      "rater_probability_mean": 0.4543888888888889,
+      "split": "primary",
+      "task_type": "conv",
+      "wasserstein_mean": 0.736925925925926
+    },
+    {
+      "alpha_delta": 0.09737371766909117,
+      "baseline_human_alpha": 0.0409475028107642,
+      "consensus_loo_change_rate_mean": 0.3360215053763441,
+      "consensus_loo_mean_delta_mean": 0.296121351766513,
+      "jsd_mean": 0.254594909174553,
+      "loo_alphas_per_slot": "[0.108049,0.106053,0.135263,0.186859,0.155381]",
+      "mean_loo_alpha": 0.13832122047985537,
+      "model_id": "gpt-5-mini",
+      "n": 217,
+      "n_evaluable": 217,
+      "n_with_rater_labels": 217,
+      "rater_probability_mean": 0.38678955453149005,
+      "split": "ambiguous",
+      "task_type": "qa",
+      "wasserstein_mean": 0.8678187403993856
+    },
+    {
+      "alpha_delta": 0.03262999325839344,
+      "baseline_human_alpha": 0.0409475028107642,
+      "consensus_loo_change_rate_mean": 0.384331797235023,
+      "consensus_loo_mean_delta_mean": 0.35775729646697385,
+      "jsd_mean": 0.29115087698941383,
+      "loo_alphas_per_slot": "[0.046572,0.052209,0.054731,0.115721,0.098654]",
+      "mean_loo_alpha": 0.07357749606915764,
+      "model_id": "gpt-5-mini",
+      "n": 217,
+      "n_evaluable": 217,
+      "n_with_rater_labels": 217,
+      "rater_probability_mean": 0.3423195084485407,
+      "split": "ambiguous",
+      "task_type": "conv",
+      "wasserstein_mean": 1.0576036866359446
+    }
+  ],
+  "pricing_note": "Estimate from token usage and prices recorded in configs/models.yaml at report time.",
+  "report_complete": true,
+  "report_scope": "full 914-case benchmark",
+  "returned_judge_models": [
+    "gpt-4.1-2025-04-14"
+  ],
+  "returned_target_models": [
+    "gpt-5-mini-2025-08-07"
+  ],
+  "run": {
+    "api_model": "gpt-5-mini",
+    "benchmark_path": "/Users/agregoric/Documents/acuity bench/data/processed/acuitybench_transformed.csv",
+    "benchmark_sha256": "47010d1c7a27f97c4c5100929715e9a56d0cb5d6cde82f0e8441821defac5956",
+    "created_at": "2026-07-10T17:01:46.397119+00:00",
+    "expected_generations": 9140,
+    "manifest_fingerprint": "fa482bec9c0eeea7202fd618da840097afabd125b733c189eebf79c817a4b543",
+    "model_config": {
+      "api_key_env": "OPENAI_API_KEY",
+      "api_model": "gpt-5-mini",
+      "cached_input_cost_per_million": 0.025,
+      "display_name": "GPT-5 mini",
+      "endpoint": "chat_completions",
+      "id": "gpt-5-mini",
+      "input_cost_per_million": 0.25,
+      "max_output_tokens": 4096,
+      "output_cost_per_million": 2.0,
+      "provider": "openai",
+      "send_temperature": false,
+      "temperature": 1.0,
+      "token_parameter": "max_completion_tokens"
+    },
+    "model_id": "gpt-5-mini",
+    "provider": "openai",
+    "run_id": "gpt-5-mini-paper-reproduction",
+    "samples": 5,
+    "selected_cases": 914,
+    "selection": {
+      "case_ids_sha256": "42c5421784f526c4d963ba73d11af742fa705439174a574469a11e94842218aa",
+      "datasets": null,
+      "limit": null
+    },
+    "status": "complete",
+    "tasks": [
+      "qa",
+      "conv"
+    ],
+    "updated_at": "2026-07-10T17:25:13.692701+00:00"
+  }
+}

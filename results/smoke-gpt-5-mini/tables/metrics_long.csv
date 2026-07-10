@@ -1,0 +1,7 @@
+model_id,task_type,group_type,group_value,n_total,n_evaluable,n_all_invalid,invalid_samples,exact,over,under,within_1
+gpt-5-mini,conv,overall,all,2,2,0,0,1.0,0.0,0.0,1.0
+gpt-5-mini,conv,dataset,healthbench,2,2,0,0,1.0,0.0,0.0,1.0
+gpt-5-mini,conv,acuity,D,2,2,0,0,1.0,0.0,0.0,1.0
+gpt-5-mini,qa,overall,all,2,2,0,0,1.0,0.0,0.0,1.0
+gpt-5-mini,qa,dataset,healthbench,2,2,0,0,1.0,0.0,0.0,1.0
+gpt-5-mini,qa,acuity,D,2,2,0,0,1.0,0.0,0.0,1.0

@@ -8,13 +8,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 
-# Downloaded source snapshots and generated benchmark artifacts contain
-# third-party clinical text. Keep them local unless their licences are reviewed.
-data/cache/
-data/processed/*.csv
-data/processed/*.parquet
-data/processed/*.json
-!data/processed/README.md
-
-# API evaluation runs are resumable local artifacts and may contain model output.
-results/
+# SQLite sidecars are transient; the checkpointed database itself is tracked.
+results/*.sqlite3-wal
+results/*.sqlite3-shm

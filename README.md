@@ -4,6 +4,19 @@ This project reconstructs the 914-case AcuityBench benchmark from pinned public
 source snapshots and the authors' released anonymised physician annotations.
 Every download is checked against a SHA-256 digest before it is used.
 
+This private repository includes the pinned source snapshots, reconstructed
+benchmark and labels, and completed evaluation artifacts so a checkout is
+self-contained. See [Data, provenance, and licensing](#data-provenance-and-licensing)
+before changing repository visibility or redistributing files.
+
+Large data and result files use Git LFS. After cloning, install Git LFS and
+materialize the tracked objects:
+
+```bash
+git lfs install
+git lfs pull
+```
+
 ## Build
 
 Python 3.10 or newer is required. With `uv`:
@@ -21,6 +34,12 @@ acuitybench build
 
 The first build downloads roughly 45 MB into `data/cache/`. Later builds reuse
 the verified cache. Use `--refresh` to fetch all source files again.
+
+Because this repository includes the verified cache, an offline rebuild works:
+
+```bash
+uv run python -m acuitybench build --offline
+```
 
 ## Outputs
 
@@ -114,6 +133,35 @@ Model aliases are not immutable. The runner records both the requested alias
 and the exact model string returned by the API; a new run should be described
 as a fresh replication rather than assumed byte-for-byte identical to the
 authors' April 2026 run.
+
+## Data, provenance, and licensing
+
+The repository tracks all data used for the current reconstruction and run:
+
+- `data/cache/sources/`: byte-for-byte upstream snapshots.
+- `data/processed/`: reconstructed benchmark, transformed prompts, Parquet
+  output, and the build report.
+- `results/evaluations.sqlite3`: resumable sample-level generation and judge
+  records, including usage and latency metadata.
+- `results/gpt-5-mini-paper-reproduction/`: exported GPT-5-mini results and
+  paper-style tables.
+
+Provenance is retained at three levels:
+
+1. `sources.lock.json` records every upstream URL, immutable revision, SHA-256,
+   byte count, homepage, and known licence.
+2. `data/processed/build_report.json` records the source files actually used,
+   output hashes, annotation audit, and validation counts.
+3. Each evaluation `run_manifest.json` records the benchmark hash, complete
+   model configuration, returned model snapshots, call completeness, token
+   usage, pricing assumptions, and scoring contract.
+
+`ARTIFACTS.sha256` provides a repository-wide integrity inventory for committed
+data and result files. No API credentials or `.env` contents are tracked.
+
+Some inputs are CC BY-NC and the AcuityBench annotation release still lacks a
+final upstream licence. Keep the repository private and treat the data as
+non-commercial research material unless those terms change; see [NOTICE.md](NOTICE.md).
 
 ## What is reproduced
 
