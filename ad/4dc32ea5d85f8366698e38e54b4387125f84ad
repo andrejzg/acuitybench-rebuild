@@ -1,0 +1,38 @@
+acuitybench/plotting.py
+  s_3f5e58f5c753ff::t_4a2addaaa4073c 201,203,255
+  s_3f5e58f5c753ff::t_77061103b5db4a 13-19,98-100,102-109,185-187,199-200,202,206-211,224-225,231-232,242-254,292,294-295,297,299,321-325,328,452-453,455,467-468,470
+README.md
+  s_3f5e58f5c753ff::t_e84768b1d618c4 123-125
+results/smoke-comparison/accuracy-vs-latency.svg
+  s_3f5e58f5c753ff::t_75604c9bdf0845 2,4,6-7,9,12-17,19-55
+  s_3f5e58f5c753ff::t_f64f9dd4592097 8,10
+ARTIFACTS.sha256
+  s_3f5e58f5c753ff::t_f64f9dd4592097 18-19,109-110,118-119
+results/smoke-comparison/accuracy-vs-cost.svg
+  s_3f5e58f5c753ff::t_75604c9bdf0845 2,4,6-7,9,12-17,19-54
+  s_3f5e58f5c753ff::t_f64f9dd4592097 8,10
+tests/test_frontier_svg.py
+  s_3f5e58f5c753ff::t_a1e341b5141c61 8,86-88,91-94,96,110-123,224,236-297
+results/model-comparison/accuracy-vs-cost.svg
+  s_3f5e58f5c753ff::t_75604c9bdf0845 2,4,6-7,9,12-17,19-55
+  s_3f5e58f5c753ff::t_f64f9dd4592097 8,10
+results/model-comparison/accuracy-vs-latency.svg
+  s_3f5e58f5c753ff::t_75604c9bdf0845 2,4,6-7,9,12-17,19-56
+  s_3f5e58f5c753ff::t_f64f9dd4592097 8,10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "ad4dc32ea5d85f8366698e38e54b4387125f84ad",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
