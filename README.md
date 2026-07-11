@@ -120,7 +120,9 @@ latency, TTFT, and provider processing. It also writes two deterministic,
 accessible SVGs:
 `accuracy-vs-cost.svg` and `accuracy-vs-latency.svg`. A hollow diamond on the
 latency chart is a legacy provider-processing proxy, never a true client
-service-latency measurement or part of the Pareto line.
+service-latency measurement. Gray circles are the latest measured model runs;
+the green `Our trained model?` circle is deliberately aspirational and is not a
+measured result or a row in `frontier.csv`.
 
 The paper explicitly specifies temperature 1, five samples, and a maximum
 4,096 completion tokens, but it does not report reasoning effort or a separate
