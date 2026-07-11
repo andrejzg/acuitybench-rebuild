@@ -102,9 +102,17 @@ work. Use `acuitybench infer`, `acuitybench judge`, and `acuitybench report` to
 run those stages separately, `acuitybench runs` to inspect cached runs, or
 `acuitybench compare --run-ids <run-a> <run-b>` to build a cross-model table.
 The comparison output includes `frontier.csv`, with average exact accuracy,
-target-model cost per 1,000 tasks, task-specific latency, and explicitly
-labelled macro-averages of QA and conversational p50/p95 service latency, TTFT,
-and provider processing ready for the cost and latency frontier plots.
+target-model cost per 1,000 successful calls, task-specific latency, and
+explicitly labelled macro-averages of QA and conversational p50/p95 service
+latency, TTFT, and provider processing. It also writes two deterministic,
+accessible SVGs:
+`accuracy-vs-cost.svg` and `accuracy-vs-latency.svg`. A hollow diamond on the
+latency chart is a legacy provider-processing proxy, never a true client
+service-latency measurement or part of the Pareto line.
+
+![Average accuracy vs target-model cost](results/model-comparison/accuracy-vs-cost.svg)
+
+![Average accuracy vs latency](results/model-comparison/accuracy-vs-latency.svg)
 
 The historical paper-reproduction run above used the original non-streaming
 transport. New calls stream by default so true time to first visible token

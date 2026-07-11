@@ -15,6 +15,8 @@ This directory contains the complete local evaluation state and exports.
   and a self-contained `run_manifest.json`.
 - `smoke-gpt-5-mini/`: the two-case end-to-end validation run.
 - `model-comparison/` and `smoke-comparison/`: combined table exports.
+  Each comparison includes ready-to-view accuracy-vs-cost and
+  accuracy-vs-latency SVGs generated from `frontier.csv`.
 
 The full run has 9,140 successful target generations and 4,570 successful
 GPT-4.1 judgments. Its manifest records the requested aliases, returned model

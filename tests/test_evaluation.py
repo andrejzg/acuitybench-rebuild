@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sqlite3
 from dataclasses import replace
 from pathlib import Path
 
@@ -16,8 +17,10 @@ from acuitybench.distributional import (
 )
 from acuitybench.evaluation import (
     GenerationTask,
+    build_judge_prompt,
     extract_label,
     extract_reasoning,
+    load_judge_assets,
     prepare_run,
     run_inference_async,
     sha256_text,
@@ -366,7 +369,7 @@ def _manifest(
         "samples": samples,
         "selected_cases": selected_cases,
         "expected_generations": selected_cases * samples * len(tasks),
-        "selection": {"fixture": True},
+        "selection": {"fixture": True, "case_ids_sha256": "fixture-cases-sha"},
     }
 
 
@@ -445,7 +448,11 @@ def _judgment_row(
     generation: dict[str, object], *, judge_id: str, judge_label: str
 ) -> dict[str, object]:
     response = f"REASONING: fixture judge\nACUITY: {judge_label}"
-    prompt = "Synthetic judge prompt"
+    if generation["task_type"] == "conv":
+        rubric, template = load_judge_assets()
+        prompt = build_judge_prompt(generation, rubric, template)
+    else:
+        prompt = "Synthetic judge prompt"
     return {
         "run_id": generation["run_id"],
         "case_id": generation["case_id"],
@@ -605,6 +612,12 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
     assert report_manifest["report_complete"] is True
     assert report_manifest["generation_status"] == {"expected": 12, "ok": 12}
     assert report_manifest["judge_status"] == {"expected": 6, "ok": 6}
+    assert report_manifest["judge_config"]["fingerprint"] == (
+        ModelRegistry().get_judge(judge_id).fingerprint
+    )
+    assert len(report_manifest["judge_assets"]["fingerprint"]) == 64
+    assert len(report_manifest["judge_assets"]["rubric_sha256"]) == 64
+    assert len(report_manifest["judge_assets"]["template_sha256"]) == 64
     assert (destination / "exports/case_predictions.parquet").exists()
     assert (destination / "tables/usage_and_cost.csv").exists()
     assert (destination / "tables/latency_summary.csv").exists()
@@ -629,10 +642,30 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
     frontier = pd.read_csv(comparison / "frontier.csv")
     assert frontier.loc[0, "run_id"] == run_id
     assert frontier.loc[0, "average_exact"] == pytest.approx(0.5)
-    assert frontier.loc[0, "target_cost_per_1000_tasks_usd"] > 0
+    assert frontier.loc[0, "accuracy_complete"]
+    assert frontier.loc[0, "target_cost_per_1000_successful_calls_usd"] > 0
     assert frontier.loc[0, "service_latency_p95_macro_ms"] == pytest.approx(1.0)
     assert frontier.loc[0, "qa_service_latency_p95_ms"] == pytest.approx(1.0)
     assert frontier.loc[0, "conv_service_latency_p95_ms"] == pytest.approx(1.0)
+    assert frontier.loc[0, "latency_plot_p95_ms"] == pytest.approx(1.0)
+    assert frontier.loc[0, "latency_plot_source"] == "client_service_latency"
+    assert not frontier.loc[0, "latency_plot_is_proxy"]
     assert (comparison / "usage_and_cost.csv").exists()
     assert (comparison / "latency_summary.csv").exists()
     assert (comparison / "execution_summary.csv").exists()
+    assert (comparison / "accuracy-vs-cost.svg").exists()
+    assert (comparison / "accuracy-vs-latency.svg").exists()
+
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            "UPDATE judgments SET judge_prompt=?, judge_prompt_sha256=? "
+            "WHERE rowid=(SELECT rowid FROM judgments LIMIT 1)",
+            ("stale prompt", sha256_text("stale prompt")),
+        )
+    with pytest.raises(RuntimeError, match="stale rubric or judge prompt"):
+        generate_report(
+            run_id=run_id,
+            store_path=database,
+            output_root=tmp_path / "stale-reports",
+            judge_id=judge_id,
+        )

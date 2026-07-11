@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -10,9 +11,17 @@ from typing import Any, Iterable
 import pandas as pd
 
 from acuitybench.distributional import evaluate_panel_distribution
-from acuitybench.evaluation import default_store_path
+from acuitybench.evaluation import (
+    build_judge_prompt,
+    default_store_path,
+    extract_label,
+    extract_reasoning,
+    label_parser_contract,
+    load_judge_assets,
+    sha256_text,
+)
 from acuitybench.models import ModelConfig, ModelRegistry
-from acuitybench.sources import project_root
+from acuitybench.sources import project_root, sha256_file
 from acuitybench.store import EvaluationStore
 
 
@@ -22,6 +31,16 @@ PAPER_GPT5_MINI = {
     "qa": {"exact": 0.780, "over": 0.055, "under": 0.165},
     "conv": {"exact": 0.677, "over": 0.036, "under": 0.286},
 }
+
+
+def _json_fingerprint(value: Any) -> str:
+    encoded = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _mode_severe(values: Iterable[str | None]) -> str | None:
@@ -704,6 +723,8 @@ def generate_report(
     if generations.empty:
         raise ValueError(f"Run {run_id!r} has no generation results")
 
+    rubric, judge_template = load_judge_assets()
+
     # Make every flat export self-describing rather than requiring a DB join.
     generations.insert(1, "model_id", run["model_id"])
     generations.insert(2, "provider", run["provider"])
@@ -731,6 +752,57 @@ def generate_report(
                 "Stored conversational judgments are stale for the current judge "
                 "configuration or target responses. Rerun `acuitybench judge`."
             )
+        conv_generations = {
+            (row["dataset"], row["source_id"], row["sample_idx"]): row
+            for row in generation_rows
+            if row["task_type"] == "conv"
+        }
+        stale_prompts = 0
+        for judgment in judgment_rows:
+            key = (
+                judgment["dataset"],
+                judgment["source_id"],
+                judgment["sample_idx"],
+            )
+            generation = conv_generations.get(key)
+            if generation is None:
+                stale_prompts += 1
+                continue
+            expected_prompt = build_judge_prompt(
+                generation, rubric, judge_template
+            )
+            if (
+                judgment.get("judge_prompt") != expected_prompt
+                or judgment.get("judge_prompt_sha256")
+                != sha256_text(expected_prompt)
+            ):
+                stale_prompts += 1
+        if stale_prompts:
+            raise RuntimeError(
+                f"{stale_prompts} stored conversational judgments use a stale "
+                "rubric or judge prompt. Rerun `acuitybench judge`."
+            )
+
+    # Labels are report-time derivations of immutable raw responses. This pins
+    # every score to the parser contract recorded below, even for older rows.
+    def parsed_label(value: object) -> str | None:
+        return extract_label(value if isinstance(value, str) else None)
+
+    qa_mask = generations["task_type"] == "qa"
+    generations.loc[qa_mask, "parsed_label"] = generations.loc[
+        qa_mask, "response"
+    ].map(parsed_label)
+    generations.loc[qa_mask, "parse_ok"] = generations.loc[
+        qa_mask, "parsed_label"
+    ].notna().astype(int)
+    if not judgments.empty:
+        judgments["judge_label"] = judgments["response"].map(parsed_label)
+        judgments["judge_reasoning"] = judgments["response"].map(
+            lambda value: extract_reasoning(
+                value if isinstance(value, str) else None
+            )
+        )
+        judgments["parse_ok"] = judgments["judge_label"].notna().astype(int)
     expected_generations = run["expected_generations"]
     ok_generations = int((generations["status"] == "ok").sum())
     expected_judgments = (
@@ -881,6 +953,29 @@ def generate_report(
         not usage.empty and usage["cost_completeness"].eq("complete").all()
     )
     estimated_total_cost = float(usage["estimated_cost_usd"].sum())
+    returned_judge_models = sorted(
+        str(value)
+        for value in judgments.get(
+            "returned_model", pd.Series(dtype=str)
+        ).dropna().unique()
+    )
+    judge_config_manifest = {
+        "id": judge_profile.id,
+        "display_name": judge_profile.display_name,
+        "model": judge_profile.model.as_dict(),
+        "fingerprint": judge_profile.fingerprint,
+    }
+    rubric_path = project_root() / "configs/rubric.yaml"
+    judge_template_path = project_root() / "configs/prompts/judge_rubric.txt"
+    judge_assets_manifest = {
+        "rubric_path": str(rubric_path.relative_to(project_root())),
+        "rubric_sha256": sha256_file(rubric_path),
+        "template_path": str(judge_template_path.relative_to(project_root())),
+        "template_sha256": sha256_file(judge_template_path),
+    }
+    judge_assets_manifest["fingerprint"] = _json_fingerprint(
+        judge_assets_manifest
+    )
 
     manifest = {
         "run": run,
@@ -894,9 +989,9 @@ def generate_report(
         "returned_target_models": sorted(
             str(value) for value in generations["returned_model"].dropna().unique()
         ),
-        "returned_judge_models": sorted(
-            str(value) for value in judgments.get("returned_model", pd.Series(dtype=str)).dropna().unique()
-        ),
+        "returned_judge_models": returned_judge_models,
+        "judge_config": judge_config_manifest,
+        "judge_assets": judge_assets_manifest,
         "estimated_total_cost_usd": estimated_total_cost,
         "cost_completeness": (
             "complete" if cost_complete else "partial_usage_telemetry"
@@ -944,7 +1039,7 @@ def generate_report(
             "main_table_expected_n": 527 if scope.startswith("full") else None,
             "samples_per_case": run["samples"],
             "aggregation": "valid-label mode; ties resolve to higher acuity",
-            "parser": r"first ACUITY\s*[:\-]\s*([A-D]) match, case-insensitive",
+            "parser": label_parser_contract(),
             "judge_id": judge_id,
             "full_contract_run": full_contract,
             "evaluable_cases": table_evaluable,
@@ -1069,6 +1164,149 @@ def generate_report(
     return destination
 
 
+def _frontier_latency_value(
+    latency: pd.DataFrame,
+    *,
+    metric: str,
+    percentile: str,
+    task_type: str,
+    required_sources: set[str] | None = None,
+) -> float | None:
+    if latency.empty:
+        return None
+    selected = latency[
+        (latency["phase"] == "target")
+        & (latency["metric"] == metric)
+        & (latency["task_type"] == task_type)
+    ]
+    if len(selected) != 1:
+        return None
+    row = selected.iloc[0]
+    coverage = pd.to_numeric(
+        pd.Series([row.get("coverage")]), errors="coerce"
+    ).iloc[0]
+    n_success = pd.to_numeric(
+        pd.Series([row.get("n_success")]), errors="coerce"
+    ).iloc[0]
+    n_measured = pd.to_numeric(
+        pd.Series([row.get("n_measured")]), errors="coerce"
+    ).iloc[0]
+    if (
+        pd.isna(coverage)
+        or not math.isclose(float(coverage), 1.0)
+        or pd.isna(n_success)
+        or pd.isna(n_measured)
+        or int(n_success) <= 0
+        or int(n_measured) != int(n_success)
+    ):
+        return None
+    timing_sources = {
+        source.strip()
+        for source in str(row.get("timing_sources") or "").split(",")
+        if source.strip()
+    }
+    if required_sources is not None and (
+        not timing_sources or not timing_sources <= required_sources
+    ):
+        return None
+    value = pd.to_numeric(
+        pd.Series([row.get(percentile)]), errors="coerce"
+    ).iloc[0]
+    return float(value) if not pd.isna(value) else None
+
+
+def _frontier_latency_macro(
+    latency: pd.DataFrame,
+    *,
+    metric: str,
+    percentile: str,
+    required_sources: set[str] | None = None,
+) -> float | None:
+    qa_value = _frontier_latency_value(
+        latency,
+        metric=metric,
+        percentile=percentile,
+        task_type="qa",
+        required_sources=required_sources,
+    )
+    conv_value = _frontier_latency_value(
+        latency,
+        metric=metric,
+        percentile=percentile,
+        task_type="conv",
+        required_sources=required_sources,
+    )
+    if qa_value is None or conv_value is None:
+        return None
+    return (qa_value + conv_value) / 2
+
+
+def _comparison_contract(manifest: dict[str, Any]) -> dict[str, Any]:
+    run = manifest["run"]
+    paper = manifest["paper_contract"]
+    selection = run.get("selection", {})
+    judge_config = manifest.get("judge_config", {})
+    judge_assets = manifest.get("judge_assets", {})
+    contract = {
+        "benchmark_sha256": run.get("benchmark_sha256"),
+        "case_ids_sha256": selection.get("case_ids_sha256"),
+        "selected_cases": run.get("selected_cases"),
+        "tasks": tuple(sorted(run.get("tasks", []))),
+        "samples": run.get("samples"),
+        "expected_generations": run.get("expected_generations"),
+        "main_table_filter": paper.get("main_table_filter"),
+        "aggregation": paper.get("aggregation"),
+        "parser": paper.get("parser"),
+        "judge_id": paper.get("judge_id"),
+        "judge_config_fingerprint": judge_config.get("fingerprint"),
+        "judge_assets_fingerprint": judge_assets.get("fingerprint"),
+        "returned_judge_models": tuple(
+            sorted(manifest.get("returned_judge_models", []))
+        ),
+    }
+    required = {
+        "benchmark_sha256",
+        "case_ids_sha256",
+        "main_table_filter",
+        "aggregation",
+        "parser",
+        "judge_id",
+        "judge_config_fingerprint",
+        "judge_assets_fingerprint",
+    }
+    missing = sorted(key for key in required if not contract.get(key))
+    if missing:
+        raise ValueError(
+            "Run manifest lacks comparison-contract metadata; regenerate its "
+            f"report. Missing: {', '.join(missing)}"
+        )
+    if "conv" in contract["tasks"] and len(contract["returned_judge_models"]) != 1:
+        raise ValueError(
+            "Conversational comparison runs must record exactly one returned "
+            "judge model snapshot; regenerate or rerun the report."
+        )
+    return contract
+
+
+def _assert_comparable(
+    reference: dict[str, Any],
+    candidate: dict[str, Any],
+    *,
+    reference_run_id: str,
+    candidate_run_id: str,
+) -> None:
+    differences = [
+        key for key in reference if reference.get(key) != candidate.get(key)
+    ]
+    if differences:
+        raise ValueError(
+            "Comparison runs must share the same benchmark cohort, samples, "
+            "tasks, scoring parser, judge configuration/snapshot, and assets. "
+            f"{candidate_run_id!r} differs from {reference_run_id!r} in: "
+            f"{', '.join(differences)}"
+        )
+
+
 def combine_reports(
     *,
     run_ids: list[str],
@@ -1087,13 +1325,36 @@ def combine_reports(
     latency_frames: list[pd.DataFrame] = []
     execution_frames: list[pd.DataFrame] = []
     frontier_records: list[dict[str, Any]] = []
+    reference_contract: dict[str, Any] | None = None
+    reference_run_id: str | None = None
     for run_id in run_ids:
         report = root / run_id
         table_path = report / "tables/table2.csv"
         metrics_path = report / "tables/metrics_long.csv"
-        if not table_path.exists() or not metrics_path.exists():
+        manifest_path = report / "run_manifest.json"
+        if (
+            not table_path.exists()
+            or not metrics_path.exists()
+            or not manifest_path.exists()
+        ):
             raise FileNotFoundError(
                 f"Report files are missing for {run_id!r}; run `acuitybench report` first"
+            )
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not manifest.get("report_complete"):
+            raise ValueError(
+                f"Run {run_id!r} is incomplete and cannot be plotted as a frontier"
+            )
+        contract = _comparison_contract(manifest)
+        if reference_contract is None:
+            reference_contract = contract
+            reference_run_id = run_id
+        else:
+            _assert_comparable(
+                reference_contract,
+                contract,
+                reference_run_id=reference_run_id or run_ids[0],
+                candidate_run_id=run_id,
             )
         table = pd.read_csv(table_path, dtype=str)
         table.insert(0, "Run ID", run_id)
@@ -1115,34 +1376,45 @@ def combine_reports(
             optional_frames[filename] = (collection, frame)
 
         table_row = table.iloc[0]
-        exact_values = pd.to_numeric(
-            pd.Series([table_row.get("QA Exact"), table_row.get("Conv Exact")]),
-            errors="coerce",
-        ).dropna()
+        overall_metrics = metrics[
+            (metrics["group_type"] == "overall")
+            & metrics["task_type"].isin(["qa", "conv"])
+        ].copy()
+        overall_by_task = overall_metrics.set_index("task_type")
+        accuracy_complete = {"qa", "conv"} <= set(overall_by_task.index)
+        if accuracy_complete:
+            qa_n = int(overall_by_task.loc["qa", "n_evaluable"])
+            conv_n = int(overall_by_task.loc["conv", "n_evaluable"])
+            qa_total = int(overall_by_task.loc["qa", "n_total"])
+            conv_total = int(overall_by_task.loc["conv", "n_total"])
+            accuracy_complete = (
+                qa_n > 0
+                and conv_n > 0
+                and qa_n == qa_total
+                and conv_n == conv_total
+            )
+        else:
+            qa_n = conv_n = qa_total = conv_total = 0
+        qa_exact = (
+            float(overall_by_task.loc["qa", "exact"])
+            if accuracy_complete
+            else None
+        )
+        conv_exact = (
+            float(overall_by_task.loc["conv", "exact"])
+            if accuracy_complete
+            else None
+        )
+        average_exact = (
+            (qa_exact + conv_exact) / 2
+            if qa_exact is not None and conv_exact is not None
+            else None
+        )
         usage = optional_frames["usage_and_cost.csv"][1]
         latency = optional_frames["latency_summary.csv"][1]
         target_usage = (
             usage[usage["phase"] == "target"] if not usage.empty else usage
         )
-
-        def latency_value(
-            metric: str,
-            percentile: str,
-            task_type: str | None = None,
-        ) -> float | None:
-            if latency.empty:
-                return None
-            selected = latency[
-                (latency["phase"] == "target")
-                & (latency["metric"] == metric)
-            ]
-            if task_type is not None:
-                selected = selected[selected["task_type"] == task_type]
-            values = pd.to_numeric(
-                selected[percentile],
-                errors="coerce",
-            ).dropna()
-            return float(values.mean()) if not values.empty else None
 
         target_calls = (
             float(pd.to_numeric(target_usage["calls"], errors="coerce").sum())
@@ -1158,24 +1430,57 @@ def combine_reports(
             if not target_usage.empty
             else None
         )
+        cost_per_1000_calls = (
+            target_cost / target_calls * 1000
+            if target_cost is not None and target_calls > 0
+            else None
+        )
+        instrumented_sources = {
+            "instrumented_stream",
+            "instrumented_nonstream",
+        }
+        service_latency_p95 = _frontier_latency_macro(
+            latency,
+            metric="service_latency_ms",
+            percentile="p95_ms",
+            required_sources=instrumented_sources,
+        )
+        provider_processing_p95 = _frontier_latency_macro(
+            latency,
+            metric="server_processing_ms",
+            percentile="p95_ms",
+        )
+        legacy_provider_processing_p95 = _frontier_latency_macro(
+            latency,
+            metric="server_processing_ms",
+            percentile="p95_ms",
+            required_sources={"legacy_aggregate"},
+        )
+        latency_plot_p95 = (
+            service_latency_p95
+            if service_latency_p95 is not None
+            else legacy_provider_processing_p95
+        )
+        latency_plot_source = (
+            "client_service_latency"
+            if service_latency_p95 is not None
+            else "provider_processing_legacy_proxy"
+            if legacy_provider_processing_p95 is not None
+            else None
+        )
         frontier_records.append(
             {
                 "run_id": run_id,
                 "model": table_row.get("Model"),
-                "average_exact": (
-                    float(exact_values.mean()) if not exact_values.empty else None
-                ),
-                "qa_exact": pd.to_numeric(
-                    pd.Series([table_row.get("QA Exact")]), errors="coerce"
-                ).iloc[0],
-                "conv_exact": pd.to_numeric(
-                    pd.Series([table_row.get("Conv Exact")]), errors="coerce"
-                ).iloc[0],
-                "target_cost_per_1000_tasks_usd": (
-                    target_cost / target_calls * 1000
-                    if target_cost is not None and target_calls > 0
-                    else None
-                ),
+                "average_exact": average_exact,
+                "qa_exact": qa_exact,
+                "conv_exact": conv_exact,
+                "accuracy_complete": accuracy_complete,
+                "qa_n_evaluable": qa_n,
+                "conv_n_evaluable": conv_n,
+                "target_cost_per_1000_successful_calls_usd": cost_per_1000_calls,
+                # Compatibility alias retained for existing analysis notebooks.
+                "target_cost_per_1000_tasks_usd": cost_per_1000_calls,
                 "target_cost_completeness": (
                     ",".join(
                         sorted(
@@ -1187,26 +1492,61 @@ def combine_reports(
                     )
                     or None
                 ),
-                "service_latency_p50_macro_ms": latency_value(
-                    "service_latency_ms", "p50_ms"
+                "service_latency_p50_macro_ms": _frontier_latency_macro(
+                    latency,
+                    metric="service_latency_ms",
+                    percentile="p50_ms",
+                    required_sources=instrumented_sources,
                 ),
-                "service_latency_p95_macro_ms": latency_value(
-                    "service_latency_ms", "p95_ms"
+                "service_latency_p95_macro_ms": service_latency_p95,
+                "qa_service_latency_p95_ms": _frontier_latency_value(
+                    latency,
+                    metric="service_latency_ms",
+                    percentile="p95_ms",
+                    task_type="qa",
+                    required_sources=instrumented_sources,
                 ),
-                "qa_service_latency_p95_ms": latency_value(
-                    "service_latency_ms", "p95_ms", "qa"
+                "conv_service_latency_p95_ms": _frontier_latency_value(
+                    latency,
+                    metric="service_latency_ms",
+                    percentile="p95_ms",
+                    task_type="conv",
+                    required_sources=instrumented_sources,
                 ),
-                "conv_service_latency_p95_ms": latency_value(
-                    "service_latency_ms", "p95_ms", "conv"
+                "ttft_p50_macro_ms": _frontier_latency_macro(
+                    latency,
+                    metric="ttft_ms",
+                    percentile="p50_ms",
+                    required_sources={"instrumented_stream"},
                 ),
-                "ttft_p50_macro_ms": latency_value("ttft_ms", "p50_ms"),
-                "ttft_p95_macro_ms": latency_value("ttft_ms", "p95_ms"),
-                "qa_ttft_p95_ms": latency_value("ttft_ms", "p95_ms", "qa"),
-                "conv_ttft_p95_ms": latency_value(
-                    "ttft_ms", "p95_ms", "conv"
+                "ttft_p95_macro_ms": _frontier_latency_macro(
+                    latency,
+                    metric="ttft_ms",
+                    percentile="p95_ms",
+                    required_sources={"instrumented_stream"},
                 ),
-                "server_processing_p95_macro_ms": latency_value(
-                    "server_processing_ms", "p95_ms"
+                "qa_ttft_p95_ms": _frontier_latency_value(
+                    latency,
+                    metric="ttft_ms",
+                    percentile="p95_ms",
+                    task_type="qa",
+                    required_sources={"instrumented_stream"},
+                ),
+                "conv_ttft_p95_ms": _frontier_latency_value(
+                    latency,
+                    metric="ttft_ms",
+                    percentile="p95_ms",
+                    task_type="conv",
+                    required_sources={"instrumented_stream"},
+                ),
+                "server_processing_p95_macro_ms": provider_processing_p95,
+                "legacy_provider_processing_p95_macro_ms": (
+                    legacy_provider_processing_p95
+                ),
+                "latency_plot_p95_ms": latency_plot_p95,
+                "latency_plot_source": latency_plot_source,
+                "latency_plot_is_proxy": (
+                    latency_plot_source == "provider_processing_legacy_proxy"
                 ),
             }
         )
@@ -1226,5 +1566,9 @@ def combine_reports(
             pd.concat(frames, ignore_index=True).to_csv(
                 output / filename, index=False
             )
-    pd.DataFrame(frontier_records).to_csv(output / "frontier.csv", index=False)
+    frontier_path = output / "frontier.csv"
+    pd.DataFrame(frontier_records).to_csv(frontier_path, index=False)
+    from acuitybench.plotting import write_frontier_charts
+
+    write_frontier_charts(frontier_path, output)
     return output
