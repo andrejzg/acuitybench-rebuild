@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,9 @@ from typing import Any
 import yaml
 
 from acuitybench.sources import project_root
+
+
+_GPT_5_4_MODEL = re.compile(r"gpt-5\.4(?:-\d{4}-\d{2}-\d{2})?")
 
 
 @dataclass(frozen=True)
@@ -28,9 +32,24 @@ class ModelConfig:
     input_cost_per_million: float
     cached_input_cost_per_million: float
     output_cost_per_million: float
+    reasoning_effort: str | None = None
+    reasoning_effort_basis: str | None = None
+    service_tier: str | None = None
+    max_retry_output_tokens: int | None = None
 
     def as_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        # Keep historical fingerprints stable when newly supported request
+        # controls are absent from an older/non-reasoning model profile.
+        payload = asdict(self)
+        for key in (
+            "reasoning_effort",
+            "reasoning_effort_basis",
+            "service_tier",
+            "max_retry_output_tokens",
+        ):
+            if payload[key] is None:
+                payload.pop(key)
+        return payload
 
     @property
     def fingerprint(self) -> str:
@@ -91,11 +110,54 @@ class ModelRegistry:
             missing = required - set(values or {})
             if missing:
                 raise ValueError(f"Model {model_id!r} is missing: {sorted(missing)}")
+            reasoning_effort = values.get("reasoning_effort")
+            if reasoning_effort is not None:
+                reasoning_effort = str(reasoning_effort)
+                allowed_efforts = {
+                    "none",
+                    "minimal",
+                    "low",
+                    "medium",
+                    "high",
+                    "xhigh",
+                }
+                if reasoning_effort not in allowed_efforts:
+                    raise ValueError(
+                        f"Model {model_id!r} has unsupported reasoning_effort "
+                        f"{reasoning_effort!r}; expected one of "
+                        f"{sorted(allowed_efforts)}"
+                    )
+            api_model = str(values["api_model"])
+            send_temperature = bool(values.get("send_temperature", True))
+            if (
+                _GPT_5_4_MODEL.fullmatch(api_model)
+                and send_temperature
+                and reasoning_effort != "none"
+            ):
+                raise ValueError(
+                    f"Model {model_id!r} sends temperature to {api_model!r}, "
+                    "so reasoning_effort must be 'none' for current OpenAI "
+                    "API compatibility"
+                )
+            max_output_tokens = int(values["max_output_tokens"])
+            max_retry_output_tokens = (
+                None
+                if values.get("max_retry_output_tokens") is None
+                else int(values["max_retry_output_tokens"])
+            )
+            if (
+                max_retry_output_tokens is not None
+                and max_retry_output_tokens < max_output_tokens
+            ):
+                raise ValueError(
+                    f"Model {model_id!r} max_retry_output_tokens cannot be "
+                    "lower than max_output_tokens"
+                )
             models[model_id] = ModelConfig(
                 id=model_id,
                 display_name=str(values["display_name"]),
                 provider=str(values["provider"]),
-                api_model=str(values["api_model"]),
+                api_model=api_model,
                 endpoint=str(values["endpoint"]),
                 api_key_env=str(values["api_key_env"]),
                 temperature=(
@@ -103,14 +165,26 @@ class ModelRegistry:
                     if values.get("temperature") is None
                     else float(values["temperature"])
                 ),
-                send_temperature=bool(values.get("send_temperature", True)),
-                max_output_tokens=int(values["max_output_tokens"]),
+                send_temperature=send_temperature,
+                max_output_tokens=max_output_tokens,
                 token_parameter=str(values["token_parameter"]),
                 input_cost_per_million=float(values["input_cost_per_million"]),
                 cached_input_cost_per_million=float(
                     values["cached_input_cost_per_million"]
                 ),
                 output_cost_per_million=float(values["output_cost_per_million"]),
+                reasoning_effort=reasoning_effort,
+                reasoning_effort_basis=(
+                    None
+                    if values.get("reasoning_effort_basis") is None
+                    else str(values["reasoning_effort_basis"])
+                ),
+                service_tier=(
+                    None
+                    if values.get("service_tier") is None
+                    else str(values["service_tier"])
+                ),
+                max_retry_output_tokens=max_retry_output_tokens,
             )
         return models
 

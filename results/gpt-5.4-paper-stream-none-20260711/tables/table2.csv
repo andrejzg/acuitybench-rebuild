@@ -1,0 +1,2 @@
+Model,Scope,QA N,QA Exact,QA Over,QA Under,Conv N,Conv Exact,Conv Over,Conv Under
+gpt-5.4,full 914-case benchmark,527,0.767,0.152,0.082,527,0.780,0.036,0.184

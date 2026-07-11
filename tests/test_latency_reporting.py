@@ -7,13 +7,28 @@ import pytest
 
 from acuitybench.models import ModelRegistry
 from acuitybench.reporting import (
+    PAPER_TARGET_API_IDENTIFIERS,
     _assert_comparable,
+    _assert_latency_profiles_comparable,
     _comparison_contract,
+    _effective_retry_completion_cap,
     _execution_summary,
     _frontier_latency_macro,
     _latency_summary,
+    _returned_service_tier_provenance,
+    _successful_generation_latency_profile,
     _usage_summary,
+    _validated_client_latency_profile,
+    _verified_reasoning_total,
 )
+
+
+def test_paper_api_identifiers_are_pinned_independently_of_run_aliases() -> None:
+    assert PAPER_TARGET_API_IDENTIFIERS == {
+        "gpt-5-mini": "gpt-5-mini",
+        "gpt-5.4": "gpt-5.4",
+        "gpt-4.1": "gpt-4.1",
+    }
 
 
 def test_latency_summary_uses_explicit_linear_percentiles_and_coverage() -> None:
@@ -175,6 +190,10 @@ def test_usage_summary_counts_all_attempts_and_flags_missing_usage() -> None:
     assert target["usage_records_complete"] == 2
     assert target["missing_usage_records"] == 1
     assert target["usage_coverage"] == pytest.approx(2 / 3)
+    assert target["reasoning_token_coverage"] == pytest.approx(2 / 3)
+    assert pd.isna(target["reasoning_tokens"])
+    assert target["reasoning_tokens_observed"] == 1
+    assert pd.isna(target["reasoning_tokens_per_successful_call"])
     assert target["cost_completeness"] == (
         "partial_missing_usage_or_cache_breakdown"
     )
@@ -240,6 +259,9 @@ def test_cost_completeness_requires_cache_breakdown_and_post_dispatch_usage() ->
     assert row["missing_cache_breakdown_records"] == 2
     assert row["usage_coverage"] == 0.5
     assert row["cache_breakdown_coverage"] == 0
+    assert row["reasoning_token_coverage"] == 0.5
+    assert pd.isna(row["reasoning_tokens"])
+    assert row["reasoning_tokens_observed"] == 0
     assert row["cost_completeness"] == (
         "partial_missing_usage_or_cache_breakdown"
     )
@@ -351,6 +373,170 @@ def test_judge_usage_is_profile_scoped_even_without_parent_rows() -> None:
     assert row["returned_models"] == "gpt-4.1-snapshot"
 
 
+def test_latency_profile_comes_only_from_successful_parent_execution_ids() -> None:
+    generations = pd.DataFrame(
+        [
+            {"status": "ok", "latest_execution_id": "used-a"},
+            {"status": "ok", "latest_execution_id": "used-b"},
+            {"status": "failed", "latest_execution_id": "unused"},
+        ]
+    )
+    executions = pd.DataFrame(
+        [
+            {
+                "execution_id": "used-a",
+                "phase": "generation",
+                "streaming": 1,
+                "configured_concurrency": 20,
+            },
+            {
+                "execution_id": "used-b",
+                "phase": "generation",
+                "streaming": 1,
+                "configured_concurrency": 20,
+            },
+            {
+                "execution_id": "unused",
+                "phase": "generation",
+                "streaming": 0,
+                "configured_concurrency": 1,
+            },
+            {
+                "execution_id": "judge",
+                "phase": "judge",
+                "streaming": 0,
+                "configured_concurrency": 99,
+            },
+        ]
+    )
+
+    profile = _successful_generation_latency_profile(generations, executions)
+
+    assert profile == {
+        "source": "successful_generation_latest_execution_id",
+        "successful_generation_count": 2,
+        "profiled_successful_generation_count": 2,
+        "execution_profile_coverage": 1.0,
+        "streaming_values": [True],
+        "concurrency_values": [20],
+    }
+
+    executions.loc[executions["execution_id"] == "used-b", "streaming"] = 0
+    executions.loc[
+        executions["execution_id"] == "used-b", "configured_concurrency"
+    ] = 10
+    mixed = _successful_generation_latency_profile(generations, executions)
+    assert mixed["streaming_values"] == [False, True]
+    assert mixed["concurrency_values"] == [10, 20]
+
+
+def test_returned_service_tier_provenance_is_success_scoped_and_covered() -> None:
+    generations = pd.DataFrame(
+        [
+            {
+                "status": "ok",
+                "provider_metadata_json": json.dumps(
+                    {"returned_service_tier": "default"}
+                ),
+            },
+            {
+                "status": "ok",
+                "provider_metadata_json": "{}",
+            },
+            {
+                "status": "failed",
+                "provider_metadata_json": json.dumps(
+                    {"returned_service_tier": "priority"}
+                ),
+            },
+        ]
+    )
+
+    provenance = _returned_service_tier_provenance(generations)
+
+    assert provenance["returned_service_tiers"] == ["default"]
+    assert provenance["returned_service_tier_records"] == 1
+    assert provenance["returned_service_tier_coverage"] == 0.5
+
+
+def test_reasoning_total_distinguishes_verified_zero_from_missing() -> None:
+    assert _verified_reasoning_total(
+        pd.DataFrame(
+            [{"reasoning_token_coverage": 1.0, "reasoning_tokens": 0}]
+        )
+    ) == (0.0, 1.0)
+    assert _verified_reasoning_total(
+        pd.DataFrame(
+            [{"reasoning_token_coverage": 0.5, "reasoning_tokens": 12}]
+        )
+    ) == (None, 0.5)
+    assert _verified_reasoning_total(
+        pd.DataFrame([{"reasoning_tokens": 0}])
+    ) == (None, None)
+
+
+def test_retry_completion_cap_preserves_legacy_runner_default() -> None:
+    assert _effective_retry_completion_cap({}, {}) == (
+        8192,
+        "legacy_runner_default",
+    )
+    assert _effective_retry_completion_cap(
+        {}, {"max_retry_output_tokens": 4096}
+    ) == (4096, "run_model_config")
+    assert _effective_retry_completion_cap(
+        {"max_retry_completion_tokens": 2048},
+        {"max_retry_output_tokens": 4096},
+    ) == (2048, "inference_contract")
+
+
+def test_client_latency_profile_requires_complete_singleton_provenance() -> None:
+    valid = {
+        "run_id": "valid",
+        "streaming_values": (True,),
+        "concurrency_values": (20,),
+        "execution_profile_coverage": 1.0,
+        "configured_service_tier": "default",
+        "returned_service_tiers": ("default",),
+        "returned_service_tier_coverage": 1.0,
+    }
+    assert _validated_client_latency_profile(**valid) == (True, 20, "default")
+
+    invalid_cases = [
+        ({"streaming_values": ()}, "streaming mode"),
+        ({"streaming_values": (True, False)}, "streaming mode"),
+        ({"concurrency_values": ()}, "configured concurrency"),
+        ({"concurrency_values": (20, 40)}, "configured concurrency"),
+        ({"execution_profile_coverage": 0.99}, "execution-profile coverage"),
+        ({"configured_service_tier": None}, "configured service tier"),
+        ({"returned_service_tiers": ()}, "returned service tier"),
+        (
+            {"returned_service_tier_coverage": 0.5},
+            "service-tier coverage",
+        ),
+        (
+            {"returned_service_tiers": ("priority",)},
+            "configured and returned service tiers",
+        ),
+    ]
+    for changes, message in invalid_cases:
+        candidate = {**valid, **changes, "run_id": message}
+        with pytest.raises(ValueError, match=message):
+            _validated_client_latency_profile(**candidate)
+
+
+def test_client_latency_profiles_must_match_across_runs() -> None:
+    _assert_latency_profiles_comparable(
+        {"mini": (True, 20, "default"), "frontier": (True, 20, "default")}
+    )
+    with pytest.raises(ValueError, match="share streaming mode"):
+        _assert_latency_profiles_comparable(
+            {
+                "mini": (True, 20, "default"),
+                "frontier": (True, 40, "default"),
+            }
+        )
+
+
 def test_frontier_latency_requires_full_two_format_coverage_and_valid_source() -> None:
     latency = pd.DataFrame(
         [
@@ -388,6 +574,16 @@ def test_frontier_latency_requires_full_two_format_coverage_and_valid_source() -
         metric="service_latency_ms",
         percentile="p95_ms",
         required_sources={"legacy_aggregate"},
+    ) is None
+
+    latency.loc[:, "timing_sources"] = (
+        "instrumented_stream,instrumented_nonstream"
+    )
+    assert _frontier_latency_macro(
+        latency,
+        metric="service_latency_ms",
+        percentile="p95_ms",
+        required_sources={"instrumented_stream", "instrumented_nonstream"},
     ) is None
 
 

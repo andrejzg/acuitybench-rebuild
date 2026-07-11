@@ -15,10 +15,40 @@ models:
     # Chat Completions default is 1, matching the paper's stated setting.
     send_temperature: false
     max_output_tokens: 4096
+    # The paper does not state reasoning effort. Its public adapter omitted the
+    # parameter; medium was the documented GPT-5-family default and is
+    # corroborated by the released run's non-zero reasoning-token usage. Pin it
+    # explicitly so future alias-default changes cannot alter this rerun.
+    reasoning_effort: medium
+    reasoning_effort_basis: paper_unreported_resolved_to_documented_provider_default
+    # Table 8 states a hard 4,096 completion-token maximum. Never use the
+    # runner's legacy length-retry expansion to 8,192 for this profile.
+    max_retry_output_tokens: 4096
+    service_tier: default
     token_parameter: max_completion_tokens
     input_cost_per_million: 0.25
     cached_input_cost_per_million: 0.025
     output_cost_per_million: 2.00
+
+  gpt-5.4:
+    display_name: GPT-5.4
+    provider: openai
+    api_model: gpt-5.4
+    endpoint: chat_completions
+    api_key_env: OPENAI_API_KEY
+    temperature: 1.0
+    # GPT-5.4 accepts temperature only with reasoning effort none. The paper
+    # does not report effort; none is the documented provider default.
+    send_temperature: true
+    max_output_tokens: 4096
+    reasoning_effort: none
+    reasoning_effort_basis: paper_unreported_resolved_to_documented_provider_default
+    max_retry_output_tokens: 4096
+    service_tier: default
+    token_parameter: max_completion_tokens
+    input_cost_per_million: 2.50
+    cached_input_cost_per_million: 0.25
+    output_cost_per_million: 15.00
 
   gpt-4.1:
     display_name: GPT-4.1

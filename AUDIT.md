@@ -77,3 +77,27 @@ retain legacy totals under `total_duration_ms` and leave unrecoverable fields
 null rather than estimating them. Billing summaries sum every tracked attempt,
 including length retries, and expose usage coverage whenever a terminated
 stream did not deliver final token accounting.
+
+## Paired July 2026 latency run
+
+The paired GPT-5-mini and GPT-5.4 runs deliberately diverge from the paper's
+transport so TTFT can be measured: both stream at concurrency 20 on the
+`default` service tier. The paper reports no concurrency; it does not report
+streaming or service tier, while its public adapter is non-streaming. The
+manifests keep those reconstruction choices separate from paper-reported
+temperature 1, five samples per case and format, and the 4,096 completion-token
+maximum.
+
+The paper does not report reasoning effort or a separate reasoning-token
+budget. The reruns explicitly pin GPT-5-mini to `medium` and GPT-5.4 to `none`,
+record the documentation source and access date, and treat 4,096 as the shared
+hidden-reasoning-plus-visible-output cap. Observed reasoning-token telemetry is
+complete: 5,429,450 billed target tokens for mini and verified zero for GPT-5.4.
+
+Three mini conversational calls in the first invocation ended at the 4,096
+cap while an older in-memory runner path still treated non-empty truncations as
+failures. The corrected resume retained capped non-empty output as evaluable
+without increasing the cap. The final run contains 9,140 successful logical
+targets and 9,143 billed target attempts; the three superseded attempts added
+$0.0248265. Attempt exports preserve the full history, while latency summaries
+use each successful parent row's linked execution.

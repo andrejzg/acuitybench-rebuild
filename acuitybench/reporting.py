@@ -31,6 +31,49 @@ PAPER_GPT5_MINI = {
     "qa": {"exact": 0.780, "over": 0.055, "under": 0.165},
     "conv": {"exact": 0.677, "over": 0.036, "under": 0.286},
 }
+PAPER_GPT5_4 = {
+    "qa": {"exact": 0.772, "over": 0.142, "under": 0.085},
+    "conv": {"exact": 0.772, "over": 0.049, "under": 0.178},
+}
+PAPER_MODEL_RESULTS = {
+    "gpt-5-mini": PAPER_GPT5_MINI,
+    "gpt-5.4": PAPER_GPT5_4,
+}
+PAPER_BASELINE_PROVENANCE = {
+    "arxiv_id": "2605.11398",
+    "source_url": "https://arxiv.org/pdf/2605.11398",
+    "table": "Table 2, printed page 5",
+    "published_decimal_places": 3,
+    "accessed_at": "2026-07-11",
+    "delta_definition": "fresh_run - published",
+}
+PAPER_TARGET_API_IDENTIFIERS = {
+    # Keep paper provenance independent from the configured request alias. A
+    # report must not make an arbitrary configured model look paper-reported.
+    "gpt-5-mini": "gpt-5-mini",
+    "gpt-5.4": "gpt-5.4",
+    "gpt-4.1": "gpt-4.1",
+}
+REASONING_EFFORT_PROVENANCE = {
+    "gpt-5-mini": {
+        "source_url": "https://developers.openai.com/api/docs/guides/reasoning",
+        "accessed_at": "2026-07-11",
+        "resolution": (
+            "The paper and companion adapter omitted reasoning effort. The "
+            "pre-GPT-5.1 documented default was medium, so this reconstruction "
+            "pins medium rather than relying on a mutable alias default."
+        ),
+    },
+    "gpt-5.4": {
+        "source_url": "https://developers.openai.com/api/docs/models/gpt-5.4",
+        "accessed_at": "2026-07-11",
+        "resolution": (
+            "The paper omitted reasoning effort. The GPT-5.4 model page "
+            "documents none as the default, and temperature is supported only "
+            "at none, so this reconstruction pins none."
+        ),
+    },
+}
 
 
 def _json_fingerprint(value: Any) -> str:
@@ -41,6 +84,120 @@ def _json_fingerprint(value: Any) -> str:
         ensure_ascii=False,
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def _successful_generation_latency_profile(
+    generations: pd.DataFrame,
+    executions: pd.DataFrame,
+) -> dict[str, Any]:
+    """Resolve transport provenance from the rows that supply latency values."""
+    successful = (
+        generations[generations["status"] == "ok"].copy()
+        if not generations.empty and "status" in generations
+        else pd.DataFrame()
+    )
+    successful_count = len(successful)
+    if successful_count == 0:
+        return {
+            "source": "successful_generation_latest_execution_id",
+            "successful_generation_count": 0,
+            "profiled_successful_generation_count": 0,
+            "execution_profile_coverage": None,
+            "streaming_values": [],
+            "concurrency_values": [],
+        }
+
+    target_executions = (
+        executions[executions["phase"] == "generation"].copy()
+        if not executions.empty
+        and {"phase", "execution_id"} <= set(executions.columns)
+        else pd.DataFrame()
+    )
+    known_execution_ids = set(
+        target_executions.get("execution_id", pd.Series(dtype=object))
+        .dropna()
+        .astype(str)
+    )
+    latest_execution_ids = successful.get(
+        "latest_execution_id", pd.Series(index=successful.index, dtype=object)
+    )
+    linked = latest_execution_ids.notna() & latest_execution_ids.astype(str).isin(
+        known_execution_ids
+    )
+    profiled_count = int(linked.sum())
+    selected_ids = set(latest_execution_ids[linked].astype(str))
+    selected_executions = (
+        target_executions[
+            target_executions["execution_id"].astype(str).isin(selected_ids)
+        ]
+        if selected_ids
+        else pd.DataFrame()
+    )
+    raw_streaming_values = {
+        int(value)
+        for value in pd.to_numeric(
+            selected_executions.get("streaming", pd.Series(dtype=float)),
+            errors="coerce",
+        ).dropna()
+    }
+    streaming_values = [
+        bool(value) if value in (0, 1) else value
+        for value in sorted(raw_streaming_values)
+    ]
+    concurrency_values = sorted(
+        {
+            int(value)
+            for value in pd.to_numeric(
+                selected_executions.get(
+                    "configured_concurrency", pd.Series(dtype=float)
+                ),
+                errors="coerce",
+            ).dropna()
+        }
+    )
+    return {
+        "source": "successful_generation_latest_execution_id",
+        "successful_generation_count": successful_count,
+        "profiled_successful_generation_count": profiled_count,
+        "execution_profile_coverage": profiled_count / successful_count,
+        "streaming_values": streaming_values,
+        "concurrency_values": concurrency_values,
+    }
+
+
+def _returned_service_tier_provenance(
+    generations: pd.DataFrame,
+) -> dict[str, Any]:
+    """Return service tiers observed on successful target generations only."""
+    successful = (
+        generations[generations["status"] == "ok"]
+        if not generations.empty and "status" in generations
+        else pd.DataFrame()
+    )
+    successful_count = len(successful)
+    returned_tiers: set[str] = set()
+    measured = 0
+    for raw_metadata in successful.get(
+        "provider_metadata_json", pd.Series(dtype=object)
+    ).dropna():
+        try:
+            metadata = json.loads(str(raw_metadata))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+        if not isinstance(metadata, dict):
+            continue
+        returned_tier = metadata.get("returned_service_tier")
+        if returned_tier is None or not str(returned_tier).strip():
+            continue
+        returned_tiers.add(str(returned_tier).strip())
+        measured += 1
+    return {
+        "returned_service_tiers": sorted(returned_tiers),
+        "returned_service_tier_records": measured,
+        "returned_service_tier_coverage": (
+            measured / successful_count if successful_count else None
+        ),
+    }
 
 
 def _mode_severe(values: Iterable[str | None]) -> str | None:
@@ -345,6 +502,9 @@ def _usage_summary(
         cache_complete_usage = expected_usage[
             expected_usage["cache_breakdown_complete"]
         ]
+        reasoning_complete_usage = expected_usage[
+            expected_usage["reasoning_tokens"].notna()
+        ]
         input_tokens = int(
             pd.to_numeric(usage_rows["input_tokens"], errors="coerce")
             .fillna(0)
@@ -360,10 +520,21 @@ def _usage_summary(
             .fillna(0)
             .sum()
         )
-        reasoning_tokens = int(
+        reasoning_tokens_observed = int(
             pd.to_numeric(usage_rows["reasoning_tokens"], errors="coerce")
             .fillna(0)
             .sum()
+        )
+        reasoning_token_coverage = (
+            len(reasoning_complete_usage) / len(expected_usage)
+            if len(expected_usage)
+            else None
+        )
+        reasoning_tokens = (
+            reasoning_tokens_observed
+            if reasoning_token_coverage is not None
+            and math.isclose(reasoning_token_coverage, 1.0)
+            else None
         )
         uncached_tokens = max(input_tokens - cached_tokens, 0)
         cost = (
@@ -380,16 +551,24 @@ def _usage_summary(
             ],
             ignore_index=True,
         )
+        successful_calls = int(
+            frame.get("status", pd.Series(dtype=object)).eq("ok").sum()
+        )
         records.append(
             {
                 "phase": phase,
                 "configured_model": config.api_model,
+                "reasoning_effort": config.reasoning_effort,
+                "reasoning_effort_basis": config.reasoning_effort_basis,
+                "service_tier": config.service_tier,
+                "max_output_tokens": config.max_output_tokens,
+                "max_retry_output_tokens": (
+                    config.max_retry_output_tokens or 8192
+                ),
                 "returned_models": ",".join(
                     sorted(str(value) for value in returned_models.dropna().unique())
                 ),
-                "calls": int(
-                    frame.get("status", pd.Series(dtype=object)).eq("ok").sum()
-                ),
+                "calls": successful_calls,
                 "attempts_tracked": len(phase_attempts),
                 "legacy_parent_records": len(legacy_parents),
                 "usage_records_expected": len(expected_usage),
@@ -410,6 +589,7 @@ def _usage_summary(
                     if len(expected_usage)
                     else None
                 ),
+                "reasoning_token_coverage": reasoning_token_coverage,
                 "cost_completeness": (
                     "complete"
                     if len(complete_usage) == len(expected_usage)
@@ -420,6 +600,12 @@ def _usage_summary(
                 "cached_input_tokens": cached_tokens,
                 "output_tokens": output_tokens,
                 "reasoning_tokens": reasoning_tokens,
+                "reasoning_tokens_observed": reasoning_tokens_observed,
+                "reasoning_tokens_per_successful_call": (
+                    reasoning_tokens / successful_calls
+                    if reasoning_tokens is not None and successful_calls
+                    else None
+                ),
                 "estimated_cost_usd": cost,
                 "input_cost_per_million": config.input_cost_per_million,
                 "cached_input_cost_per_million": config.cached_input_cost_per_million,
@@ -663,12 +849,21 @@ def _confusion(case_predictions: pd.DataFrame, task: str) -> pd.DataFrame:
     )
 
 
+def _is_paper_comparable_run(run: dict[str, Any]) -> bool:
+    return (
+        run.get("selected_cases") == 914
+        and run.get("samples") == 5
+        and set(run.get("tasks", [])) == {"qa", "conv"}
+    )
+
+
 def _paper_comparison(run: dict[str, Any], metrics: pd.DataFrame) -> pd.DataFrame:
-    if run["model_id"] != "gpt-5-mini":
+    published_results = PAPER_MODEL_RESULTS.get(run["model_id"])
+    if published_results is None or not _is_paper_comparable_run(run):
         return pd.DataFrame()
     overall = metrics[metrics["group_type"] == "overall"].set_index("task_type")
     records = []
-    for task, published in PAPER_GPT5_MINI.items():
+    for task, published in published_results.items():
         if task not in overall.index:
             continue
         for metric, paper_value in published.items():
@@ -889,11 +1084,7 @@ def generate_report(
         for task in ("qa", "conv")
         if task in overall.index
     }
-    full_contract = (
-        run["selected_cases"] == 914
-        and run["samples"] == 5
-        and set(run["tasks"]) == {"qa", "conv"}
-    )
+    full_contract = _is_paper_comparable_run(run)
     if full_contract:
         totals = {
             task: int(overall.loc[task, "n_total"])
@@ -924,8 +1115,11 @@ def generate_report(
     latency.to_csv(tables / "latency_summary.csv", index=False)
     execution_summary.to_csv(tables / "execution_summary.csv", index=False)
     distributional.to_csv(tables / "distributional_metrics.csv", index=False)
+    published_comparison_path = tables / "published_comparison.csv"
     if not comparison.empty:
-        comparison.to_csv(tables / "published_comparison.csv", index=False)
+        comparison.to_csv(published_comparison_path, index=False)
+    else:
+        published_comparison_path.unlink(missing_ok=True)
     for task in run["tasks"]:
         _confusion(case_predictions, task).to_csv(
             tables / f"confusion_{task}.csv"
@@ -976,6 +1170,87 @@ def generate_report(
     judge_assets_manifest["fingerprint"] = _json_fingerprint(
         judge_assets_manifest
     )
+    latency_profile = _successful_generation_latency_profile(
+        generations, executions
+    )
+    execution_concurrency = latency_profile["concurrency_values"]
+    execution_streaming = latency_profile["streaming_values"]
+    service_tier_provenance = _returned_service_tier_provenance(generations)
+    transport_differences: list[str] = []
+    if execution_streaming and execution_streaming != [False]:
+        transport_differences.append(
+            "streaming enabled to measure TTFT; companion paper adapter was non-streaming"
+        )
+    if execution_concurrency and execution_concurrency != [1]:
+        transport_differences.append(
+            "concurrent execution used for practical runtime; paper reports no concurrency"
+        )
+    if target_config.service_tier is not None:
+        transport_differences.append(
+            f"service tier explicitly pinned to {target_config.service_tier!r}; "
+            "the paper did not report service tier"
+        )
+    paper_api_identifier = PAPER_TARGET_API_IDENTIFIERS.get(run["model_id"])
+    inference_contract = {
+        "paper_reported": {
+            "api_identifier": paper_api_identifier,
+            "api_identifier_source": (
+                "pinned_project_paper_contract"
+                if paper_api_identifier is not None
+                else "no_paper_identifier_pinned_for_model"
+            ),
+            "samples_per_case_per_format": 5,
+            "temperature": 1.0,
+            "max_completion_tokens": 4096,
+            "reasoning_effort": None,
+            "reasoning_effort_note": (
+                "Not reported by the paper; 4096 is the combined completion "
+                "cap, not a separate reasoning-token budget."
+            ),
+            "service_tier": None,
+            "service_tier_note": (
+                "Not reported by the paper; the public companion adapter "
+                "omitted the service-tier parameter."
+            ),
+            "streaming": None,
+            "streaming_note": (
+                "Not reported by the paper; the public companion adapter was "
+                "non-streaming."
+            ),
+            "concurrency": 1,
+            "concurrency_note": (
+                "Appendix C reports no concurrency or distributed computation."
+            ),
+        },
+        "configured": {
+            "api_identifier": target_config.api_model,
+            "endpoint": target_config.endpoint,
+            "samples_per_case_per_format": run["samples"],
+            "temperature": target_config.temperature,
+            "temperature_parameter_sent": target_config.send_temperature,
+            "max_completion_tokens": target_config.max_output_tokens,
+            "max_retry_completion_tokens": (
+                target_config.max_retry_output_tokens or 8192
+            ),
+            "reasoning_effort": target_config.reasoning_effort,
+            "reasoning_effort_basis": target_config.reasoning_effort_basis,
+            "reasoning_effort_provenance": REASONING_EFFORT_PROVENANCE.get(
+                run["model_id"]
+            ),
+            "service_tier": target_config.service_tier,
+            "streaming_values": execution_streaming,
+            "concurrency_values": execution_concurrency,
+        },
+        "observed": {
+            "returned_models": sorted(
+                str(value)
+                for value in generations["returned_model"].dropna().unique()
+            ),
+            **latency_profile,
+            **service_tier_provenance,
+        },
+        "transport_differences_from_paper": transport_differences,
+    }
 
     manifest = {
         "run": run,
@@ -992,6 +1267,18 @@ def generate_report(
         "returned_judge_models": returned_judge_models,
         "judge_config": judge_config_manifest,
         "judge_assets": judge_assets_manifest,
+        "inference_contract": inference_contract,
+        "paper_baseline": {
+            **PAPER_BASELINE_PROVENANCE,
+            "model_id": run["model_id"],
+            "published_values": PAPER_MODEL_RESULTS.get(run["model_id"]),
+            "applicable_to_run": not comparison.empty,
+            "inapplicable_reason": (
+                None
+                if not comparison.empty
+                else "run is not the complete 914-case, five-sample, two-format contract or has no pinned paper baseline"
+            ),
+        },
         "estimated_total_cost_usd": estimated_total_cost,
         "cost_completeness": (
             "complete" if cost_complete else "partial_usage_telemetry"
@@ -1061,6 +1348,31 @@ def generate_report(
         f"Scope: {scope}. Requested model: `{run['api_model']}`.",
         f"Returned target snapshot(s): {', '.join(manifest['returned_target_models'])}.",
         "",
+        "## Inference contract",
+        "",
+        (
+            f"Reasoning effort: `{target_config.reasoning_effort or 'omitted'}` "
+            f"({target_config.reasoning_effort_basis or 'no explicit basis'}). "
+            "The paper did not report a reasoning effort or separate reasoning-token "
+            "budget."
+        ),
+        (
+            f"Completion cap: {target_config.max_output_tokens:,} tokens; retry cap: "
+            f"{target_config.max_retry_output_tokens or 8192:,}. This combined cap "
+            "includes hidden reasoning and visible output."
+        ),
+        (
+            f"Configured temperature: {target_config.temperature}; parameter sent: "
+            f"{target_config.send_temperature}. Service tier: "
+            f"`{target_config.service_tier or 'provider default'}` "
+            "(paper unreported)."
+        ),
+        (
+            "Execution streaming value(s): "
+            f"{execution_streaming or ['not recorded']}; concurrency value(s): "
+            f"{execution_concurrency or ['not recorded']}."
+        ),
+        "",
         "## Paper-style main table",
         "",
         _markdown(table2).rstrip(),
@@ -1126,6 +1438,12 @@ def generate_report(
                 "## Published comparison",
                 "",
                 _markdown(display_comparison).rstrip(),
+                "",
+                (
+                    "Baseline: [AcuityBench Table 2]"
+                    "(https://arxiv.org/pdf/2605.11398), published to three "
+                    "decimals. Delta is fresh run minus published."
+                ),
                 "",
                 "This is a fresh stochastic run; the published aliases were not "
                 "immutable experiment artifacts.",
@@ -1206,7 +1524,7 @@ def _frontier_latency_value(
         if source.strip()
     }
     if required_sources is not None and (
-        not timing_sources or not timing_sources <= required_sources
+        len(timing_sources) != 1 or not timing_sources <= required_sources
     ):
         return None
     value = pd.to_numeric(
@@ -1239,6 +1557,146 @@ def _frontier_latency_macro(
     if qa_value is None or conv_value is None:
         return None
     return (qa_value + conv_value) / 2
+
+
+def _verified_reasoning_total(
+    target_usage: pd.DataFrame,
+) -> tuple[float | None, float | None]:
+    """Return a total only when every expected call reported reasoning usage."""
+    if target_usage.empty or "reasoning_token_coverage" not in target_usage:
+        return None, None
+    coverage_values = pd.to_numeric(
+        target_usage["reasoning_token_coverage"], errors="coerce"
+    ).dropna()
+    if coverage_values.empty:
+        return None, None
+    coverage = float(coverage_values.min())
+    if not math.isclose(coverage, 1.0):
+        return None, coverage
+    if "reasoning_tokens" not in target_usage:
+        return None, coverage
+    token_values = pd.to_numeric(
+        target_usage["reasoning_tokens"], errors="coerce"
+    )
+    if token_values.isna().any() or token_values.empty:
+        return None, coverage
+    return float(token_values.sum()), coverage
+
+
+def _effective_retry_completion_cap(
+    configured_inference: dict[str, Any],
+    run_model_config: dict[str, Any],
+) -> tuple[Any, str]:
+    configured_cap = configured_inference.get("max_retry_completion_tokens")
+    if configured_cap is not None:
+        return configured_cap, "inference_contract"
+    model_cap = run_model_config.get("max_retry_output_tokens")
+    if model_cap is not None:
+        return model_cap, "run_model_config"
+    return 8192, "legacy_runner_default"
+
+
+def _validated_client_latency_profile(
+    *,
+    run_id: str,
+    streaming_values: tuple[Any, ...],
+    concurrency_values: tuple[Any, ...],
+    execution_profile_coverage: Any,
+    configured_service_tier: Any,
+    returned_service_tiers: tuple[Any, ...],
+    returned_service_tier_coverage: Any,
+) -> tuple[bool, int, str]:
+    """Fail closed unless one fully observed serving profile produced the dot."""
+    problems: list[str] = []
+
+    streaming: bool | None = None
+    if len(streaming_values) != 1:
+        problems.append("exactly one streaming mode is required")
+    else:
+        raw_streaming = streaming_values[0]
+        if isinstance(raw_streaming, bool):
+            streaming = raw_streaming
+        elif raw_streaming in (0, 1):
+            streaming = bool(raw_streaming)
+        else:
+            problems.append("streaming mode must be boolean")
+
+    concurrency: int | None = None
+    if len(concurrency_values) != 1:
+        problems.append("exactly one configured concurrency is required")
+    else:
+        try:
+            raw_concurrency = float(concurrency_values[0])
+        except (TypeError, ValueError):
+            problems.append("configured concurrency must be an integer")
+        else:
+            if not math.isfinite(raw_concurrency) or not raw_concurrency.is_integer():
+                problems.append("configured concurrency must be an integer")
+            else:
+                concurrency = int(raw_concurrency)
+            if concurrency is not None and concurrency < 1:
+                problems.append("configured concurrency must be positive")
+
+    profile_coverage = pd.to_numeric(
+        pd.Series([execution_profile_coverage]), errors="coerce"
+    ).iloc[0]
+    if pd.isna(profile_coverage) or not math.isclose(
+        float(profile_coverage), 1.0
+    ):
+        problems.append("successful-generation execution-profile coverage must be 1")
+
+    configured_tier = (
+        str(configured_service_tier).strip()
+        if configured_service_tier is not None
+        else ""
+    )
+    if not configured_tier:
+        problems.append("configured service tier is required")
+
+    returned_tiers = tuple(
+        str(value).strip()
+        for value in returned_service_tiers
+        if value is not None and str(value).strip()
+    )
+    if len(returned_tiers) != 1:
+        problems.append("exactly one returned service tier is required")
+    returned_coverage = pd.to_numeric(
+        pd.Series([returned_service_tier_coverage]), errors="coerce"
+    ).iloc[0]
+    if pd.isna(returned_coverage) or not math.isclose(
+        float(returned_coverage), 1.0
+    ):
+        problems.append("returned service-tier coverage must be 1")
+    if (
+        configured_tier
+        and len(returned_tiers) == 1
+        and configured_tier != returned_tiers[0]
+    ):
+        problems.append(
+            "configured and returned service tiers must match "
+            f"({configured_tier!r} != {returned_tiers[0]!r})"
+        )
+
+    if problems:
+        raise ValueError(
+            f"Run {run_id!r} cannot supply a client service-latency frontier "
+            f"point: {'; '.join(problems)}"
+        )
+    assert streaming is not None and concurrency is not None and configured_tier
+    return streaming, concurrency, configured_tier
+
+
+def _assert_latency_profiles_comparable(
+    profiles: dict[str, tuple[bool, int, str]],
+) -> None:
+    if len(set(profiles.values())) > 1:
+        rendered = ", ".join(
+            f"{run_id}={profile}" for run_id, profile in sorted(profiles.items())
+        )
+        raise ValueError(
+            "Client service-latency frontier points must share streaming mode, "
+            f"configured concurrency, and service tier; found: {rendered}"
+        )
 
 
 def _comparison_contract(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -1325,6 +1783,7 @@ def combine_reports(
     latency_frames: list[pd.DataFrame] = []
     execution_frames: list[pd.DataFrame] = []
     frontier_records: list[dict[str, Any]] = []
+    client_latency_profiles: dict[str, tuple[bool, int, str]] = {}
     reference_contract: dict[str, Any] | None = None
     reference_run_id: str | None = None
     for run_id in run_ids:
@@ -1430,6 +1889,48 @@ def combine_reports(
             if not target_usage.empty
             else None
         )
+        (
+            target_reasoning_tokens,
+            target_reasoning_coverage,
+        ) = _verified_reasoning_total(target_usage)
+        inference_contract = manifest.get("inference_contract") or {}
+        configured_inference = inference_contract.get("configured", {})
+        observed_inference = inference_contract.get("observed", {})
+        run_model_config = manifest.get("run", {}).get("model_config", {})
+        reasoning_effort = configured_inference.get(
+            "reasoning_effort", run_model_config.get("reasoning_effort")
+        )
+        reasoning_effort_basis = configured_inference.get(
+            "reasoning_effort_basis",
+            run_model_config.get("reasoning_effort_basis"),
+        )
+        completion_cap = configured_inference.get(
+            "max_completion_tokens", run_model_config.get("max_output_tokens")
+        )
+        (
+            retry_completion_cap,
+            retry_completion_cap_basis,
+        ) = _effective_retry_completion_cap(
+            configured_inference, run_model_config
+        )
+        latency_profile_streaming = tuple(
+            configured_inference.get("streaming_values", [])
+        )
+        latency_profile_concurrency = tuple(
+            configured_inference.get("concurrency_values", [])
+        )
+        latency_profile_service_tier = configured_inference.get(
+            "service_tier", run_model_config.get("service_tier")
+        )
+        latency_profile_execution_coverage = observed_inference.get(
+            "execution_profile_coverage"
+        )
+        latency_profile_returned_service_tiers = tuple(
+            observed_inference.get("returned_service_tiers", [])
+        )
+        latency_profile_returned_service_tier_coverage = (
+            observed_inference.get("returned_service_tier_coverage")
+        )
         cost_per_1000_calls = (
             target_cost / target_calls * 1000
             if target_cost is not None and target_calls > 0
@@ -1468,6 +1969,22 @@ def combine_reports(
             if legacy_provider_processing_p95 is not None
             else None
         )
+        if latency_plot_source == "client_service_latency":
+            client_latency_profiles[run_id] = _validated_client_latency_profile(
+                run_id=run_id,
+                streaming_values=latency_profile_streaming,
+                concurrency_values=latency_profile_concurrency,
+                execution_profile_coverage=(
+                    latency_profile_execution_coverage
+                ),
+                configured_service_tier=latency_profile_service_tier,
+                returned_service_tiers=(
+                    latency_profile_returned_service_tiers
+                ),
+                returned_service_tier_coverage=(
+                    latency_profile_returned_service_tier_coverage
+                ),
+            )
         frontier_records.append(
             {
                 "run_id": run_id,
@@ -1491,6 +2008,37 @@ def combine_reports(
                         )
                     )
                     or None
+                ),
+                "reasoning_effort": reasoning_effort,
+                "reasoning_effort_basis": reasoning_effort_basis,
+                "max_completion_tokens": completion_cap,
+                "max_retry_completion_tokens": retry_completion_cap,
+                "max_retry_completion_tokens_basis": (
+                    retry_completion_cap_basis
+                ),
+                "target_reasoning_tokens": target_reasoning_tokens,
+                "target_reasoning_tokens_per_successful_call": (
+                    target_reasoning_tokens / target_calls
+                    if target_reasoning_tokens is not None and target_calls > 0
+                    else None
+                ),
+                "target_reasoning_token_coverage": target_reasoning_coverage,
+                "latency_profile_streaming": ",".join(
+                    str(value).lower() for value in latency_profile_streaming
+                ),
+                "latency_profile_concurrency": ",".join(
+                    str(value) for value in latency_profile_concurrency
+                ),
+                "latency_profile_service_tier": latency_profile_service_tier,
+                "latency_profile_returned_service_tiers": ",".join(
+                    str(value)
+                    for value in latency_profile_returned_service_tiers
+                ),
+                "latency_profile_execution_coverage": (
+                    latency_profile_execution_coverage
+                ),
+                "latency_profile_returned_service_tier_coverage": (
+                    latency_profile_returned_service_tier_coverage
                 ),
                 "service_latency_p50_macro_ms": _frontier_latency_macro(
                     latency,
@@ -1550,6 +2098,7 @@ def combine_reports(
                 ),
             }
         )
+    _assert_latency_profiles_comparable(client_latency_profiles)
     combined_table = pd.concat(table_frames, ignore_index=True)
     combined_metrics = pd.concat(metric_frames, ignore_index=True)
     combined_table.to_csv(output / "table2.csv", index=False)

@@ -48,6 +48,10 @@ def test_single_point_charts_are_valid_and_byte_deterministic(
                 "target_cost_completeness": "complete",
                 "latency_plot_p95_ms": 420,
                 "latency_plot_source": "client_service_latency",
+                "reasoning_effort": "medium",
+                "latency_profile_streaming": "true",
+                "latency_profile_concurrency": 20,
+                "latency_profile_service_tier": "default",
             }
         ],
     )
@@ -81,6 +85,10 @@ def test_single_point_charts_are_valid_and_byte_deterministic(
     assert "Average exact accuracy" in cost_text
     assert "Cost per 1,000 successful target-model calls (USD)" in cost_text
     assert "p95 duration macro-average" in latency_text
+    assert "effort medium" in latency_text
+    assert "Profile: streaming, concurrency 20, default tier" in latency_text
+    assert "Line: Pareto frontier" in cost_text
+    assert "paint-order:stroke fill" in cost_text
     latency_root = ET.fromstring(latency_text)
     latency_desc = latency_root.find(f"{SVG_NAMESPACE}desc")
     assert latency_desc is not None

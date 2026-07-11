@@ -1,1 +1,6 @@
 run_id,execution_id,phase,profile_id,status,streaming,configured_concurrency,pending_count,success_count,failure_count,cancelled_count,unpersisted_count,elapsed_seconds,persisted_requests_per_second,requests_observed,attempts_total,retry_attempts,attempts_per_request,terminal_error_attempts
+gpt-5-mini-paper-stream-medium-20260711,2613e06cc5fc41bf8a507efb3538f959,generation,gpt-5-mini,incomplete,1,20,9140,9137,3,0,0,4950.353665,1.8463327306534976,9140,9140,0,1.0,3
+gpt-5-mini-paper-stream-medium-20260711,dec4f06df4c44d5ba5ab1f8c4b5e2f41,generation,gpt-5-mini,complete,1,20,3,3,0,0,0,38.764609,0.0773901782422208,3,3,0,1.0,0
+gpt-5-mini-paper-stream-medium-20260711,7c3cebb79aae4987ab51a91c391ee530,judge,paper-gpt-4.1,complete,1,20,4570,4570,0,0,0,405.352951,11.274125397942395,4570,4570,0,1.0,0
+gpt-5.4-paper-stream-none-20260711,b710f103949c4d3fb55e7ad60835a941,generation,gpt-5.4,complete,1,20,9140,9140,0,0,0,1783.411173,5.125009946318196,9140,9140,0,1.0,0
+gpt-5.4-paper-stream-none-20260711,b9aa0e3bc9b04bad8d7c83ad67a65011,judge,paper-gpt-4.1,complete,1,20,4570,4570,0,0,0,500.190327,9.136522146298924,4570,4570,0,1.0,0
