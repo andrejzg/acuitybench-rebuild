@@ -1,13 +1,31 @@
 # AcuityBench rebuild
 
-This project reconstructs the 914-case AcuityBench benchmark from pinned public
-source snapshots and the authors' released anonymised physician annotations.
-Every download is checked against a SHA-256 digest before it is used.
+This project reconstructs the 914-case benchmark introduced in
+[AcuityBench: Evaluating Clinical Acuity Identification and Uncertainty Alignment](https://arxiv.org/abs/2605.11398)
+([arXiv PDF](https://arxiv.org/pdf/2605.11398)) from pinned public source
+snapshots and the authors' released anonymised physician annotations. Every
+download is checked against a SHA-256 digest before it is used.
 
 This private repository includes the pinned source snapshots, reconstructed
 benchmark and labels, and completed evaluation artifacts so a checkout is
 self-contained. See [Data, provenance, and licensing](#data-provenance-and-licensing)
 before changing repository visibility or redistributing files.
+
+## Goal
+
+The rebuild is the foundation for training and evaluating a specialised,
+low-latency clinical-acuity research model. A successful model should:
+
+- retain or improve agreement with the physician/reference labels, including
+  uncertainty-aware and under-triage evaluation;
+- materially reduce p95 service latency, our primary optimisation target; and
+- reduce inference cost without trading away accuracy.
+
+On both frontier charts, success means moving a measured result toward the
+top-left: higher accuracy with lower latency or cost. The green
+`Our trained model?` point is the goal, not a claimed result; it will remain
+explicitly aspirational until it can be replaced by a reproducible benchmark
+run.
 
 Large data and result files use Git LFS. After cloning, install Git LFS and
 materialize the tracked objects:
