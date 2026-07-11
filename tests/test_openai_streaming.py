@@ -22,6 +22,36 @@ class FakeClock:
         self.now += seconds
 
 
+def test_paper_openai_profiles_send_resolved_reasoning_and_service_tier() -> None:
+    registry = ModelRegistry()
+    mini = OpenAIProvider._chat_kwargs(
+        registry.get("gpt-5-mini"),
+        [{"role": "user", "content": "case"}],
+        None,
+    )
+    frontier = OpenAIProvider._chat_kwargs(
+        registry.get("gpt-5.4"),
+        [{"role": "user", "content": "case"}],
+        None,
+    )
+    assert mini["reasoning_effort"] == "medium"
+    assert mini["service_tier"] == "default"
+    assert mini["max_completion_tokens"] == 4096
+    assert "temperature" not in mini
+    assert frontier["reasoning_effort"] == "none"
+    assert frontier["temperature"] == 1
+    assert frontier["service_tier"] == "default"
+    assert frontier["max_completion_tokens"] == 4096
+
+    responses = OpenAIProvider._response_kwargs(
+        registry.get("gpt-5.4"),
+        [{"role": "user", "content": "case"}],
+        None,
+    )
+    assert responses["reasoning"] == {"effort": "none"}
+    assert responses["service_tier"] == "default"
+
+
 class FakeAsyncStream:
     def __init__(self, clock: FakeClock, events: list[tuple[float, Any]]) -> None:
         self.clock = clock

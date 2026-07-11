@@ -467,12 +467,21 @@ async def _complete_with_retries(
         request_wall_total_ms += request_wall_ms
         semaphore.release()
         needs_length_retry = result.finish_reason == "length"
+        retry_output_cap = config.max_retry_output_tokens or 8192
+        at_retry_output_cap = max_output_tokens >= retry_output_cap
+        accept_capped_length = (
+            needs_length_retry and at_retry_output_cap and bool(result.text)
+        )
         will_retry_length = (
             needs_length_retry
             and attempt < max_attempts
-            and max_output_tokens < 8192
+            and not at_retry_output_cap
         )
-        terminal_length_error = needs_length_retry and not will_retry_length
+        terminal_length_error = (
+            needs_length_retry
+            and not will_retry_length
+            and not accept_capped_length
+        )
         if terminal_length_error:
             last_error = (
                 "Provider returned a length-truncated response after "
@@ -515,7 +524,7 @@ async def _complete_with_retries(
         terminal_request_started_at = request_started_at
         terminal_completed_at = request_finished_at
         if will_retry_length:
-            max_output_tokens = min(max_output_tokens * 2, 8192)
+            max_output_tokens = min(max_output_tokens * 2, retry_output_cap)
             continue
         if terminal_length_error:
             break
@@ -666,7 +675,7 @@ def _request_key(
     )
 
 
-def _runner_metadata() -> dict[str, Any]:
+def _runner_metadata(config: ModelConfig) -> dict[str, Any]:
     try:
         package_version = importlib.metadata.version("acuitybench-rebuild")
     except importlib.metadata.PackageNotFoundError:
@@ -683,6 +692,15 @@ def _runner_metadata() -> dict[str, Any]:
         "openai_sdk_version": openai_version,
         "limiter": "asyncio.Semaphore",
         "clock": "time.perf_counter",
+        "request_contract": {
+            "temperature_configured": config.temperature,
+            "temperature_parameter_sent": config.send_temperature,
+            "reasoning_effort_requested": config.reasoning_effort,
+            "reasoning_effort_basis": config.reasoning_effort_basis,
+            "service_tier_requested": config.service_tier,
+            "max_output_tokens": config.max_output_tokens,
+            "max_retry_output_tokens": config.max_retry_output_tokens or 8192,
+        },
     }
 
 
@@ -794,7 +812,7 @@ async def run_inference_async(
             "fallback": "exponential_jitter",
             "maximum_seconds": 60,
         },
-        runner_metadata=_runner_metadata(),
+        runner_metadata=_runner_metadata(model),
         task_count=len(tasks),
         cache_hit_count=len(completed),
         pending_count=len(pending),
@@ -1062,7 +1080,7 @@ async def run_judge_async(
             "fallback": "exponential_jitter",
             "maximum_seconds": 60,
         },
-        runner_metadata=_runner_metadata(),
+        runner_metadata=_runner_metadata(judge.model),
         task_count=len(generations),
         cache_hit_count=len(generations) - len(pending),
         pending_count=len(pending),

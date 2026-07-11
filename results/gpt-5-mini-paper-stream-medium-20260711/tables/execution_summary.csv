@@ -1,0 +1,4 @@
+execution_id,phase,profile_id,status,streaming,configured_concurrency,pending_count,success_count,failure_count,cancelled_count,unpersisted_count,elapsed_seconds,persisted_requests_per_second,requests_observed,attempts_total,retry_attempts,attempts_per_request,terminal_error_attempts
+2613e06cc5fc41bf8a507efb3538f959,generation,gpt-5-mini,incomplete,1,20,9140,9137,3,0,0,4950.353665,1.8463327306534978,9140,9140,0,1.0,3
+dec4f06df4c44d5ba5ab1f8c4b5e2f41,generation,gpt-5-mini,complete,1,20,3,3,0,0,0,38.764609,0.07739017824222089,3,3,0,1.0,0
+7c3cebb79aae4987ab51a91c391ee530,judge,paper-gpt-4.1,complete,1,20,4570,4570,0,0,0,405.352951,11.274125397942397,4570,4570,0,1.0,0

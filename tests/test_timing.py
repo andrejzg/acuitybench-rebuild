@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import replace
 from types import SimpleNamespace
 from typing import Any
 
@@ -47,8 +48,10 @@ class ScriptedProvider:
         self.clock = clock
         self.script = list(script)
         self.calls = 0
+        self.max_output_tokens: list[int | None] = []
 
-    async def complete(self, **_: Any) -> CompletionResult:
+    async def complete(self, **kwargs: Any) -> CompletionResult:
+        self.max_output_tokens.append(kwargs.get("max_output_tokens"))
         duration, value = self.script[self.calls]
         self.calls += 1
         self.clock.advance(duration)
@@ -196,8 +199,8 @@ def test_nonstreaming_call_has_no_ttft() -> None:
     assert outcome.timing.request_wall_ms == pytest.approx(12)
 
 
-def test_empty_truncated_response_is_terminal_failure_at_attempt_limit() -> None:
-    async def scenario() -> tuple[Any, FakeStore]:
+def test_empty_truncated_response_at_hard_cap_is_terminal_failure() -> None:
+    async def scenario() -> tuple[Any, FakeStore, ScriptedProvider]:
         clock = FakeClock()
         store = FakeStore()
         truncated = CompletionResult(
@@ -206,29 +209,75 @@ def test_empty_truncated_response_is_terminal_failure_at_attempt_limit() -> None
             first_event_ms=2.0,
             server_processing_ms=4.0,
         )
+        provider = ScriptedProvider(clock, [(0.010, truncated)])
         outcome = await _complete_with_retries(
             store=store,  # type: ignore[arg-type]
             context=_context(),
-            provider=ScriptedProvider(clock, [(0.010, truncated)]),
+            provider=provider,
             config=ModelRegistry().get("gpt-5-mini"),
             messages=[{"role": "user", "content": "case"}],
             semaphore=asyncio.Semaphore(1),
             stream=True,
-            max_attempts=1,
             monotonic=clock,
             utcnow=clock.utcnow,
         )
-        return outcome, store
+        return outcome, store, provider
 
-    outcome, store = asyncio.run(scenario())
+    outcome, store, provider = asyncio.run(scenario())
     assert outcome.result is None
     assert outcome.error == (
         "Provider returned a length-truncated response after 1 attempt(s)"
     )
     assert outcome.timing.request_wall_ms == pytest.approx(10)
     assert outcome.timing.server_processing_ms == pytest.approx(4)
+    assert provider.calls == 1
+    assert provider.max_output_tokens == [4096]
     assert store.attempts[0]["outcome"] == "terminal_error"
     assert store.attempts[0]["error_type"] == "LengthTruncatedResponse"
+
+
+@pytest.mark.parametrize("model_id", ["gpt-5-mini", "gpt-5.4"])
+def test_paper_profile_never_expands_past_4096_tokens(model_id: str) -> None:
+    async def scenario() -> tuple[Any, FakeStore, ScriptedProvider]:
+        clock = FakeClock()
+        store = FakeStore()
+        provider = ScriptedProvider(
+            clock,
+            [
+                (
+                    0.010,
+                    CompletionResult(
+                        text="REASONING: capped but usable\nACUITY: A",
+                        finish_reason="length",
+                    ),
+                ),
+                (0.020, _result()),
+            ],
+        )
+        outcome = await _complete_with_retries(
+            store=store,  # type: ignore[arg-type]
+            context=_context(),
+            provider=provider,
+            config=ModelRegistry().get(model_id),
+            messages=[{"role": "user", "content": "case"}],
+            semaphore=asyncio.Semaphore(1),
+            stream=True,
+            monotonic=clock,
+            utcnow=clock.utcnow,
+        )
+        return outcome, store, provider
+
+    outcome, store, provider = asyncio.run(scenario())
+    assert outcome.result is not None
+    assert outcome.result.text.endswith("ACUITY: A")
+    assert outcome.result.finish_reason == "length"
+    assert outcome.error is None
+    assert outcome.attempts == 1
+    assert provider.calls == 1
+    assert provider.max_output_tokens == [4096]
+    assert store.attempts[0]["max_output_tokens"] == 4096
+    assert store.attempts[0]["outcome"] == "success"
+    assert store.attempts[0]["error_type"] is None
 
 
 def test_partial_length_response_is_retried_and_not_returned() -> None:
@@ -244,7 +293,10 @@ def test_partial_length_response_is_retried_and_not_returned() -> None:
                 clock,
                 [(0.010, partial), (0.020, complete)],
             ),
-            config=ModelRegistry().get("gpt-5-mini"),
+            config=replace(
+                ModelRegistry().get("gpt-5-mini"),
+                max_retry_output_tokens=8192,
+            ),
             messages=[{"role": "user", "content": "case"}],
             semaphore=asyncio.Semaphore(1),
             stream=True,
@@ -277,7 +329,10 @@ def test_length_retry_then_permanent_error_does_not_return_stale_result() -> Non
                     (0.020, ValueError("permanent")),
                 ],
             ),
-            config=ModelRegistry().get("gpt-5-mini"),
+            config=replace(
+                ModelRegistry().get("gpt-5-mini"),
+                max_retry_output_tokens=8192,
+            ),
             messages=[{"role": "user", "content": "case"}],
             semaphore=asyncio.Semaphore(1),
             stream=True,

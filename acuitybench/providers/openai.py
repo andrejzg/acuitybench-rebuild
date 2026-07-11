@@ -76,6 +76,20 @@ def _usage_metadata(
     )
 
 
+def _request_contract(
+    config: ModelConfig, max_output_tokens: int | None
+) -> dict[str, Any]:
+    return {
+        "temperature_configured": config.temperature,
+        "temperature_parameter_sent": config.send_temperature,
+        "reasoning_effort_requested": config.reasoning_effort,
+        "reasoning_effort_basis": config.reasoning_effort_basis,
+        "service_tier_requested": config.service_tier,
+        "max_output_tokens": max_output_tokens or config.max_output_tokens,
+        "max_retry_output_tokens": config.max_retry_output_tokens or 8192,
+    }
+
+
 def _chat_visible_text(message: object) -> tuple[str, bool]:
     parts: list[str] = []
     content = _value(message, "content")
@@ -348,6 +362,10 @@ class OpenAIProvider:
         }
         if config.send_temperature and config.temperature is not None:
             kwargs["temperature"] = config.temperature
+        if config.reasoning_effort is not None:
+            kwargs["reasoning_effort"] = config.reasoning_effort
+        if config.service_tier is not None:
+            kwargs["service_tier"] = config.service_tier
         return kwargs
 
     async def _chat_completion(
@@ -359,12 +377,17 @@ class OpenAIProvider:
         stream: bool,
     ) -> CompletionResult:
         kwargs = self._chat_kwargs(config, messages, max_output_tokens)
+        request_contract = _request_contract(config, max_output_tokens)
         client = self._client(config.api_key_env)
         if not stream:
             raw = await client.chat.completions.with_raw_response.create(**kwargs)
             response = raw.parse()
             request_id, rate_limit, metadata, processing_ms = self._headers(
                 raw, endpoint=config.endpoint, streaming=False
+            )
+            metadata["request_contract"] = request_contract
+            metadata["returned_service_tier"] = _value(
+                response, "service_tier"
             )
             if not response.choices or response.choices[0].finish_reason is None:
                 raise OpenAIProviderError(
@@ -417,6 +440,7 @@ class OpenAIProvider:
         response_id: str | None = None
         returned_model: str | None = None
         system_fingerprint: str | None = None
+        returned_service_tier: str | None = None
         event_count = 0
         text_chunk_count = 0
         contains_refusal = False
@@ -446,6 +470,9 @@ class OpenAIProvider:
                         first_event_ms = elapsed_ms
                     response_id = response_id or _value(chunk, "id")
                     returned_model = returned_model or _value(chunk, "model")
+                    returned_service_tier = returned_service_tier or _value(
+                        chunk, "service_tier"
+                    )
                     system_fingerprint = system_fingerprint or _value(
                         chunk, "system_fingerprint"
                     )
@@ -498,6 +525,8 @@ class OpenAIProvider:
                     "stream_event_count": event_count,
                     "text_chunk_count": text_chunk_count,
                     "stream_interrupted": True,
+                    "request_contract": request_contract,
+                    "returned_service_tier": returned_service_tier,
                 }
             )
             raise OpenAIProviderError(
@@ -540,6 +569,8 @@ class OpenAIProvider:
                 "stream_event_count": event_count,
                 "text_chunk_count": text_chunk_count,
                 "output_contains_refusal": contains_refusal,
+                "request_contract": request_contract,
+                "returned_service_tier": returned_service_tier,
             }
         )
         if finish_reason is None:
@@ -597,6 +628,10 @@ class OpenAIProvider:
         }
         if config.send_temperature and config.temperature is not None:
             kwargs["temperature"] = config.temperature
+        if config.reasoning_effort is not None:
+            kwargs["reasoning"] = {"effort": config.reasoning_effort}
+        if config.service_tier is not None:
+            kwargs["service_tier"] = config.service_tier
         return kwargs
 
     @staticmethod
@@ -661,12 +696,17 @@ class OpenAIProvider:
         stream: bool,
     ) -> CompletionResult:
         kwargs = self._response_kwargs(config, messages, max_output_tokens)
+        request_contract = _request_contract(config, max_output_tokens)
         client = self._client(config.api_key_env)
         if not stream:
             raw = await client.responses.with_raw_response.create(**kwargs)
             response = raw.parse()
             request_id, rate_limit, metadata, processing_ms = self._headers(
                 raw, endpoint=config.endpoint, streaming=False
+            )
+            metadata["request_contract"] = request_contract
+            metadata["returned_service_tier"] = _value(
+                response, "service_tier"
             )
             status = _value(response, "status")
             incomplete_reason = _value(
@@ -794,6 +834,7 @@ class OpenAIProvider:
                     "stream_event_count": event_count,
                     "text_chunk_count": text_chunk_count,
                     "stream_interrupted": True,
+                    "request_contract": request_contract,
                 }
             )
             raise OpenAIProviderError(
@@ -822,6 +863,10 @@ class OpenAIProvider:
                 "response_headers_ms": headers_received_ms,
                 "stream_event_count": event_count,
                 "text_chunk_count": text_chunk_count,
+                "request_contract": request_contract,
+                "returned_service_tier": _value(
+                    terminal, "service_tier"
+                ),
             }
         )
         if terminal is None:

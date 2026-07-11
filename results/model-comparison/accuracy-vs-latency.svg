@@ -1,52 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="accuracy-vs-latency-title accuracy-vs-latency-desc">
   <title id="accuracy-vs-latency-title">Average accuracy vs latency</title>
-  <desc id="accuracy-vs-latency-desc">Average accuracy vs latency. Filled: client p95 service latency. Hollow diamond: legacy provider-header proxy. 1 plotted model run. Within each measurement type, lower x and higher accuracy are better. Legacy proxy points are not compared with client service-latency points. gpt-5-mini (gpt-5-mini-paper-reproduction): 72.49% average exact, 21.86s p95, provider processing p95 macro-average; legacy proxy, not client service latency.</desc>
+  <desc id="accuracy-vs-latency-desc">Average accuracy vs latency. Filled: client p95; hollow: legacy proxy. Profile: streaming, concurrency 20, default tier. Top-left is better. 2 plotted model runs. Lower x and higher accuracy are better. gpt-5.4 (gpt-5.4-paper-stream-none-20260711): 77.32% average exact, 6.98s p95, client p95 service-latency macro-average, reasoning effort none. gpt-5-mini (gpt-5-mini-paper-stream-medium-20260711): 73.72% average exact, 17.23s p95, client p95 service-latency macro-average, reasoning effort medium.</desc>
   <style>
     :root { --bg:#ffffff; --fg:#44403c; --muted:#78716c; --grid:#e7e5e4; --axis:#a8a29e; --series:#0f9f79; --proxy:#78716c; --partial:#b7791f; --frontier:#0f9f79; }
     @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#d6d3d1; --grid:#44403c; --axis:#78716c; --series:#34d399; --proxy:#d6d3d1; --partial:#fbbf24; --frontier:#34d399; } }
     .background{fill:var(--bg)} .title{fill:var(--fg);font:500 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .subtitle{fill:var(--muted);font:400 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
     .grid{stroke:var(--grid);stroke-width:1} .axis{stroke:var(--axis);stroke-width:1.4} .tick{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
     .point{stroke-width:2.5} .measured-point{fill:var(--series);stroke:var(--series)} .proxy-point{fill:var(--bg);stroke:var(--proxy)} .partial-point{fill:var(--bg);stroke:var(--partial)} .pareto-frontier{fill:none;stroke:var(--frontier);stroke-width:2;stroke-opacity:.45}
-    .point-label{fill:var(--fg);font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .point-label{fill:var(--fg);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
   </style>
   <rect class="background" width="1200" height="760"/>
   <text class="title" x="118" y="52">Average accuracy vs latency</text>
-  <text class="subtitle" x="118" y="82">Filled: client p95 service latency. Hollow diamond: legacy provider-header proxy.</text>
+  <text class="subtitle" x="118" y="82">Filled: client p95; hollow: legacy proxy. Profile: streaming, concurrency 20, default tier. Top-left is better.</text>
   <line class="grid" x1="118" y1="648.00" x2="1128" y2="648.00"/>
-  <text class="tick" x="102" y="653.00" text-anchor="end">60%</text>
+  <text class="tick" x="102" y="653.00" text-anchor="end">65%</text>
   <line class="grid" x1="118" y1="543.60" x2="1128" y2="543.60"/>
-  <text class="tick" x="102" y="548.60" text-anchor="end">65%</text>
+  <text class="tick" x="102" y="548.60" text-anchor="end">70%</text>
   <line class="grid" x1="118" y1="439.20" x2="1128" y2="439.20"/>
-  <text class="tick" x="102" y="444.20" text-anchor="end">70%</text>
+  <text class="tick" x="102" y="444.20" text-anchor="end">75%</text>
   <line class="grid" x1="118" y1="334.80" x2="1128" y2="334.80"/>
-  <text class="tick" x="102" y="339.80" text-anchor="end">75%</text>
+  <text class="tick" x="102" y="339.80" text-anchor="end">80%</text>
   <line class="grid" x1="118" y1="230.40" x2="1128" y2="230.40"/>
-  <text class="tick" x="102" y="235.40" text-anchor="end">80%</text>
+  <text class="tick" x="102" y="235.40" text-anchor="end">85%</text>
   <line class="grid" x1="118" y1="126.00" x2="1128" y2="126.00"/>
-  <text class="tick" x="102" y="131.00" text-anchor="end">85%</text>
+  <text class="tick" x="102" y="131.00" text-anchor="end">90%</text>
   <line class="grid" x1="118.00" y1="126" x2="118.00" y2="648"/>
   <text class="tick" x="118.00" y="680" text-anchor="middle">0s</text>
-  <line class="grid" x1="286.33" y1="126" x2="286.33" y2="648"/>
-  <text class="tick" x="286.33" y="680" text-anchor="middle">5s</text>
-  <line class="grid" x1="454.67" y1="126" x2="454.67" y2="648"/>
-  <text class="tick" x="454.67" y="680" text-anchor="middle">10s</text>
-  <line class="grid" x1="623.00" y1="126" x2="623.00" y2="648"/>
-  <text class="tick" x="623.00" y="680" text-anchor="middle">15s</text>
-  <line class="grid" x1="791.33" y1="126" x2="791.33" y2="648"/>
-  <text class="tick" x="791.33" y="680" text-anchor="middle">20s</text>
-  <line class="grid" x1="959.67" y1="126" x2="959.67" y2="648"/>
-  <text class="tick" x="959.67" y="680" text-anchor="middle">25s</text>
+  <line class="grid" x1="320.00" y1="126" x2="320.00" y2="648"/>
+  <text class="tick" x="320.00" y="680" text-anchor="middle">5s</text>
+  <line class="grid" x1="522.00" y1="126" x2="522.00" y2="648"/>
+  <text class="tick" x="522.00" y="680" text-anchor="middle">10s</text>
+  <line class="grid" x1="724.00" y1="126" x2="724.00" y2="648"/>
+  <text class="tick" x="724.00" y="680" text-anchor="middle">15s</text>
+  <line class="grid" x1="926.00" y1="126" x2="926.00" y2="648"/>
+  <text class="tick" x="926.00" y="680" text-anchor="middle">20s</text>
   <line class="grid" x1="1128.00" y1="126" x2="1128.00" y2="648"/>
-  <text class="tick" x="1128.00" y="680" text-anchor="middle">30s</text>
+  <text class="tick" x="1128.00" y="680" text-anchor="middle">25s</text>
   <line class="axis" x1="118" y1="648" x2="1128" y2="648"/>
   <line class="axis" x1="118" y1="126" x2="118" y2="648"/>
   <text class="better" x="132" y="150">BETTER ↖</text>
   <text class="axis-label" x="623.00" y="732" text-anchor="middle">p95 duration macro-average across QA + conversation (seconds)</text>
   <text class="axis-label" transform="translate(35 387.00) rotate(-90)" text-anchor="middle">Average exact accuracy</text>
-  <g class="point proxy-point" data-run-id="gpt-5-mini-paper-reproduction"><title>gpt-5-mini (gpt-5-mini-paper-reproduction): 72.49% average exact; 21.86s p95; provider processing p95 macro-average; legacy proxy, not client service latency.</title>
-    <polygon points="853.89,379.30 861.89,387.30 853.89,395.30 845.89,387.30"/>
-    <text class="point-label" x="867.89" y="372.30" text-anchor="start">gpt-5-mini</text>
-    <text class="point-value" x="867.89" y="392.30" text-anchor="start">72.5% · 21.86s p95 · legacy proxy</text>
+  <g class="point measured-point pareto-point" data-run-id="gpt-5.4-paper-stream-none-20260711"><title>gpt-5.4 (gpt-5.4-paper-stream-none-20260711): 77.32% average exact; 6.98s p95; client p95 service-latency macro-average; reasoning effort none.</title>
+    <circle cx="400.11" cy="390.66" r="8"/>
+    <text class="point-label" x="414.11" y="375.66" text-anchor="start">gpt-5.4</text>
+    <text class="point-value" x="414.11" y="395.66" text-anchor="start">77.3% · 6.98s p95 · effort none</text>
+  </g>
+  <g class="point measured-point" data-run-id="gpt-5-mini-paper-stream-medium-20260711"><title>gpt-5-mini (gpt-5-mini-paper-stream-medium-20260711): 73.72% average exact; 17.23s p95; client p95 service-latency macro-average; reasoning effort medium.</title>
+    <circle cx="814.25" cy="465.94" r="8"/>
+    <text class="point-label" x="828.25" y="493.94" text-anchor="start">gpt-5-mini</text>
+    <text class="point-value" x="828.25" y="513.94" text-anchor="start">73.7% · 17.23s p95 · effort medium</text>
   </g>
 </svg>

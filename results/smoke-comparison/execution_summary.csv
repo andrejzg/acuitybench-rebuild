@@ -1,1 +1,5 @@
 run_id,execution_id,phase,profile_id,status,streaming,configured_concurrency,pending_count,success_count,failure_count,cancelled_count,unpersisted_count,elapsed_seconds,persisted_requests_per_second,requests_observed,attempts_total,retry_attempts,attempts_per_request,terminal_error_attempts
+smoke-gpt-5-mini-medium-stream-20260711,e303f774dc734c7ba687a52c2390e6c8,generation,gpt-5-mini,complete,1,1,2,2,0,0,0,17.568019,0.1138432284254701,2,2,0,1.0,0
+smoke-gpt-5-mini-medium-stream-20260711,46b7bbe992504c66b90e11fcae32263f,judge,paper-gpt-4.1,complete,1,1,1,1,0,0,0,2.149588,0.4652054254117533,1,1,0,1.0,0
+smoke-gpt-5.4-none-stream-20260711,393a61a3736148c7a93cb057e68c0291,generation,gpt-5.4,complete,1,1,2,2,0,0,0,6.238119,0.3206094657700502,2,2,0,1.0,0
+smoke-gpt-5.4-none-stream-20260711,4111af31b57147f78d8c0d4a727ba8e4,judge,paper-gpt-4.1,complete,1,1,1,1,0,0,0,2.005697,0.4985797954526531,1,1,0,1.0,0

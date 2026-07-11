@@ -1,0 +1,7 @@
+model_id,task_type,group_type,group_value,n_total,n_evaluable,n_all_invalid,invalid_samples,exact,over,under,within_1
+gpt-5.4,conv,overall,all,1,1,0,0,1.0,0.0,0.0,1.0
+gpt-5.4,conv,dataset,healthbench,1,1,0,0,1.0,0.0,0.0,1.0
+gpt-5.4,conv,acuity,D,1,1,0,0,1.0,0.0,0.0,1.0
+gpt-5.4,qa,overall,all,1,1,0,0,1.0,0.0,0.0,1.0
+gpt-5.4,qa,dataset,healthbench,1,1,0,0,1.0,0.0,0.0,1.0
+gpt-5.4,qa,acuity,D,1,1,0,0,1.0,0.0,0.0,1.0

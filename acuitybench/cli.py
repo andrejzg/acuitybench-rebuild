@@ -191,9 +191,11 @@ def _run_models(args: argparse.Namespace) -> int:
     print("Models:")
     for model in registry.models():
         temperature = model.temperature if model.send_temperature else "provider default"
+        reasoning = model.reasoning_effort or "not applicable/provider default"
         print(
             f"  {model.id:16} {model.provider:8} {model.api_model:24} "
-            f"{model.endpoint} (temperature={temperature})"
+            f"{model.endpoint} (temperature={temperature}, reasoning={reasoning}, "
+            f"service_tier={model.service_tier or 'provider default'})"
         )
     print("\nJudges:")
     for judge in registry.judges():

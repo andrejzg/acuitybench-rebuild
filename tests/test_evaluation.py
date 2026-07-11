@@ -30,6 +30,7 @@ from acuitybench.providers.base import CompletionResult
 from acuitybench.reporting import (
     _metrics_long,
     _mode_severe,
+    _paper_comparison,
     _paper_value,
     _table2,
     combine_reports,
@@ -63,6 +64,47 @@ def test_mode_ties_resolve_to_more_severe_label() -> None:
     assert _mode_severe(["A", "B", "A", "B", None]) == "B"
     assert _mode_severe(["C", "D"]) == "D"
     assert _mode_severe([None, "not-a-label"]) is None
+
+
+def test_paper_comparison_uses_model_specific_published_baseline() -> None:
+    metrics = pd.DataFrame(
+        [
+            {
+                "group_type": "overall",
+                "task_type": task,
+                "exact": 0.8,
+                "over": 0.1,
+                "under": 0.1,
+            }
+            for task in ("qa", "conv")
+        ]
+    )
+
+    comparison = _paper_comparison(
+        {
+            "model_id": "gpt-5.4",
+            "selected_cases": 914,
+            "samples": 5,
+            "tasks": ["qa", "conv"],
+        },
+        metrics,
+    )
+
+    exact = comparison[comparison["metric"] == "exact"].set_index("task_type")
+    assert exact.loc["qa", "published"] == pytest.approx(0.772)
+    assert exact.loc["conv", "published"] == pytest.approx(0.772)
+    assert exact.loc["qa", "delta"] == pytest.approx(0.028)
+
+    smoke = _paper_comparison(
+        {
+            "model_id": "gpt-5.4",
+            "selected_cases": 1,
+            "samples": 1,
+            "tasks": ["qa", "conv"],
+        },
+        metrics,
+    )
+    assert smoke.empty
 
 
 def test_distributional_distances_use_paper_conventions() -> None:
@@ -161,16 +203,28 @@ def test_paper_metrics_exclude_boundary_and_ambiguous_cases() -> None:
 def test_model_registry_exposes_paper_configs_and_stable_fingerprints() -> None:
     registry = ModelRegistry()
     target = registry.get("gpt-5-mini")
+    frontier = registry.get("gpt-5.4")
     judge = registry.get_judge("paper-gpt-4.1")
 
     assert target.api_model == "gpt-5-mini"
     assert target.endpoint == "chat_completions"
     assert target.token_parameter == "max_completion_tokens"
     assert target.send_temperature is False
+    assert target.reasoning_effort == "medium"
+    assert target.max_retry_output_tokens == 4096
+    assert target.service_tier == "default"
+    assert frontier.api_model == "gpt-5.4"
+    assert frontier.temperature == 1
+    assert frontier.send_temperature is True
+    assert frontier.reasoning_effort == "none"
+    assert frontier.max_output_tokens == 4096
+    assert frontier.max_retry_output_tokens == 4096
+    assert frontier.service_tier == "default"
     assert judge.model.api_model == "gpt-4.1"
     assert judge.model.temperature == 0
     assert judge.model.max_output_tokens == 1024
     assert replace(target, max_output_tokens=target.max_output_tokens + 1).fingerprint != target.fingerprint
+    assert replace(target, reasoning_effort="low").fingerprint != target.fingerprint
     with pytest.raises(ValueError, match="Unknown model"):
         registry.get("not-configured")
 
@@ -382,6 +436,7 @@ def _generation_row(
     sample_idx: int,
     gold: str,
     label: str,
+    latest_execution_id: str | None = None,
 ) -> dict[str, object]:
     response = (
         f"REASONING: fixture\nACUITY: {label}"
@@ -423,6 +478,7 @@ def _generation_row(
         "reasoning_tokens": 1,
         "total_tokens": 14,
         "latency_ms": 1.5,
+        "latest_execution_id": latest_execution_id,
         "timing_version": 2,
         "timing_source": "instrumented_stream",
         "queued_at": "2026-01-01T00:00:00+00:00",
@@ -440,7 +496,11 @@ def _generation_row(
         "total_duration_ms": 1.5,
         "server_processing_ms": 0.4,
         "rate_limit_json": "{}",
-        "provider_metadata_json": "{}",
+        "provider_metadata_json": json.dumps(
+            {"returned_service_tier": "default"}
+            if latest_execution_id is not None
+            else {}
+        ),
     }
 
 
@@ -565,6 +625,24 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
                 samples=samples,
             )
         )
+        generation_execution_id = store.start_execution(
+            run_id=run_id,
+            phase="generation",
+            profile_id=model.id,
+            judge_id=None,
+            provider=model.provider,
+            api_model=model.api_model,
+            endpoint=model.endpoint,
+            config_sha256=model.fingerprint,
+            concurrency=20,
+            streaming=True,
+            max_attempts=6,
+            retry_policy={},
+            runner_metadata={},
+            task_count=len(cases) * samples * 2,
+            cache_hit_count=0,
+            pending_count=len(cases) * samples * 2,
+        )
         for source_id, (gold, qa_label, conv_label) in cases.items():
             for sample_idx in range(samples):
                 qa = _generation_row(
@@ -575,6 +653,7 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
                     sample_idx=sample_idx,
                     gold=gold,
                     label=qa_label,
+                    latest_execution_id=generation_execution_id,
                 )
                 conv = _generation_row(
                     run_id=run_id,
@@ -584,12 +663,19 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
                     sample_idx=sample_idx,
                     gold=gold,
                     label=conv_label,
+                    latest_execution_id=generation_execution_id,
                 )
                 store.upsert_generation(qa)
                 store.upsert_generation(conv)
                 store.upsert_judgment(
                     _judgment_row(conv, judge_id=judge_id, judge_label=conv_label)
                 )
+        store.finish_execution(
+            generation_execution_id,
+            status="complete",
+            success_count=len(cases) * samples * 2,
+            failure_count=0,
+        )
 
     destination = generate_report(
         run_id=run_id,
@@ -618,6 +704,45 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
     assert len(report_manifest["judge_assets"]["fingerprint"]) == 64
     assert len(report_manifest["judge_assets"]["rubric_sha256"]) == 64
     assert len(report_manifest["judge_assets"]["template_sha256"]) == 64
+    inference_contract = report_manifest["inference_contract"]
+    assert (
+        inference_contract["paper_reported"]["api_identifier"]
+        == "gpt-5-mini"
+    )
+    assert inference_contract["paper_reported"]["reasoning_effort"] is None
+    assert inference_contract["paper_reported"]["service_tier"] is None
+    assert inference_contract["paper_reported"]["streaming"] is None
+    assert "Not reported" in (
+        inference_contract["paper_reported"]["service_tier_note"]
+    )
+    assert (
+        inference_contract["configured"]["reasoning_effort"] == "medium"
+    )
+    assert (
+        inference_contract["configured"]["reasoning_effort_provenance"][
+            "source_url"
+        ]
+        == "https://developers.openai.com/api/docs/guides/reasoning"
+    )
+    assert report_manifest["paper_baseline"]["arxiv_id"] == "2605.11398"
+    assert report_manifest["paper_baseline"]["applicable_to_run"] is False
+    assert (
+        inference_contract["configured"]["max_retry_completion_tokens"]
+        == 4096
+    )
+    assert inference_contract["configured"]["streaming_values"] == [True]
+    assert inference_contract["configured"]["concurrency_values"] == [20]
+    assert (
+        inference_contract["observed"]["execution_profile_coverage"]
+        == 1
+    )
+    assert inference_contract["observed"]["returned_service_tiers"] == [
+        "default"
+    ]
+    assert (
+        inference_contract["observed"]["returned_service_tier_coverage"]
+        == 1
+    )
     assert (destination / "exports/case_predictions.parquet").exists()
     assert (destination / "tables/usage_and_cost.csv").exists()
     assert (destination / "tables/latency_summary.csv").exists()
@@ -644,6 +769,19 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
     assert frontier.loc[0, "average_exact"] == pytest.approx(0.5)
     assert frontier.loc[0, "accuracy_complete"]
     assert frontier.loc[0, "target_cost_per_1000_successful_calls_usd"] > 0
+    assert frontier.loc[0, "reasoning_effort"] == "medium"
+    assert frontier.loc[0, "max_completion_tokens"] == 4096
+    assert frontier.loc[0, "max_retry_completion_tokens"] == 4096
+    assert (
+        frontier.loc[0, "max_retry_completion_tokens_basis"]
+        == "inference_contract"
+    )
+    assert frontier.loc[0, "target_reasoning_tokens"] > 0
+    assert frontier.loc[0, "latency_profile_execution_coverage"] == 1
+    assert (
+        frontier.loc[0, "latency_profile_returned_service_tier_coverage"]
+        == 1
+    )
     assert frontier.loc[0, "service_latency_p95_macro_ms"] == pytest.approx(1.0)
     assert frontier.loc[0, "qa_service_latency_p95_ms"] == pytest.approx(1.0)
     assert frontier.loc[0, "conv_service_latency_p95_ms"] == pytest.approx(1.0)

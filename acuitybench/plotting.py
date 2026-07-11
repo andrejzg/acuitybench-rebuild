@@ -25,6 +25,7 @@ class FrontierPoint:
     accuracy: float
     x: float
     source: str
+    reasoning_effort: str | None = None
     is_proxy: bool = False
     is_partial: bool = False
 
@@ -162,7 +163,12 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
     point_summaries = " ".join(
         (
             f"{point.model} ({point.run_id}): {point.accuracy:.2%} average exact, "
-            f"{spec.value_formatter(point.x)}, {point.source}."
+            f"{spec.value_formatter(point.x)}, {point.source}"
+            + (
+                f", reasoning effort {point.reasoning_effort}."
+                if point.reasoning_effort
+                else "."
+            )
         )
         for point in points
     )
@@ -192,7 +198,7 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
         "    .background{fill:var(--bg)} .title{fill:var(--fg);font:500 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .subtitle{fill:var(--muted);font:400 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
         "    .grid{stroke:var(--grid);stroke-width:1} .axis{stroke:var(--axis);stroke-width:1.4} .tick{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
         "    .point{stroke-width:2.5} .measured-point{fill:var(--series);stroke:var(--series)} .proxy-point{fill:var(--bg);stroke:var(--proxy)} .partial-point{fill:var(--bg);stroke:var(--partial)} .pareto-frontier{fill:none;stroke:var(--frontier);stroke-width:2;stroke-opacity:.45}",
-        "    .point-label{fill:var(--fg);font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
+        "    .point-label{fill:var(--fg);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
         "  </style>",
         f'  <rect class="background" width="{SVG_WIDTH}" height="{SVG_HEIGHT}"/>',
         f'  <text class="title" x="{PLOT_LEFT}" y="52">{escape(spec.title)}</text>',
@@ -252,13 +258,20 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
         if point.run_id in frontier_ids:
             classes.append("pareto-point")
         value = f"{point.accuracy:.1%} · {spec.value_formatter(point.x)}"
+        if point.reasoning_effort:
+            value += f" · effort {point.reasoning_effort}"
         if point.is_proxy:
             value += " · legacy proxy"
         elif point.is_partial:
             value += " · partial cost telemetry"
         mark_title = (
             f"{point.model} ({point.run_id}): {point.accuracy:.2%} average exact; "
-            f"{spec.value_formatter(point.x)}; {point.source}."
+            f"{spec.value_formatter(point.x)}; {point.source}"
+            + (
+                f"; reasoning effort {point.reasoning_effort}."
+                if point.reasoning_effort
+                else "."
+            )
         )
         escaped_run = escape(point.run_id, quote=True)
         lines.append(
@@ -313,6 +326,28 @@ def _point_identity(row: dict[str, str]) -> tuple[str, str, float] | None:
     )
 
 
+def _reasoning_effort(row: dict[str, str]) -> str | None:
+    effort = (row.get("reasoning_effort") or "").strip()
+    return effort or None
+
+
+def _latency_profile_note(rows: list[dict[str, str]]) -> str:
+    profiles: set[tuple[str, str, str]] = set()
+    for row in rows:
+        if row.get("latency_plot_source") != "client_service_latency":
+            continue
+        streaming = (row.get("latency_profile_streaming") or "").strip().lower()
+        concurrency = (row.get("latency_profile_concurrency") or "").strip()
+        tier = (row.get("latency_profile_service_tier") or "").strip()
+        if streaming and concurrency and tier:
+            profiles.add((streaming, concurrency, tier))
+    if len(profiles) != 1:
+        return "Serving profile: see frontier.csv."
+    streaming, concurrency, tier = next(iter(profiles))
+    transport = "streaming" if streaming == "true" else "non-streaming"
+    return f"Profile: {transport}, concurrency {concurrency}, {tier} tier."
+
+
 def _cost_points(rows: list[dict[str, str]]) -> list[FrontierPoint]:
     points: list[FrontierPoint] = []
     for row in rows:
@@ -332,6 +367,7 @@ def _cost_points(rows: list[dict[str, str]]) -> list[FrontierPoint]:
                 accuracy=accuracy,
                 x=cost,
                 source=f"cost telemetry: {completeness}",
+                reasoning_effort=_reasoning_effort(row),
                 is_partial=completeness != "complete",
             )
         )
@@ -361,6 +397,7 @@ def _latency_points(rows: list[dict[str, str]]) -> list[FrontierPoint]:
                         if is_proxy
                         else "client p95 service-latency macro-average"
                     ),
+                    reasoning_effort=_reasoning_effort(row),
                     is_proxy=is_proxy,
                 )
             )
@@ -375,6 +412,7 @@ def _latency_points(rows: list[dict[str, str]]) -> list[FrontierPoint]:
                     accuracy=accuracy,
                     x=service_ms / 1000,
                     source="client p95 service-latency macro-average",
+                    reasoning_effort=_reasoning_effort(row),
                 )
             )
         elif provider_ms is not None and provider_ms >= 0:
@@ -388,6 +426,7 @@ def _latency_points(rows: list[dict[str, str]]) -> list[FrontierPoint]:
                         "provider processing p95 macro-average; legacy proxy, "
                         "not client service latency"
                     ),
+                    reasoning_effort=_reasoning_effort(row),
                     is_proxy=True,
                 )
             )
@@ -398,6 +437,7 @@ def write_frontier_charts(frontier_path: Path, destination: Path) -> list[Path]:
     """Write accuracy-vs-cost and accuracy-vs-latency SVGs from frontier.csv."""
     rows = _frontier_rows(frontier_path)
     destination.mkdir(parents=True, exist_ok=True)
+    latency_profile_note = _latency_profile_note(rows)
     specifications = (
         (
             _cost_points(rows),
@@ -405,7 +445,8 @@ def write_frontier_charts(frontier_path: Path, destination: Path) -> list[Path]:
                 filename="accuracy-vs-cost.svg",
                 title="Average accuracy vs cost",
                 subtitle=(
-                    "Target inference only; judge cost excluded. Top-left is better."
+                    "Target only; judge excluded. Line: Pareto frontier. "
+                    "Reasoning effort in labels. Top-left is better."
                 ),
                 x_label="Cost per 1,000 successful target-model calls (USD)",
                 empty_message="No plottable data: target cost is unavailable",
@@ -419,8 +460,8 @@ def write_frontier_charts(frontier_path: Path, destination: Path) -> list[Path]:
                 filename="accuracy-vs-latency.svg",
                 title="Average accuracy vs latency",
                 subtitle=(
-                    "Filled: client p95 service latency. Hollow diamond: legacy "
-                    "provider-header proxy."
+                    "Filled: client p95; hollow: legacy proxy. "
+                    f"{latency_profile_note} Top-left is better."
                 ),
                 x_label="p95 duration macro-average across QA + conversation (seconds)",
                 empty_message=(

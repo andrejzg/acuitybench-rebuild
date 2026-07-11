@@ -83,20 +83,32 @@ uv run python -m acuitybench evaluate \
   --run-id smoke-gpt-5-mini
 ```
 
-The paper-compatible full run is:
+The historical non-streaming reproduction committed under
+`gpt-5-mini-paper-reproduction` used the paper's five-sample contract but
+predates definitive client-side latency instrumentation. The paired,
+instrumented paper-contract runs use fresh IDs so no legacy response can be
+mistaken for a streamed call:
 
 ```bash
 uv run python -m acuitybench evaluate \
   --model gpt-5-mini \
   --samples 5 \
-  --run-id gpt-5-mini-paper-reproduction \
-  --concurrency 100 \
-  --judge-concurrency 100 \
-  --no-stream
+  --run-id gpt-5-mini-paper-stream-medium-20260711 \
+  --concurrency 20 \
+  --judge-concurrency 20
+
+uv run python -m acuitybench evaluate \
+  --model gpt-5.4 \
+  --samples 5 \
+  --run-id gpt-5.4-paper-stream-none-20260711 \
+  --concurrency 20 \
+  --judge-concurrency 20
 ```
 
-This makes 9,140 target-model calls (914 cases × two formats × five samples)
-and 4,570 GPT-4.1 rubric-judge calls. Every result is committed immediately to
+Each command makes 9,140 target-model calls (914 cases × two formats × five
+samples) and 4,570 GPT-4.1 rubric-judge calls. Run them sequentially: identical
+streaming, concurrency, and `default` service-tier settings make the latency
+points comparable. Every result is committed immediately to
 `results/evaluations.sqlite3`; rerunning the identical command skips completed
 work. Use `acuitybench infer`, `acuitybench judge`, and `acuitybench report` to
 run those stages separately, `acuitybench runs` to inspect cached runs, or
@@ -109,6 +121,36 @@ accessible SVGs:
 `accuracy-vs-cost.svg` and `accuracy-vs-latency.svg`. A hollow diamond on the
 latency chart is a legacy provider-processing proxy, never a true client
 service-latency measurement or part of the Pareto line.
+
+The paper explicitly specifies temperature 1, five samples, and a maximum
+4,096 completion tokens, but it does not report reasoning effort or a separate
+reasoning-token budget. For reproducibility, the current profiles resolve that
+omission to the documented provider defaults used by the paper-era aliases:
+`medium` for GPT-5-mini and `none` for GPT-5.4. The 4,096 cap includes hidden
+reasoning plus visible output and is now a hard retry cap. Manifests label the
+efforts as inferred rather than paper-reported, retain observed reasoning-token
+usage, and record the deliberate streaming/concurrency divergence needed for
+the latency study. The resolution is pinned to the official
+[reasoning guide](https://developers.openai.com/api/docs/guides/reasoning) for
+GPT-5-mini and the [GPT-5.4 model page](https://developers.openai.com/api/docs/models/gpt-5.4),
+with an access date in each run manifest.
+
+The completed paired run produced:
+
+| Model | Reasoning | Avg exact | Paper delta | Target cost / 1K successful calls | p95 service latency | p95 TTFT |
+|---|---:|---:|---:|---:|---:|---:|
+| GPT-5 mini | medium (5.429M observed tokens) | 73.719% | +0.869 pp | $2.09 | 17.234s | 10.909s |
+| GPT-5.4 | none (0 observed tokens) | 77.324% | +0.124 pp | $5.09 | 6.983s | 1.100s |
+
+Accuracy is the macro-average of QA and conversational exact agreement. Paper
+delta means fresh run minus the [AcuityBench Table 2](https://arxiv.org/pdf/2605.11398)
+value. The
+latency values are macro-averages of the two formats' client-side p95s. Paper
+deltas use Table 2's three-decimal values, so they inherit ±0.05 percentage
+point rounding uncertainty. Including the GPT-4.1 judge, the complete runs cost
+$36.64 and $61.83 respectively. GPT-5.4 is 2.43× the target-model cost per call,
+but is 59.5% lower-latency at p95 and 3.61 percentage points more accurate in
+this run.
 
 ![Average accuracy vs target-model cost](results/model-comparison/accuracy-vs-cost.svg)
 
@@ -130,8 +172,9 @@ Reports are written to `results/<run-id>/`:
   Wasserstein, consensus leave-one-out, and reported custom alpha metrics for
   the 450 panel-consensus and 217 ambiguous cases.
 - `tables/confusion_*.csv`: QA and conversational confusion matrices.
-- `tables/usage_and_cost.csv`: attempt-aware token usage, price-based cost,
-  explicit token/cache-detail coverage, and labeled partial estimates.
+- `tables/usage_and_cost.csv`: attempt-aware token usage, configured reasoning
+  effort and completion caps, observed reasoning-token coverage, price-based
+  cost, explicit token/cache-detail coverage, and labeled partial estimates.
 - `tables/latency_summary.csv`: p50/p90/p95/p99 service latency, terminal
   request time, TTFT, stream tail, provider processing, queueing, and backoff,
   with measurement coverage and clock source kept explicit.
@@ -142,8 +185,9 @@ Reports are written to `results/<run-id>/`:
 - `exports/run_executions.csv` and `request_attempts.*`: invocation concurrency,
   runtime metadata, every API attempt, retries, response headers, and attempt
   usage for latency and billing audits.
-- `run_manifest.json`: exact configuration, data digest, returned model
-  snapshots, completeness, and aggregation contract.
+- `run_manifest.json`: exact configuration, paper-vs-run inference contract,
+  reasoning provenance, data digest, returned model/service tier, completeness,
+  and aggregation contract.
 - `SUMMARY.md`: compact main results, cost, paper comparison, and ambiguous-case
   physician-panel summary.
 
@@ -202,6 +246,10 @@ The repository tracks all data used for the current reconstruction and run:
   records, including usage and latency metadata.
 - `results/gpt-5-mini-paper-reproduction/`: exported GPT-5-mini results and
   paper-style tables.
+- `results/gpt-5-mini-paper-stream-medium-20260711/` and
+  `results/gpt-5.4-paper-stream-none-20260711/`: the complete paired,
+  instrumented runs used by the frontier charts.
+- `results/model-comparison/`: the combined frontier table and README graphs.
 
 Provenance is retained at three levels:
 

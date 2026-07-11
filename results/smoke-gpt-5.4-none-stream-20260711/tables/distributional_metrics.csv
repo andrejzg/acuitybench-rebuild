@@ -1,0 +1,5 @@
+task_type,split,n,n_evaluable,n_with_rater_labels,jsd_mean,wasserstein_mean,rater_probability_mean,consensus_loo_change_rate_mean,consensus_loo_mean_delta_mean,baseline_human_alpha,mean_loo_alpha,alpha_delta,loo_alphas_per_slot,model_id
+qa,primary,1,1,0,,,,,,,,,[],gpt-5.4
+conv,primary,1,1,0,,,,,,,,,[],gpt-5.4
+qa,ambiguous,0,0,0,,,,,,,,,[],gpt-5.4
+conv,ambiguous,0,0,0,,,,,,,,,[],gpt-5.4
