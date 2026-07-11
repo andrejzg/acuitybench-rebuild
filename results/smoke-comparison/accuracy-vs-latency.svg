@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="accuracy-vs-latency-title accuracy-vs-latency-desc">
+  <title id="accuracy-vs-latency-title">Average accuracy vs latency</title>
+  <desc id="accuracy-vs-latency-desc">Average accuracy vs latency. Filled: client p95 service latency. Hollow diamond: legacy provider-header proxy. 1 plotted model run. Within each measurement type, lower x and higher accuracy are better. Legacy proxy points are not compared with client service-latency points. gpt-5-mini (smoke-gpt-5-mini): 100.00% average exact, 10.04s p95, provider processing p95 macro-average; legacy proxy, not client service latency.</desc>
+  <style>
+    :root { --bg:#ffffff; --fg:#44403c; --muted:#78716c; --grid:#e7e5e4; --axis:#a8a29e; --series:#0f9f79; --proxy:#78716c; --partial:#b7791f; --frontier:#0f9f79; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#d6d3d1; --grid:#44403c; --axis:#78716c; --series:#34d399; --proxy:#d6d3d1; --partial:#fbbf24; --frontier:#34d399; } }
+    .background{fill:var(--bg)} .title{fill:var(--fg);font:500 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .subtitle{fill:var(--muted);font:400 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .grid{stroke:var(--grid);stroke-width:1} .axis{stroke:var(--axis);stroke-width:1.4} .tick{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .point{stroke-width:2.5} .measured-point{fill:var(--series);stroke:var(--series)} .proxy-point{fill:var(--bg);stroke:var(--proxy)} .partial-point{fill:var(--bg);stroke:var(--partial)} .pareto-frontier{fill:none;stroke:var(--frontier);stroke-width:2;stroke-opacity:.45}
+    .point-label{fill:var(--fg);font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  </style>
+  <rect class="background" width="1200" height="760"/>
+  <text class="title" x="118" y="52">Average accuracy vs latency</text>
+  <text class="subtitle" x="118" y="82">Filled: client p95 service latency. Hollow diamond: legacy provider-header proxy.</text>
+  <line class="grid" x1="118" y1="648.00" x2="1128" y2="648.00"/>
+  <text class="tick" x="102" y="653.00" text-anchor="end">85%</text>
+  <line class="grid" x1="118" y1="474.00" x2="1128" y2="474.00"/>
+  <text class="tick" x="102" y="479.00" text-anchor="end">90%</text>
+  <line class="grid" x1="118" y1="300.00" x2="1128" y2="300.00"/>
+  <text class="tick" x="102" y="305.00" text-anchor="end">95%</text>
+  <line class="grid" x1="118" y1="126.00" x2="1128" y2="126.00"/>
+  <text class="tick" x="102" y="131.00" text-anchor="end">100%</text>
+  <line class="grid" x1="118.00" y1="126" x2="118.00" y2="648"/>
+  <text class="tick" x="118.00" y="680" text-anchor="middle">0s</text>
+  <line class="grid" x1="320.00" y1="126" x2="320.00" y2="648"/>
+  <text class="tick" x="320.00" y="680" text-anchor="middle">2.5s</text>
+  <line class="grid" x1="522.00" y1="126" x2="522.00" y2="648"/>
+  <text class="tick" x="522.00" y="680" text-anchor="middle">5s</text>
+  <line class="grid" x1="724.00" y1="126" x2="724.00" y2="648"/>
+  <text class="tick" x="724.00" y="680" text-anchor="middle">7.5s</text>
+  <line class="grid" x1="926.00" y1="126" x2="926.00" y2="648"/>
+  <text class="tick" x="926.00" y="680" text-anchor="middle">10s</text>
+  <line class="grid" x1="1128.00" y1="126" x2="1128.00" y2="648"/>
+  <text class="tick" x="1128.00" y="680" text-anchor="middle">12.5s</text>
+  <line class="axis" x1="118" y1="648" x2="1128" y2="648"/>
+  <line class="axis" x1="118" y1="126" x2="118" y2="648"/>
+  <text class="better" x="132" y="150">BETTER ↖</text>
+  <text class="axis-label" x="623.00" y="732" text-anchor="middle">p95 duration macro-average across QA + conversation (seconds)</text>
+  <text class="axis-label" transform="translate(35 387.00) rotate(-90)" text-anchor="middle">Average exact accuracy</text>
+  <g class="point proxy-point" data-run-id="smoke-gpt-5-mini"><title>gpt-5-mini (smoke-gpt-5-mini): 100.00% average exact; 10.04s p95; provider processing p95 macro-average; legacy proxy, not client service latency.</title>
+    <polygon points="929.25,118.00 937.25,126.00 929.25,134.00 921.25,126.00"/>
+    <text class="point-label" x="915.25" y="154.00" text-anchor="end">gpt-5-mini</text>
+    <text class="point-value" x="915.25" y="174.00" text-anchor="end">100.0% · 10.04s p95 · legacy proxy</text>
+  </g>
+</svg>

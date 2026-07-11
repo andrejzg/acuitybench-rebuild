@@ -7,7 +7,10 @@ import pytest
 
 from acuitybench.models import ModelRegistry
 from acuitybench.reporting import (
+    _assert_comparable,
+    _comparison_contract,
     _execution_summary,
+    _frontier_latency_macro,
     _latency_summary,
     _usage_summary,
 )
@@ -346,3 +349,132 @@ def test_judge_usage_is_profile_scoped_even_without_parent_rows() -> None:
     assert row["input_tokens"] == 10
     assert row["output_tokens"] == 2
     assert row["returned_models"] == "gpt-4.1-snapshot"
+
+
+def test_frontier_latency_requires_full_two_format_coverage_and_valid_source() -> None:
+    latency = pd.DataFrame(
+        [
+            {
+                "phase": "target",
+                "task_type": task_type,
+                "metric": "service_latency_ms",
+                "coverage": 1.0,
+                "n_success": 10,
+                "n_measured": 10,
+                "timing_sources": "instrumented_stream",
+                "p95_ms": value,
+            }
+            for task_type, value in (("qa", 100), ("conv", 200))
+        ]
+    )
+    assert _frontier_latency_macro(
+        latency,
+        metric="service_latency_ms",
+        percentile="p95_ms",
+        required_sources={"instrumented_stream", "instrumented_nonstream"},
+    ) == pytest.approx(150)
+
+    latency.loc[latency["task_type"] == "conv", "coverage"] = 0.9
+    assert _frontier_latency_macro(
+        latency,
+        metric="service_latency_ms",
+        percentile="p95_ms",
+        required_sources={"instrumented_stream", "instrumented_nonstream"},
+    ) is None
+
+    latency.loc[:, "coverage"] = 1.0
+    assert _frontier_latency_macro(
+        latency,
+        metric="service_latency_ms",
+        percentile="p95_ms",
+        required_sources={"legacy_aggregate"},
+    ) is None
+
+
+def test_comparison_contract_rejects_mixed_benchmark_scope() -> None:
+    reference = {
+        "benchmark_sha256": "benchmark",
+        "case_ids_sha256": "cases",
+        "selected_cases": 914,
+        "tasks": ("conv", "qa"),
+        "samples": 5,
+        "expected_generations": 9140,
+        "main_table_filter": "primary-clear",
+        "aggregation": "mode",
+        "parser": "acuity-parser-v1",
+        "judge_id": "judge",
+        "judge_config_fingerprint": "judge-config",
+        "judge_assets_fingerprint": "judge-assets",
+        "returned_judge_models": ("judge-snapshot",),
+    }
+    _assert_comparable(
+        reference,
+        dict(reference),
+        reference_run_id="a",
+        candidate_run_id="b",
+    )
+
+    candidate = dict(reference)
+    candidate.update(
+        {
+            "case_ids_sha256": "smoke-cases",
+            "selected_cases": 2,
+            "samples": 1,
+        }
+    )
+    with pytest.raises(ValueError, match=r"case_ids_sha256.*selected_cases.*samples"):
+        _assert_comparable(
+            reference,
+            candidate,
+            reference_run_id="full",
+            candidate_run_id="smoke",
+        )
+
+
+def test_comparison_contract_pins_judge_snapshot_parser_and_assets() -> None:
+    manifest = {
+        "run": {
+            "benchmark_sha256": "benchmark",
+            "selection": {"case_ids_sha256": "cases"},
+            "selected_cases": 914,
+            "tasks": ["qa", "conv"],
+            "samples": 5,
+            "expected_generations": 9140,
+        },
+        "paper_contract": {
+            "main_table_filter": "primary-clear",
+            "aggregation": "mode",
+            "parser": {"version": 1, "pattern": "acuity-parser-v1"},
+            "judge_id": "judge",
+        },
+        "judge_config": {"fingerprint": "judge-config"},
+        "judge_assets": {"fingerprint": "judge-assets"},
+        "returned_judge_models": ["judge-snapshot"],
+    }
+    contract = _comparison_contract(manifest)
+    assert contract["parser"] == {
+        "version": 1,
+        "pattern": "acuity-parser-v1",
+    }
+    assert contract["judge_config_fingerprint"] == "judge-config"
+    assert contract["judge_assets_fingerprint"] == "judge-assets"
+    assert contract["returned_judge_models"] == ("judge-snapshot",)
+
+    changed = dict(contract)
+    changed["returned_judge_models"] = ("different-snapshot",)
+    with pytest.raises(ValueError, match="returned_judge_models"):
+        _assert_comparable(
+            contract,
+            changed,
+            reference_run_id="a",
+            candidate_run_id="b",
+        )
+
+    del manifest["judge_assets"]
+    with pytest.raises(ValueError, match="judge_assets_fingerprint"):
+        _comparison_contract(manifest)
+
+    manifest["judge_assets"] = {"fingerprint": "judge-assets"}
+    manifest["returned_judge_models"] = []
+    with pytest.raises(ValueError, match="exactly one returned judge"):
+        _comparison_contract(manifest)

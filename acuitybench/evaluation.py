@@ -108,6 +108,16 @@ def extract_label(response: str | None) -> str | None:
     return match.group(1).upper() if match else None
 
 
+def label_parser_contract() -> dict[str, Any]:
+    """Return the explicit scoring-parser contract recorded in reports."""
+    return {
+        "version": 1,
+        "pattern": ACUITY_RE.pattern,
+        "flags": ACUITY_RE.flags,
+        "selection": "first match; capture group uppercased",
+    }
+
+
 def extract_reasoning(response: str | None) -> str:
     if not response:
         return ""
@@ -878,7 +888,7 @@ async def run_inference_async(
     return {"pending": len(pending), "completed": successful, "failed": failed}
 
 
-def _load_judge_assets() -> tuple[dict[str, Any], str]:
+def load_judge_assets() -> tuple[dict[str, Any], str]:
     root = project_root()
     rubric = yaml.safe_load(
         (root / "configs/rubric.yaml").read_text(encoding="utf-8")
@@ -899,7 +909,9 @@ def _format_conversation(prompt_json: str) -> str:
     )
 
 
-def _judge_prompt(generation: dict[str, Any], rubric: dict[str, Any], template: str) -> str:
+def build_judge_prompt(
+    generation: dict[str, Any], rubric: dict[str, Any], template: str
+) -> str:
     replacements = {
         "{{CONVERSATION}}": _format_conversation(generation["prompt"]),
         "{{RESPONSE}}": str(generation["response"] or ""),
@@ -991,12 +1003,12 @@ async def run_judge_async(
 ) -> dict[str, int]:
     if concurrency < 1:
         raise ValueError("--judge-concurrency must be at least 1")
-    rubric, template = _load_judge_assets()
+    rubric, template = load_judge_assets()
     generations = store.completed_conv_generations(run_id)
     existing = store.judgment_records(run_id, judge.id)
     pending: list[JudgeTask] = []
     for generation in generations:
-        prompt = _judge_prompt(generation, rubric, template)
+        prompt = build_judge_prompt(generation, rubric, template)
         prompt_hash = sha256_text(prompt)
         key = (generation["dataset"], generation["source_id"], generation["sample_idx"])
         cached = existing.get(key)

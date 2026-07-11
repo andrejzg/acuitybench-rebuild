@@ -5,6 +5,33 @@
     "expected": 4,
     "ok": 4
   },
+  "judge_assets": {
+    "fingerprint": "e1f572eab911a77d504994fa9d29cef492846a6a72dc94244912b1214eda8e84",
+    "rubric_path": "configs/rubric.yaml",
+    "rubric_sha256": "363cf20bd6e2066139b973363d970f5c42b381e23630d8fe625d99cd426ed334",
+    "template_path": "configs/prompts/judge_rubric.txt",
+    "template_sha256": "5afcf7bada74414eb360fc81197ec77ff022f00f0c094007322089aea432e19b"
+  },
+  "judge_config": {
+    "display_name": "GPT-4.1 paper rubric judge",
+    "fingerprint": "9baf7db233239be3a527873c928b3b76469217005aa9df666c8c5b739fffb847",
+    "id": "paper-gpt-4.1",
+    "model": {
+      "api_key_env": "OPENAI_API_KEY",
+      "api_model": "gpt-4.1",
+      "cached_input_cost_per_million": 0.5,
+      "display_name": "GPT-4.1",
+      "endpoint": "chat_completions",
+      "id": "gpt-4.1",
+      "input_cost_per_million": 2.0,
+      "max_output_tokens": 1024,
+      "output_cost_per_million": 8.0,
+      "provider": "openai",
+      "send_temperature": true,
+      "temperature": 0.0,
+      "token_parameter": "max_tokens"
+    }
+  },
   "judge_status": {
     "expected": 2,
     "ok": 2
@@ -20,7 +47,12 @@
     "judge_id": "paper-gpt-4.1",
     "main_table_expected_n": null,
     "main_table_filter": "split=primary and gold in A/B/C/D",
-    "parser": "first ACUITY\\s*[:\\-]\\s*([A-D]) match, case-insensitive",
+    "parser": {
+      "flags": 34,
+      "pattern": "ACUITY\\s*[:\\-]\\s*([A-D])",
+      "selection": "first match; capture group uppercased",
+      "version": 1
+    },
     "samples_per_case": 1
   },
   "physician_panel_distributional_metrics": [

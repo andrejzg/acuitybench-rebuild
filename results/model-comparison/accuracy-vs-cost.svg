@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="accuracy-vs-cost-title accuracy-vs-cost-desc">
+  <title id="accuracy-vs-cost-title">Average accuracy vs cost</title>
+  <desc id="accuracy-vs-cost-desc">Average accuracy vs cost. Target inference only; judge cost excluded. Top-left is better. 1 plotted model run. Lower x and higher accuracy are better. gpt-5-mini (gpt-5-mini-paper-reproduction): 72.49% average exact, $2.07 / 1k calls, cost telemetry: complete.</desc>
+  <style>
+    :root { --bg:#ffffff; --fg:#44403c; --muted:#78716c; --grid:#e7e5e4; --axis:#a8a29e; --series:#0f9f79; --proxy:#78716c; --partial:#b7791f; --frontier:#0f9f79; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#d6d3d1; --grid:#44403c; --axis:#78716c; --series:#34d399; --proxy:#d6d3d1; --partial:#fbbf24; --frontier:#34d399; } }
+    .background{fill:var(--bg)} .title{fill:var(--fg);font:500 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .subtitle{fill:var(--muted);font:400 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .grid{stroke:var(--grid);stroke-width:1} .axis{stroke:var(--axis);stroke-width:1.4} .tick{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .point{stroke-width:2.5} .measured-point{fill:var(--series);stroke:var(--series)} .proxy-point{fill:var(--bg);stroke:var(--proxy)} .partial-point{fill:var(--bg);stroke:var(--partial)} .pareto-frontier{fill:none;stroke:var(--frontier);stroke-width:2;stroke-opacity:.45}
+    .point-label{fill:var(--fg);font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  </style>
+  <rect class="background" width="1200" height="760"/>
+  <text class="title" x="118" y="52">Average accuracy vs cost</text>
+  <text class="subtitle" x="118" y="82">Target inference only; judge cost excluded. Top-left is better.</text>
+  <line class="grid" x1="118" y1="648.00" x2="1128" y2="648.00"/>
+  <text class="tick" x="102" y="653.00" text-anchor="end">60%</text>
+  <line class="grid" x1="118" y1="543.60" x2="1128" y2="543.60"/>
+  <text class="tick" x="102" y="548.60" text-anchor="end">65%</text>
+  <line class="grid" x1="118" y1="439.20" x2="1128" y2="439.20"/>
+  <text class="tick" x="102" y="444.20" text-anchor="end">70%</text>
+  <line class="grid" x1="118" y1="334.80" x2="1128" y2="334.80"/>
+  <text class="tick" x="102" y="339.80" text-anchor="end">75%</text>
+  <line class="grid" x1="118" y1="230.40" x2="1128" y2="230.40"/>
+  <text class="tick" x="102" y="235.40" text-anchor="end">80%</text>
+  <line class="grid" x1="118" y1="126.00" x2="1128" y2="126.00"/>
+  <text class="tick" x="102" y="131.00" text-anchor="end">85%</text>
+  <line class="grid" x1="118.00" y1="126" x2="118.00" y2="648"/>
+  <text class="tick" x="118.00" y="680" text-anchor="middle">$0</text>
+  <line class="grid" x1="286.33" y1="126" x2="286.33" y2="648"/>
+  <text class="tick" x="286.33" y="680" text-anchor="middle">$0.5</text>
+  <line class="grid" x1="454.67" y1="126" x2="454.67" y2="648"/>
+  <text class="tick" x="454.67" y="680" text-anchor="middle">$1</text>
+  <line class="grid" x1="623.00" y1="126" x2="623.00" y2="648"/>
+  <text class="tick" x="623.00" y="680" text-anchor="middle">$1.5</text>
+  <line class="grid" x1="791.33" y1="126" x2="791.33" y2="648"/>
+  <text class="tick" x="791.33" y="680" text-anchor="middle">$2</text>
+  <line class="grid" x1="959.67" y1="126" x2="959.67" y2="648"/>
+  <text class="tick" x="959.67" y="680" text-anchor="middle">$2.5</text>
+  <line class="grid" x1="1128.00" y1="126" x2="1128.00" y2="648"/>
+  <text class="tick" x="1128.00" y="680" text-anchor="middle">$3</text>
+  <line class="axis" x1="118" y1="648" x2="1128" y2="648"/>
+  <line class="axis" x1="118" y1="126" x2="118" y2="648"/>
+  <text class="better" x="132" y="150">BETTER ↖</text>
+  <text class="axis-label" x="623.00" y="732" text-anchor="middle">Cost per 1,000 successful target-model calls (USD)</text>
+  <text class="axis-label" transform="translate(35 387.00) rotate(-90)" text-anchor="middle">Average exact accuracy</text>
+  <g class="point measured-point pareto-point" data-run-id="gpt-5-mini-paper-reproduction"><title>gpt-5-mini (gpt-5-mini-paper-reproduction): 72.49% average exact; $2.07 / 1k calls; cost telemetry: complete.</title>
+    <circle cx="816.35" cy="387.30" r="8"/>
+    <text class="point-label" x="830.35" y="372.30" text-anchor="start">gpt-5-mini</text>
+    <text class="point-value" x="830.35" y="392.30" text-anchor="start">72.5% · $2.07 / 1k calls</text>
+  </g>
+</svg>
