@@ -1,59 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="accuracy-vs-latency-title accuracy-vs-latency-desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1368" height="848" viewBox="0 0 1368 848" role="img" aria-labelledby="accuracy-vs-latency-title accuracy-vs-latency-desc">
   <title id="accuracy-vs-latency-title">Average accuracy vs latency</title>
-  <desc id="accuracy-vs-latency-desc">Average accuracy vs latency. Filled: client p95; hollow: legacy proxy. Profile: streaming, concurrency 1, default tier. Top-left is better. 2 plotted model runs. Lower x and higher accuracy are better. gpt-5.4 (smoke-gpt-5.4-none-stream-20260711): 100.00% average exact, 3.12s p95, client p95 service-latency macro-average, reasoning effort none. gpt-5-mini (smoke-gpt-5-mini-medium-stream-20260711): 50.00% average exact, 8.78s p95, client p95 service-latency macro-average, reasoning effort medium.</desc>
+  <desc id="accuracy-vs-latency-desc">Average accuracy vs latency. Gray circles are measured client p95 service latency; hollow diamonds are legacy proxies. Profile: streaming, concurrency 1, default tier. 2 plotted model runs. Lower x and higher accuracy are better. GPT-5.4 (smoke-gpt-5.4-none-stream-20260711): 100.00% average exact, 3.12s p95, client p95 service-latency macro-average, reasoning effort none. GPT-5 mini (smoke-gpt-5-mini-medium-stream-20260711): 50.00% average exact, 8.78s p95, client p95 service-latency macro-average, reasoning effort medium. The green Our trained model? marker is an aspirational target, not a measured result.</desc>
   <style>
-    :root { --bg:#ffffff; --fg:#44403c; --muted:#78716c; --grid:#e7e5e4; --axis:#a8a29e; --series:#0f9f79; --proxy:#78716c; --partial:#b7791f; --frontier:#0f9f79; }
-    @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#d6d3d1; --grid:#44403c; --axis:#78716c; --series:#34d399; --proxy:#d6d3d1; --partial:#fbbf24; --frontier:#34d399; } }
-    .background{fill:var(--bg)} .title{fill:var(--fg);font:500 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .subtitle{fill:var(--muted);font:400 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-    .grid{stroke:var(--grid);stroke-width:1} .axis{stroke:var(--axis);stroke-width:1.4} .tick{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-    .point{stroke-width:2.5} .measured-point{fill:var(--series);stroke:var(--series)} .proxy-point{fill:var(--bg);stroke:var(--proxy)} .partial-point{fill:var(--bg);stroke:var(--partial)} .pareto-frontier{fill:none;stroke:var(--frontier);stroke-width:2;stroke-opacity:.45}
-    .point-label{fill:var(--fg);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    :root { --bg:#ffffff; --fg:#4f4946; --muted:#6b6866; --grid:#e7e7e7; --axis:#c5c5c5; --frontier:#9e9e9e; --aspiration:#4a9c7b; --partial:#b7791f; }
+    .background{fill:var(--bg)} .legend-label{fill:var(--fg);font:400 22px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .grid{stroke:var(--grid);stroke-width:1.3} .axis{stroke:var(--axis);stroke-width:1.7} .tick{fill:var(--muted);font:400 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .point{stroke-width:2.5} .measured-point{fill:var(--frontier);stroke:var(--frontier)} .proxy-point{fill:var(--bg);stroke:var(--frontier)} .partial-point{fill:var(--bg);stroke:var(--partial)} .frontier-legend-mark{fill:var(--frontier)} .aspiration-mark{fill:var(--aspiration)}
+    .point-label,.aspiration-label{fill:var(--fg);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
   </style>
-  <rect class="background" width="1200" height="760"/>
-  <text class="title" x="118" y="52">Average accuracy vs latency</text>
-  <text class="subtitle" x="118" y="82">Filled: client p95; hollow: legacy proxy. Profile: streaming, concurrency 1, default tier. Top-left is better.</text>
-  <line class="grid" x1="118" y1="648.00" x2="1128" y2="648.00"/>
-  <text class="tick" x="102" y="653.00" text-anchor="end">40%</text>
-  <line class="grid" x1="118" y1="561.00" x2="1128" y2="561.00"/>
-  <text class="tick" x="102" y="566.00" text-anchor="end">50%</text>
-  <line class="grid" x1="118" y1="474.00" x2="1128" y2="474.00"/>
-  <text class="tick" x="102" y="479.00" text-anchor="end">60%</text>
-  <line class="grid" x1="118" y1="387.00" x2="1128" y2="387.00"/>
-  <text class="tick" x="102" y="392.00" text-anchor="end">70%</text>
-  <line class="grid" x1="118" y1="300.00" x2="1128" y2="300.00"/>
-  <text class="tick" x="102" y="305.00" text-anchor="end">80%</text>
-  <line class="grid" x1="118" y1="213.00" x2="1128" y2="213.00"/>
-  <text class="tick" x="102" y="218.00" text-anchor="end">90%</text>
-  <line class="grid" x1="118" y1="126.00" x2="1128" y2="126.00"/>
-  <text class="tick" x="102" y="131.00" text-anchor="end">100%</text>
-  <line class="grid" x1="118.00" y1="126" x2="118.00" y2="648"/>
-  <text class="tick" x="118.00" y="680" text-anchor="middle">0s</text>
-  <line class="grid" x1="286.33" y1="126" x2="286.33" y2="648"/>
-  <text class="tick" x="286.33" y="680" text-anchor="middle">2s</text>
-  <line class="grid" x1="454.67" y1="126" x2="454.67" y2="648"/>
-  <text class="tick" x="454.67" y="680" text-anchor="middle">4s</text>
-  <line class="grid" x1="623.00" y1="126" x2="623.00" y2="648"/>
-  <text class="tick" x="623.00" y="680" text-anchor="middle">6s</text>
-  <line class="grid" x1="791.33" y1="126" x2="791.33" y2="648"/>
-  <text class="tick" x="791.33" y="680" text-anchor="middle">8s</text>
-  <line class="grid" x1="959.67" y1="126" x2="959.67" y2="648"/>
-  <text class="tick" x="959.67" y="680" text-anchor="middle">10s</text>
-  <line class="grid" x1="1128.00" y1="126" x2="1128.00" y2="648"/>
-  <text class="tick" x="1128.00" y="680" text-anchor="middle">12s</text>
-  <line class="axis" x1="118" y1="648" x2="1128" y2="648"/>
-  <line class="axis" x1="118" y1="126" x2="118" y2="648"/>
-  <text class="better" x="132" y="150">BETTER ↖</text>
-  <text class="axis-label" x="623.00" y="732" text-anchor="middle">p95 duration macro-average across QA + conversation (seconds)</text>
-  <text class="axis-label" transform="translate(35 387.00) rotate(-90)" text-anchor="middle">Average exact accuracy</text>
-  <g class="point measured-point pareto-point" data-run-id="smoke-gpt-5.4-none-stream-20260711"><title>gpt-5.4 (smoke-gpt-5.4-none-stream-20260711): 100.00% average exact; 3.12s p95; client p95 service-latency macro-average; reasoning effort none.</title>
-    <circle cx="380.36" cy="126.00" r="8"/>
-    <text class="point-label" x="394.36" y="154.00" text-anchor="start">gpt-5.4</text>
-    <text class="point-value" x="394.36" y="174.00" text-anchor="start">100.0% · 3.12s p95 · effort none</text>
+  <rect class="background" width="1368" height="848"/>
+  <g class="legend" aria-label="Chart legend">
+    <circle class="aspiration-mark" cx="114" cy="48" r="11"/>
+    <text class="legend-label" x="139" y="56">Our trained model?</text>
+    <circle class="frontier-legend-mark" cx="396" cy="48" r="11"/>
+    <text class="legend-label" x="421" y="56">Frontier models</text>
   </g>
-  <g class="point measured-point" data-run-id="smoke-gpt-5-mini-medium-stream-20260711"><title>gpt-5-mini (smoke-gpt-5-mini-medium-stream-20260711): 50.00% average exact; 8.78s p95; client p95 service-latency macro-average; reasoning effort medium.</title>
-    <circle cx="857.03" cy="561.00" r="8"/>
-    <text class="point-label" x="843.03" y="589.00" text-anchor="end">gpt-5-mini</text>
-    <text class="point-value" x="843.03" y="609.00" text-anchor="end">50.0% · 8.78s p95 · effort medium</text>
+  <line class="grid" x1="209" y1="660.00" x2="1264" y2="660.00"/>
+  <text class="tick" x="193" y="665.00" text-anchor="end">40%</text>
+  <line class="grid" x1="209" y1="567.83" x2="1264" y2="567.83"/>
+  <text class="tick" x="193" y="572.83" text-anchor="end">50%</text>
+  <line class="grid" x1="209" y1="475.67" x2="1264" y2="475.67"/>
+  <text class="tick" x="193" y="480.67" text-anchor="end">60%</text>
+  <line class="grid" x1="209" y1="383.50" x2="1264" y2="383.50"/>
+  <text class="tick" x="193" y="388.50" text-anchor="end">70%</text>
+  <line class="grid" x1="209" y1="291.33" x2="1264" y2="291.33"/>
+  <text class="tick" x="193" y="296.33" text-anchor="end">80%</text>
+  <line class="grid" x1="209" y1="199.17" x2="1264" y2="199.17"/>
+  <text class="tick" x="193" y="204.17" text-anchor="end">90%</text>
+  <line class="grid" x1="209" y1="107.00" x2="1264" y2="107.00"/>
+  <text class="tick" x="193" y="112.00" text-anchor="end">100%</text>
+  <text class="tick" x="209.00" y="706" text-anchor="middle">0s</text>
+  <text class="tick" x="384.83" y="706" text-anchor="middle">2s</text>
+  <text class="tick" x="560.67" y="706" text-anchor="middle">4s</text>
+  <text class="tick" x="736.50" y="706" text-anchor="middle">6s</text>
+  <text class="tick" x="912.33" y="706" text-anchor="middle">8s</text>
+  <text class="tick" x="1088.17" y="706" text-anchor="middle">10s</text>
+  <text class="tick" x="1264.00" y="706" text-anchor="middle">12s</text>
+  <line class="axis" x1="209" y1="660" x2="1264" y2="660"/>
+  <line class="axis" x1="209" y1="107" x2="209" y2="660"/>
+  <text class="axis-label" x="736.50" y="780" text-anchor="middle">p95 service latency (seconds)</text>
+  <text class="axis-label" transform="translate(93 383.50) rotate(-90)" text-anchor="middle">Average accuracy</text>
+  <g class="aspirational-marker" data-kind="aspirational">
+    <title>Aspirational target, not a measured result.</title>
+    <circle class="aspiration-mark" cx="258.58" cy="161.19" r="11"/>
+    <text class="aspiration-label" x="281.58" y="168.19">Our trained model?</text>
+  </g>
+  <g class="point measured-point pareto-point" data-run-id="smoke-gpt-5.4-none-stream-20260711"><title>GPT-5.4 (smoke-gpt-5.4-none-stream-20260711): 100.00% average exact; 3.12s p95; client p95 service-latency macro-average; reasoning effort none.</title>
+    <circle cx="483.05" cy="107.00" r="11"/>
+    <text class="point-label" x="501.05" y="143.00" text-anchor="start">GPT-5.4</text>
+  </g>
+  <g class="point measured-point" data-run-id="smoke-gpt-5-mini-medium-stream-20260711"><title>GPT-5 mini (smoke-gpt-5-mini-medium-stream-20260711): 50.00% average exact; 8.78s p95; client p95 service-latency macro-average; reasoning effort medium.</title>
+    <circle cx="980.96" cy="567.83" r="11"/>
+    <text class="point-label" x="962.96" y="603.83" text-anchor="end">GPT-5 mini</text>
   </g>
 </svg>

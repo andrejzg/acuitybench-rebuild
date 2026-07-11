@@ -10,12 +10,13 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 
-SVG_WIDTH = 1200
-SVG_HEIGHT = 760
-PLOT_LEFT = 118
-PLOT_RIGHT = 72
-PLOT_TOP = 126
-PLOT_BOTTOM = 112
+SVG_WIDTH = 1368
+SVG_HEIGHT = 848
+PLOT_LEFT = 209
+PLOT_RIGHT = 104
+PLOT_TOP = 107
+PLOT_BOTTOM = 188
+ASPIRATION_LABEL = "Our trained model?"
 
 
 @dataclass(frozen=True)
@@ -94,18 +95,18 @@ def _x_domain(values: list[float]) -> tuple[float, float, list[float]]:
 
 
 def _y_domain(values: list[float]) -> tuple[float, float, list[float]]:
+    # Match the paper-style editorial chart for the full frontier while still
+    # expanding safely for smoke runs or future results outside this range.
+    low, high = 0.72, 0.86
     if values:
-        low = max(0.0, math.floor((min(values) - 0.08) / 0.05) * 0.05)
-        high = min(1.0, math.ceil((max(values) + 0.08) / 0.05) * 0.05)
-    else:
-        low, high = 0.5, 0.9
-    if high - low < 0.20:
-        midpoint = (high + low) / 2
-        low = max(0.0, math.floor((midpoint - 0.10) / 0.05) * 0.05)
-        high = min(1.0, math.ceil((midpoint + 0.10) / 0.05) * 0.05)
-    if high <= low:
-        low, high = max(0.0, low - 0.1), min(1.0, high + 0.1)
-    step = 0.05 if high - low <= 0.35 else 0.10
+        if min(values) < low:
+            low = max(0.0, math.floor((min(values) - 0.01) / 0.02) * 0.02)
+        if max(values) > high:
+            high = min(1.0, math.ceil((max(values) + 0.01) / 0.02) * 0.02)
+    span = high - low
+    step = 0.02 if span <= 0.24 else 0.05 if span <= 0.50 else 0.10
+    low = max(0.0, math.floor(low / step) * step)
+    high = min(1.0, math.ceil(high / step) * step)
     count = int(round((high - low) / step))
     ticks = [round(low + index * step, 10) for index in range(count + 1)]
     if not math.isclose(ticks[-1], high):
@@ -181,7 +182,9 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
     description = (
         f"{spec.title}. {spec.subtitle} {len(points)} plotted model run"
         f"{'s' if len(points) != 1 else ''}. {comparison_guidance} "
-        f"{point_summaries}"
+        f"{point_summaries} "
+        f"The green {ASPIRATION_LABEL} marker is an aspirational target, not a "
+        "measured result."
     )
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -193,16 +196,19 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
         f"  <title id=\"{title_id}\">{escape(spec.title)}</title>",
         f"  <desc id=\"{desc_id}\">{escape(description)}</desc>",
         "  <style>",
-        "    :root { --bg:#ffffff; --fg:#44403c; --muted:#78716c; --grid:#e7e5e4; --axis:#a8a29e; --series:#0f9f79; --proxy:#78716c; --partial:#b7791f; --frontier:#0f9f79; }",
-        "    @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#f5f5f4; --muted:#d6d3d1; --grid:#44403c; --axis:#78716c; --series:#34d399; --proxy:#d6d3d1; --partial:#fbbf24; --frontier:#34d399; } }",
-        "    .background{fill:var(--bg)} .title{fill:var(--fg);font:500 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .subtitle{fill:var(--muted);font:400 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
-        "    .grid{stroke:var(--grid);stroke-width:1} .axis{stroke:var(--axis);stroke-width:1.4} .tick{fill:var(--muted);font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
-        "    .point{stroke-width:2.5} .measured-point{fill:var(--series);stroke:var(--series)} .proxy-point{fill:var(--bg);stroke:var(--proxy)} .partial-point{fill:var(--bg);stroke:var(--partial)} .pareto-frontier{fill:none;stroke:var(--frontier);stroke-width:2;stroke-opacity:.45}",
-        "    .point-label{fill:var(--fg);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:500 17px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .point-value{fill:var(--muted);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .better{fill:var(--muted);font:500 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.08em} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
+        "    :root { --bg:#ffffff; --fg:#4f4946; --muted:#6b6866; --grid:#e7e7e7; --axis:#c5c5c5; --frontier:#9e9e9e; --aspiration:#4a9c7b; --partial:#b7791f; }",
+        "    .background{fill:var(--bg)} .legend-label{fill:var(--fg);font:400 22px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
+        "    .grid{stroke:var(--grid);stroke-width:1.3} .axis{stroke:var(--axis);stroke-width:1.7} .tick{fill:var(--muted);font:400 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .axis-label{fill:var(--fg);font:500 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
+        "    .point{stroke-width:2.5} .measured-point{fill:var(--frontier);stroke:var(--frontier)} .proxy-point{fill:var(--bg);stroke:var(--frontier)} .partial-point{fill:var(--bg);stroke:var(--partial)} .frontier-legend-mark{fill:var(--frontier)} .aspiration-mark{fill:var(--aspiration)}",
+        "    .point-label,.aspiration-label{fill:var(--fg);stroke:var(--bg);stroke-width:4;stroke-linejoin:round;paint-order:stroke fill;font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif} .empty{fill:var(--muted);font:400 20px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}",
         "  </style>",
         f'  <rect class="background" width="{SVG_WIDTH}" height="{SVG_HEIGHT}"/>',
-        f'  <text class="title" x="{PLOT_LEFT}" y="52">{escape(spec.title)}</text>',
-        f'  <text class="subtitle" x="{PLOT_LEFT}" y="82">{escape(spec.subtitle)}</text>',
+        '  <g class="legend" aria-label="Chart legend">',
+        '    <circle class="aspiration-mark" cx="114" cy="48" r="11"/>',
+        f'    <text class="legend-label" x="139" y="56">{escape(ASPIRATION_LABEL)}</text>',
+        '    <circle class="frontier-legend-mark" cx="396" cy="48" r="11"/>',
+        '    <text class="legend-label" x="421" y="56">Frontier models</text>',
+        "  </g>",
     ]
 
     for tick in y_ticks:
@@ -215,37 +221,38 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
         )
     for tick in x_ticks:
         x = x_position(tick)
-        lines.extend(
-            [
-                f'  <line class="grid" x1="{x:.2f}" y1="{PLOT_TOP}" x2="{x:.2f}" y2="{PLOT_TOP + plot_height}"/>',
-                f'  <text class="tick" x="{x:.2f}" y="{PLOT_TOP + plot_height + 32}" text-anchor="middle">{escape(spec.x_formatter(tick))}</text>',
-            ]
+        lines.append(
+            f'  <text class="tick" x="{x:.2f}" y="{PLOT_TOP + plot_height + 46}" text-anchor="middle">{escape(spec.x_formatter(tick))}</text>'
         )
     lines.extend(
         [
             f'  <line class="axis" x1="{PLOT_LEFT}" y1="{PLOT_TOP + plot_height}" x2="{PLOT_LEFT + plot_width}" y2="{PLOT_TOP + plot_height}"/>',
             f'  <line class="axis" x1="{PLOT_LEFT}" y1="{PLOT_TOP}" x2="{PLOT_LEFT}" y2="{PLOT_TOP + plot_height}"/>',
-            f'  <text class="better" x="{PLOT_LEFT + 14}" y="{PLOT_TOP + 24}">BETTER ↖</text>',
-            f'  <text class="axis-label" x="{PLOT_LEFT + plot_width / 2:.2f}" y="{SVG_HEIGHT - 28}" text-anchor="middle">{escape(spec.x_label)}</text>',
-            f'  <text class="axis-label" transform="translate(35 {PLOT_TOP + plot_height / 2:.2f}) rotate(-90)" text-anchor="middle">Average exact accuracy</text>',
+            f'  <text class="axis-label" x="{PLOT_LEFT + plot_width / 2:.2f}" y="780" text-anchor="middle">{escape(spec.x_label)}</text>',
+            f'  <text class="axis-label" transform="translate(93 {PLOT_TOP + plot_height / 2:.2f}) rotate(-90)" text-anchor="middle">Average accuracy</text>',
         ]
     )
 
     comparable = [point for point in points if not point.is_proxy and not point.is_partial]
-    path = _frontier_path(
-        comparable,
-        x_position=x_position,
-        y_position=y_position,
-    )
-    if path:
-        lines.append(f'  <polyline class="pareto-frontier" points="{path}"/>')
-
     frontier_ids = _pareto_ids(comparable)
     if not points:
         lines.append(
             f'  <text class="empty" x="{PLOT_LEFT + plot_width / 2:.2f}" y="{PLOT_TOP + plot_height / 2:.2f}" text-anchor="middle">{escape(spec.empty_message)}</text>'
         )
-    for index, point in enumerate(points):
+    else:
+        aspiration_x = PLOT_LEFT + plot_width * 0.047
+        aspiration_y = PLOT_TOP + plot_height * 0.098
+        lines.extend(
+            [
+                '  <g class="aspirational-marker" data-kind="aspirational">',
+                '    <title>Aspirational target, not a measured result.</title>',
+                f'    <circle class="aspiration-mark" cx="{aspiration_x:.2f}" cy="{aspiration_y:.2f}" r="11"/>',
+                f'    <text class="aspiration-label" x="{aspiration_x + 23:.2f}" y="{aspiration_y + 7:.2f}">{escape(ASPIRATION_LABEL)}</text>',
+                "  </g>",
+            ]
+        )
+    best_accuracy = max((point.accuracy for point in points), default=-math.inf)
+    for point in points:
         x = x_position(point.x)
         y = y_position(point.accuracy)
         classes = ["point"]
@@ -257,13 +264,6 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
             classes.append("measured-point")
         if point.run_id in frontier_ids:
             classes.append("pareto-point")
-        value = f"{point.accuracy:.1%} · {spec.value_formatter(point.x)}"
-        if point.reasoning_effort:
-            value += f" · effort {point.reasoning_effort}"
-        if point.is_proxy:
-            value += " · legacy proxy"
-        elif point.is_partial:
-            value += " · partial cost telemetry"
         mark_title = (
             f"{point.model} ({point.run_id}): {point.accuracy:.2%} average exact; "
             f"{spec.value_formatter(point.x)}; {point.source}"
@@ -289,18 +289,17 @@ def _chart_svg(points: list[FrontierPoint], spec: ChartSpec) -> str:
             )
             lines.append(f'    <polygon points="{polygon}"/>')
         else:
-            lines.append(f'    <circle cx="{x:.2f}" cy="{y:.2f}" r="8"/>')
+            lines.append(f'    <circle cx="{x:.2f}" cy="{y:.2f}" r="11"/>')
         label_anchor = "end" if x > PLOT_LEFT + plot_width * 0.73 else "start"
-        label_x = x - 14 if label_anchor == "end" else x + 14
-        label_y = y - 15 if index % 2 == 0 else y + 28
+        label_x = x - 18 if label_anchor == "end" else x + 18
+        label_y = y - 18 if math.isclose(point.accuracy, best_accuracy) else y + 36
         if label_y < PLOT_TOP + 20:
-            label_y = y + 28
+            label_y = y + 36
         if label_y > PLOT_TOP + plot_height - 20:
-            label_y = y - 28
+            label_y = y - 32
         lines.extend(
             [
                 f'    <text class="point-label" x="{label_x:.2f}" y="{label_y:.2f}" text-anchor="{label_anchor}">{escape(point.model)}</text>',
-                f'    <text class="point-value" x="{label_x:.2f}" y="{label_y + 20:.2f}" text-anchor="{label_anchor}">{escape(value)}</text>',
                 "  </g>",
             ]
         )
@@ -319,9 +318,14 @@ def _point_identity(row: dict[str, str]) -> tuple[str, str, float] | None:
     accuracy = _number(row.get("average_exact"))
     if accuracy is None or not 0 <= accuracy <= 1:
         return None
+    raw_model = row.get("model") or row.get("run_id") or "unknown model"
+    model = {
+        "gpt-5-mini": "GPT-5 mini",
+        "gpt-5.4": "GPT-5.4",
+    }.get(raw_model, raw_model)
     return (
         row.get("run_id") or "unknown-run",
-        row.get("model") or row.get("run_id") or "unknown model",
+        model,
         accuracy,
     )
 
@@ -445,10 +449,10 @@ def write_frontier_charts(frontier_path: Path, destination: Path) -> list[Path]:
                 filename="accuracy-vs-cost.svg",
                 title="Average accuracy vs cost",
                 subtitle=(
-                    "Target only; judge excluded. Line: Pareto frontier. "
-                    "Reasoning effort in labels. Top-left is better."
+                    "Gray circles are measured target-model runs; judge cost is "
+                    "excluded."
                 ),
-                x_label="Cost per 1,000 successful target-model calls (USD)",
+                x_label="Target-model cost per 1,000 calls (USD)",
                 empty_message="No plottable data: target cost is unavailable",
                 x_formatter=_format_cost_tick,
                 value_formatter=lambda value: f"${value:,.2f} / 1k calls",
@@ -460,10 +464,10 @@ def write_frontier_charts(frontier_path: Path, destination: Path) -> list[Path]:
                 filename="accuracy-vs-latency.svg",
                 title="Average accuracy vs latency",
                 subtitle=(
-                    "Filled: client p95; hollow: legacy proxy. "
-                    f"{latency_profile_note} Top-left is better."
+                    "Gray circles are measured client p95 service latency; hollow "
+                    f"diamonds are legacy proxies. {latency_profile_note}"
                 ),
-                x_label="p95 duration macro-average across QA + conversation (seconds)",
+                x_label="p95 service latency (seconds)",
                 empty_message=(
                     "No plottable data: service latency and legacy proxy are unavailable"
                 ),

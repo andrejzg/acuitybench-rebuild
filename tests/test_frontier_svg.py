@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from acuitybench.plotting import (
     PLOT_LEFT,
@@ -82,13 +83,17 @@ def test_single_point_charts_are_valid_and_byte_deterministic(
 
     cost_text = first[0].read_text(encoding="utf-8")
     latency_text = first[1].read_text(encoding="utf-8")
-    assert "Average exact accuracy" in cost_text
-    assert "Cost per 1,000 successful target-model calls (USD)" in cost_text
-    assert "p95 duration macro-average" in latency_text
+    assert "Average accuracy" in cost_text
+    assert "Target-model cost per 1,000 calls (USD)" in cost_text
+    assert "p95 service latency (seconds)" in latency_text
     assert "effort medium" in latency_text
     assert "Profile: streaming, concurrency 20, default tier" in latency_text
-    assert "Line: Pareto frontier" in cost_text
+    assert "Our trained model?" in cost_text
+    assert "Frontier models" in cost_text
+    assert 'data-kind="aspirational"' in cost_text
+    assert "not a measured result" in cost_text
     assert "paint-order:stroke fill" in cost_text
+    assert "pareto-frontier" not in cost_text
     latency_root = ET.fromstring(latency_text)
     latency_desc = latency_root.find(f"{SVG_NAMESPACE}desc")
     assert latency_desc is not None
@@ -102,6 +107,20 @@ def test_single_point_charts_are_valid_and_byte_deterministic(
     ]
     assert len(duration_ticks) == len(set(duration_ticks))
     assert "0.2s" in duration_ticks
+    accuracy_ticks = [
+        element.text
+        for element in latency_root.findall(f".//{SVG_NAMESPACE}text")
+        if element.attrib.get("class") == "tick"
+        and (element.text or "").endswith("%")
+    ]
+    assert accuracy_ticks == ["72%", "74%", "76%", "78%", "80%", "82%", "84%", "86%"]
+    grid_lines = [
+        element
+        for element in latency_root.findall(f".//{SVG_NAMESPACE}line")
+        if element.attrib.get("class") == "grid"
+    ]
+    assert grid_lines
+    assert all(line.attrib["y1"] == line.attrib["y2"] for line in grid_lines)
 
 
 def test_legacy_provider_processing_is_explicit_latency_proxy(
@@ -202,6 +221,7 @@ def test_unplottable_rows_still_write_valid_placeholder_svgs(
         root = ET.fromstring(raw)
         assert not _point_groups(root)
         assert "No plottable data" in raw
+        assert 'data-kind="aspirational"' not in raw
         assert "infinity" not in raw.lower()
 
 
@@ -213,3 +233,65 @@ def test_pareto_frontier_excludes_dominated_points() -> None:
         FrontierPoint("d", "D", 0.90, 3.0, "measured"),
     ]
     assert _pareto_ids(points) == {"a", "c"}
+
+
+def test_committed_charts_use_latest_full_results_and_separate_aspiration() -> None:
+    root_path = Path(__file__).resolve().parents[1]
+    frontier = pd.read_csv(root_path / "results/model-comparison/frontier.csv")
+    expected = {
+        "gpt-5-mini-paper-stream-medium-20260711": {
+            "accuracy": 0.7371916508538899,
+            "cost": 2.092634146608315,
+            "latency_ms": 17233.86545202302,
+        },
+        "gpt-5.4-paper-stream-none-20260711": {
+            "accuracy": 0.7732447817836812,
+            "cost": 5.085045404814005,
+            "latency_ms": 6982.850375002092,
+        },
+    }
+    assert set(frontier["run_id"]) == set(expected)
+    indexed = frontier.set_index("run_id")
+    for run_id, values in expected.items():
+        assert indexed.loc[run_id, "average_exact"] == pytest.approx(
+            values["accuracy"]
+        )
+        assert indexed.loc[
+            run_id, "target_cost_per_1000_successful_calls_usd"
+        ] == pytest.approx(values["cost"])
+        assert indexed.loc[run_id, "latency_plot_p95_ms"] == pytest.approx(
+            values["latency_ms"]
+        )
+
+    for filename in ("accuracy-vs-cost.svg", "accuracy-vs-latency.svg"):
+        chart = ET.parse(root_path / "results/model-comparison" / filename).getroot()
+        measured = _point_groups(chart)
+        assert {point.attrib["data-run-id"] for point in measured} == set(expected)
+        aspirations = [
+            element
+            for element in chart.findall(f".//{SVG_NAMESPACE}g")
+            if element.attrib.get("data-kind") == "aspirational"
+        ]
+        assert len(aspirations) == 1
+        aspiration = aspirations[0]
+        assert "data-run-id" not in aspiration.attrib
+        title = aspiration.find(f"{SVG_NAMESPACE}title")
+        assert title is not None and "not a measured result" in (title.text or "")
+        labels = [
+            element.text
+            for element in aspiration.findall(f"{SVG_NAMESPACE}text")
+        ]
+        assert labels == ["Our trained model?"]
+
+        point_titles = " ".join(
+            (point.find(f"{SVG_NAMESPACE}title").text or "")
+            for point in measured
+        )
+        assert "73.72%" in point_titles
+        assert "77.32%" in point_titles
+        if filename == "accuracy-vs-cost.svg":
+            assert "$2.09 / 1k calls" in point_titles
+            assert "$5.09 / 1k calls" in point_titles
+        else:
+            assert "17.23s p95" in point_titles
+            assert "6.98s p95" in point_titles
