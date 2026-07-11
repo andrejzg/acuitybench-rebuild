@@ -1,0 +1,21 @@
+README.md
+  s_3f5e58f5c753ff::t_90b89507fe5312 3-7,14-15,18-28
+  s_3f5e58f5c753ff::t_abd8827d7fc7fe 16-17
+  s_3f5e58f5c753ff::t_ccf3c55757f8aa 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "ac36bc936bc6f494f790d7d7bbfc287fbdf1c526",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
