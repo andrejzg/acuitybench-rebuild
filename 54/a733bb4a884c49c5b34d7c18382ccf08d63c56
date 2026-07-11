@@ -1,0 +1,409 @@
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/metrics_long.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-7
+results/model-comparison/execution_summary.csv
+  s_3f5e58f5c753ff::t_5047acb60eea78 2-6
+results/model-comparison/accuracy-vs-cost.svg
+  s_3f5e58f5c753ff::t_b9d1ab94ee52c2 4,11,15,44,47,49,52
+  s_3f5e58f5c753ff::t_5047acb60eea78 17,19,21,23,25,27,30-31,33-35,37,43,45-46,48,50-51
+results/smoke-gpt-5.4-none-stream-20260711/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+README.md
+  s_3f5e58f5c753ff::t_8b678a4bdc4fbc 86-90,96-105,108-111,125-132,175-177,188-190
+  s_3f5e58f5c753ff::t_e25d9758c0bfa6 133-139,141-144,148-153,249-252
+  s_3f5e58f5c753ff::t_b3eb2216cea1b4 140,145-147
+  s_3f5e58f5c753ff::t_1c8c35d3f639b7 154
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_ambiguous_qa.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/latency_summary.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-28
+results/gpt-5-mini-paper-stream-medium-20260711/run_manifest.json
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-55,57-62,65-103,127-1165
+  s_3f5e58f5c753ff::t_01bdaa023faf41 56,63-64
+  s_3f5e58f5c753ff::t_54f6eadf92af7a 104-126
+acuitybench/reporting.py
+  s_3f5e58f5c753ff::t_98d3bc1212b0a7 1786,1892-1898,1915,1925-1933,1972-1987,2016-2018,2033-2042,2101
+  s_3f5e58f5c753ff::t_88e4fc1cd1378c 1367-1368
+  s_3f5e58f5c753ff::t_fae9df301913d2 1173-1174,1176-1178,1188-1193,1196,1210-1214,1249-1250
+  s_3f5e58f5c753ff::t_b3c25d3688a064 1215-1219,1221-1223
+  s_3f5e58f5c753ff::t_1a2c8dcc4bd2bd 136-146
+  s_3f5e58f5c753ff::t_03e87cc6b2d5b4 55,57-76,1237-1239,1527
+  s_3f5e58f5c753ff::t_855aa56f6129fe 34-41,861,866
+  s_3f5e58f5c753ff::t_60f8a5b597f0bb 505-507,554-556,561-567,571,604-605,607-608
+  s_3f5e58f5c753ff::t_b3eb2216cea1b4 42-49,852-856,862,1087,1271-1281,1442-1446
+  s_3f5e58f5c753ff::t_37c44e79f527f8 857,1562-1585,1599-1628,1630-1632,1638-1701
+  s_3f5e58f5c753ff::t_0a0afe8f79de7c 523,528-538,592,603,606
+  s_3f5e58f5c753ff::t_a7442d3f8118f2 1175,1179-1187,1194-1195,1202-1209,1220,1224-1236,1240-1248,1251-1253,1270,1351-1366,1369-1375
+  s_3f5e58f5c753ff::t_9d0f7c743e0329 1629,1633-1637
+  s_3f5e58f5c753ff::t_8c4b5b291a1748 1118,1120-1122
+  s_3f5e58f5c753ff::t_dd3b247e5fb6e9 1197-1201
+  s_3f5e58f5c753ff::t_bd0ca200a09587 187-188
+  s_3f5e58f5c753ff::t_66a5fd09439293 1586-1598,1910-1914
+  s_3f5e58f5c753ff::t_d4e9e100da292e 1899-1909,1916-1924,2012-2015,2019-2032
+  s_3f5e58f5c753ff::t_ddd1e57457812b 50-54,56,89-135,147-186,189-200
+  s_3f5e58f5c753ff::t_9053f1954bf81e 201-202
+  s_3f5e58f5c753ff::t_51e6d2cbca0438 858-859
+  s_3f5e58f5c753ff::t_75ceadec1f74c8 1447
+results/smoke-gpt-5.4-none-stream-20260711/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+configs/models.yaml
+  s_3f5e58f5c753ff::t_7c24991d87439b 18-27,33-51
+  s_c23991ac800f3f::t_177caa9c0208b6 52
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/request_attempts.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/tables/execution_summary.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-4
+results/gpt-5-mini-paper-stream-medium-20260711/tables/table2.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-2
+acuitybench/evaluation.py
+  s_3f5e58f5c753ff::t_7c24991d87439b 470,527,678,695-703,815,1083
+  s_3f5e58f5c753ff::t_5bce0d89ef3d92 471-474,478-483
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/boundary_metrics.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_ambiguous_conv.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/tables/boundary_metrics.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-7
+results/gpt-5-mini-paper-stream-medium-20260711/tables/published_comparison.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-7
+results/gpt-5-mini-paper-stream-medium-20260711/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/smoke-comparison/latency_summary.csv
+  s_3f5e58f5c753ff::t_63237d85d54f95 2-55
+results/model-comparison/accuracy-vs-latency.svg
+  s_3f5e58f5c753ff::t_b9d1ab94ee52c2 4,11,15,45,48,50,53
+  s_3f5e58f5c753ff::t_5047acb60eea78 17,19,21,23,25,27,30-37,39,46-47,49,51-52
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/execution_summary.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+results/smoke-gpt-5.4-none-stream-20260711/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_a5499e6b5b0f8d 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/run_executions.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+results/smoke-comparison/accuracy-vs-cost.svg
+  s_3f5e58f5c753ff::t_f28d4eff661586 4,11,15,48,51,53,56
+  s_3f5e58f5c753ff::t_63237d85d54f95 17-19,21-23,25-27,32-39,41,47,49-50,52,54-55
+tests/test_frontier_svg.py
+  s_3f5e58f5c753ff::t_d48e046c68d0d5 51-54,88-91
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_primary_qa.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/confusion_qa.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-5
+results/smoke-gpt-5-mini-medium-stream-20260711/SUMMARY.md
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-9,11-22,27-44
+  s_3f5e58f5c753ff::t_a5499e6b5b0f8d 10,23-26
+results/model-comparison/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_5047acb60eea78 1-5
+results/smoke-comparison/table2.md
+  s_3f5e58f5c753ff::t_63237d85d54f95 1-4
+results/smoke-comparison/table2.csv
+  s_3f5e58f5c753ff::t_63237d85d54f95 2-3
+results/gpt-5-mini-paper-stream-medium-20260711/tables/latency_summary.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-28
+results/smoke-gpt-5.4-none-stream-20260711/tables/latency_summary.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-28
+AUDIT.md
+  s_3f5e58f5c753ff::t_e25d9758c0bfa6 80-103
+tests/test_timing.py
+  s_3f5e58f5c753ff::t_643625fb6c12bf 239-240,261
+  s_3f5e58f5c753ff::t_71a164b54eae3d 296-299
+  s_3f5e58f5c753ff::t_64b0e26fb40fea 4
+  s_3f5e58f5c753ff::t_5bce0d89ef3d92 51,53-54,202-203,212,216,224,226,233-234,247-253,271-274,277,279-280
+  s_3f5e58f5c753ff::t_ffe85ee53c9036 241-246,254-260,262-270,275-276,278,281-282
+  s_3f5e58f5c753ff::t_7ebdc1dda9058d 332-335
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_ambiguous_conv.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1
+  s_3f5e58f5c753ff::t_7e7e0c24003e82 2-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_primary_conv.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-2
+  s_3f5e58f5c753ff::t_b99c0ab52b37f7 3
+results/smoke-gpt-5.4-none-stream-20260711/exports/run_executions.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/tables/confusion_qa.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-5
+results/gpt-5.4-paper-stream-none-20260711/tables/published_comparison.csv
+  s_3f5e58f5c753ff::t_85c97eef9b9a96 1-7
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_ambiguous_qa.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1
+  s_3f5e58f5c753ff::t_0a0e7492581bb1 2-3
+acuitybench/models.py
+  s_3f5e58f5c753ff::t_8686458c9e1a08 7,17-19,130-141,160,168
+  s_3f5e58f5c753ff::t_7c24991d87439b 35-38,41-52,113-129,142-155,169,176-187
+results/smoke-gpt-5.4-none-stream-20260711/tables/boundary_metrics.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1
+results/smoke-gpt-5.4-none-stream-20260711/exports/case_predictions.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/run_manifest.json
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-18,24-32,38-41,43-44,51-53,55,57-60,65-67,70-102,126-1044,1046-1076,1078-1086
+  s_3f5e58f5c753ff::t_a5499e6b5b0f8d 19-23,33-37,42,45-50,54,56,61-64,68-69,1045,1077
+  s_3f5e58f5c753ff::t_76cc2cb1373215 103-125
+tests/test_models.py
+  s_3f5e58f5c753ff::t_8686458c9e1a08 1-122
+results/smoke-comparison/frontier.csv
+  s_3f5e58f5c753ff::t_63237d85d54f95 1-3
+results/smoke-gpt-5.4-none-stream-20260711/SUMMARY.md
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-9,11-22,27-44
+  s_3f5e58f5c753ff::t_a5499e6b5b0f8d 10,23-26
+results/smoke-gpt-5.4-none-stream-20260711/run_manifest.json
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-18,24-32,38-41,43-44,51-53,55,57-60,65-67,70-102,126-1044,1046-1076,1078-1086
+  s_3f5e58f5c753ff::t_76cc2cb1373215 103-125
+  s_3f5e58f5c753ff::t_a5499e6b5b0f8d 19-23,33-37,42,45-50,54,56,61-64,68-69,1045,1077
+results/gpt-5.4-paper-stream-none-20260711/run_manifest.json
+  s_3f5e58f5c753ff::t_85c97eef9b9a96 56-64
+  s_3f5e58f5c753ff::t_a77dd471953078 7,23,31,51,66,72,79,99,103-126,133,143,145,163,180,197,232,253-254,263,270,292,312,372,430,443,471,492,513,534,555,576,597,618,639,660,681,702,723,744,765,786,807,828,849,870,891,912,933,954,975,996,1017,1020,1053
+  s_3f5e58f5c753ff::t_e2263817207a3c 1-6,8-22,24-30,32-50,52-55,65,67-71,73-78,80-98,100-102,127-132,134-142,144,146-162,164-179,181-196,198-231,233-252,255-262,264-269,271-291,293-311,313-371,373-429,431-442,444-470,472-491,493-512,514-533,535-554,556-575,577-596,598-617,619-638,640-659,661-680,682-701,703-722,724-743,745-764,766-785,787-806,808-827,829-848,850-869,871-890,892-911,913-932,934-953,955-974,976-995,997-1016,1018-1019,1021-1052,1054-1087
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+results/model-comparison/table2.csv
+  s_3f5e58f5c753ff::t_5047acb60eea78 2-3
+results/smoke-gpt-5.4-none-stream-20260711/tables/execution_summary.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+results/smoke-comparison/execution_summary.csv
+  s_3f5e58f5c753ff::t_63237d85d54f95 2-5
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_ambiguous_qa.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1
+  s_3f5e58f5c753ff::t_39d2b37288a4e3 2-3
+acuitybench/plotting.py
+  s_3f5e58f5c753ff::t_d48e046c68d0d5 28,166-171,201,261-262,269-274,329-350,370,400,415,429,440,448-449,463-464
+tests/test_openai_streaming.py
+  s_3f5e58f5c753ff::t_e3bfd0d3d916c7 25-54
+results/model-comparison/metrics_long.csv
+  s_3f5e58f5c753ff::t_5047acb60eea78 2-41
+results/gpt-5.4-paper-stream-none-20260711/SUMMARY.md
+  s_3f5e58f5c753ff::t_a77dd471953078 57-58
+  s_3f5e58f5c753ff::t_85c97eef9b9a96 46-56,59-60
+  s_3f5e58f5c753ff::t_8b8e019cae3c79 1-45,61-68
+tests/test_evaluation.py
+  s_3f5e58f5c753ff::t_03e87cc6b2d5b4 722-726,729
+  s_3f5e58f5c753ff::t_5766d1d579ba99 707,712,718-721,730-731,738,772-774,779
+  s_3f5e58f5c753ff::t_e3bfd0d3d916c7 206,213-222,227
+  s_3f5e58f5c753ff::t_13809cb267a446 439,481,499-503
+  s_3f5e58f5c753ff::t_f138d666fc224a 708-711,713,715-717,732-737,739-745,775-778,780-784
+  s_3f5e58f5c753ff::t_855aa56f6129fe 33,69-82,92-96
+  s_3f5e58f5c753ff::t_cb98561653fca9 728
+  s_3f5e58f5c753ff::t_a87ed9d5cedd97 628-645,656,666,673-678
+  s_3f5e58f5c753ff::t_b3c25d3688a064 714
+  s_3f5e58f5c753ff::t_b3eb2216cea1b4 83-91,97-107,727
+  s_3f5e58f5c753ff::t_5b0980c663a4f1 108-109
+results/gpt-5-mini-paper-stream-medium-20260711/tables/confusion_conv.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-5
+results/gpt-5-mini-paper-stream-medium-20260711/tables/table2.md
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/smoke-gpt-5.4-none-stream-20260711/tables/confusion_conv.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-5
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_a5499e6b5b0f8d 1-3
+results/smoke-gpt-5.4-none-stream-20260711/tables/confusion_qa.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-5
+results/smoke-gpt-5.4-none-stream-20260711/exports/request_attempts.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/table2.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-2
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/table2.md
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+tests/test_latency_reporting.py
+  s_3f5e58f5c753ff::t_03e87cc6b2d5b4 30
+  s_3f5e58f5c753ff::t_94b6d9bfb23102 579-588
+  s_3f5e58f5c753ff::t_8cee4113659605 376-475,490-539
+  s_3f5e58f5c753ff::t_5a75b5e98d252f 10,26-29,31
+  s_3f5e58f5c753ff::t_505b43098c8567 12,18-19,21-22
+  s_3f5e58f5c753ff::t_83ef5f4d4311b7 193-196,262-264
+  s_3f5e58f5c753ff::t_3a383b9d887b78 14,476-489
+  s_3f5e58f5c753ff::t_7bb7c0c59bbec8 32-33
+results/smoke-gpt-5.4-none-stream-20260711/tables/distributional_metrics.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-5
+results/smoke-gpt-5.4-none-stream-20260711/tables/table2.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-2
+results/model-comparison/table2.md
+  s_3f5e58f5c753ff::t_5047acb60eea78 1-4
+results/smoke-comparison/metrics_long.csv
+  s_3f5e58f5c753ff::t_63237d85d54f95 2-13
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_primary_conv.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_ambiguous_conv.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1
+  s_3f5e58f5c753ff::t_0827e591fb2f37 2-3
+results/gpt-5-mini-paper-stream-medium-20260711/tables/distributional_metrics.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-5
+results/model-comparison/latency_summary.csv
+  s_3f5e58f5c753ff::t_5047acb60eea78 2-55
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_primary_qa.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-2
+  s_3f5e58f5c753ff::t_c85a59724d2bff 3
+results/model-comparison/frontier.csv
+  s_3f5e58f5c753ff::t_5047acb60eea78 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/distributional_metrics.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-5
+results/gpt-5-mini-paper-stream-medium-20260711/tables/metrics_long.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-21
+results/README.md
+  s_3f5e58f5c753ff::t_e25d9758c0bfa6 14-21,26-42
+acuitybench/providers/openai.py
+  s_3f5e58f5c753ff::t_7c24991d87439b 365-368,631-634
+  s_3f5e58f5c753ff::t_fa66a2d271d67e 79-92,380,388-391,443,473-475,528-529,572-573,699,707-710,837,866-869
+ARTIFACTS.sha256
+  s_3f5e58f5c753ff::t_cf7ab17c97cd63 16-17,48-64,66-76,78-94,96-106,109-115,118-124,126-142,144-153,184-200,202-211
+  s_3f5e58f5c753ff::t_f12720b970b30f 47,65,77,95,107-108,116-117,125,143,183,201
+results/smoke-gpt-5-mini-medium-stream-20260711/tables/confusion_conv.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-5
+results/smoke-comparison/accuracy-vs-latency.svg
+  s_3f5e58f5c753ff::t_63237d85d54f95 17-19,21-23,25-27,32-41,43,50-51,53,55-56
+  s_3f5e58f5c753ff::t_f28d4eff661586 4,11,15,49,52,54,57
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/case_predictions.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/run_executions.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+acuitybench/cli.py
+  s_3f5e58f5c753ff::t_7c24991d87439b 194,197-198
+results/gpt-5-mini-paper-stream-medium-20260711/SUMMARY.md
+  s_3f5e58f5c753ff::t_54f6eadf92af7a 57-58
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-56,59-68
+results/smoke-gpt-5.4-none-stream-20260711/tables/table2.md
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_primary_conv.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-2
+  s_3f5e58f5c753ff::t_fc0b2f7a417704 3
+results/smoke-gpt-5.4-none-stream-20260711/tables/metrics_long.csv
+  s_3f5e58f5c753ff::t_a4d1b2f6bbdcfc 1-7
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_primary_qa.csv
+  s_3f5e58f5c753ff::t_32272c5f99776a 1-2
+  s_3f5e58f5c753ff::t_b44aa7864eaded 3
+results/smoke-comparison/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_63237d85d54f95 1-5
+results/gpt-5-mini-paper-stream-medium-20260711/exports/case_predictions.csv
+  s_3f5e58f5c753ff::t_f8f29069f7e985 1-3
+results/evaluations.sqlite3
+  s_3f5e58f5c753ff::t_5382d36e4a8b71 2-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/case_predictions.parquet
+  s_3f5e58f5c753ff::t_a631cac4d0376a 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_ambiguous_conv.parquet
+  s_3f5e58f5c753ff::t_d1487ca6edb805 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_ambiguous_qa.parquet
+  s_3f5e58f5c753ff::t_1bab6315ca01aa 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_primary_conv.parquet
+  s_3f5e58f5c753ff::t_0e77d97bd75635 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/distributional_primary_qa.parquet
+  s_3f5e58f5c753ff::t_73aa24e901d3f3 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_c1dcb077d41df8 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_42dcf4421b0835 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_6d92f6d7b8fed1 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_57f16068316fd5 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/request_attempts.csv
+  s_3f5e58f5c753ff::t_23edac6ba1554b 1-3
+results/gpt-5-mini-paper-stream-medium-20260711/exports/request_attempts.parquet
+  s_3f5e58f5c753ff::t_db5e620e88b770 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/case_predictions.csv
+  s_3f5e58f5c753ff::t_52ee577504617a 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/case_predictions.parquet
+  s_3f5e58f5c753ff::t_3e1c289c01563c 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_ambiguous_conv.csv
+  s_3f5e58f5c753ff::t_10f265363d6b31 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_ambiguous_conv.parquet
+  s_3f5e58f5c753ff::t_8f5e71c58d0dcc 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_ambiguous_qa.csv
+  s_3f5e58f5c753ff::t_6d3a6c22df032c 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_ambiguous_qa.parquet
+  s_3f5e58f5c753ff::t_7bc108ebcf0d31 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_primary_conv.csv
+  s_3f5e58f5c753ff::t_54d17b929beb22 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_primary_conv.parquet
+  s_3f5e58f5c753ff::t_f77b796a945a07 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_primary_qa.csv
+  s_3f5e58f5c753ff::t_536a901bc49b64 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/distributional_primary_qa.parquet
+  s_3f5e58f5c753ff::t_34f415f0fe57e4 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/judged_samples.csv
+  s_3f5e58f5c753ff::t_d0c813fd7d4f79 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_c055b402ab75e9 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/raw_samples.csv
+  s_3f5e58f5c753ff::t_b9d6a15131c845 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_2044bc90f825b1 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/request_attempts.csv
+  s_3f5e58f5c753ff::t_04b71f1d8c8ec9 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/request_attempts.parquet
+  s_3f5e58f5c753ff::t_9b7684b2587c51 1-3
+results/gpt-5.4-paper-stream-none-20260711/exports/run_executions.csv
+  s_3f5e58f5c753ff::t_ec30ace8463e06 1-3
+results/gpt-5.4-paper-stream-none-20260711/tables/boundary_metrics.csv
+  s_3f5e58f5c753ff::t_5f0d0099746268 1-7
+results/gpt-5.4-paper-stream-none-20260711/tables/confusion_conv.csv
+  s_3f5e58f5c753ff::t_6968a9f06210f3 1-5
+results/gpt-5.4-paper-stream-none-20260711/tables/confusion_qa.csv
+  s_3f5e58f5c753ff::t_cf9b61e78e5fa5 1-5
+results/gpt-5.4-paper-stream-none-20260711/tables/distributional_metrics.csv
+  s_3f5e58f5c753ff::t_2f551bd4128c30 1-5
+results/gpt-5.4-paper-stream-none-20260711/tables/execution_summary.csv
+  s_3f5e58f5c753ff::t_9ca60a9218d48c 1-3
+results/gpt-5.4-paper-stream-none-20260711/tables/latency_summary.csv
+  s_3f5e58f5c753ff::t_ea21fff87970b6 1-28
+results/gpt-5.4-paper-stream-none-20260711/tables/metrics_long.csv
+  s_3f5e58f5c753ff::t_4d2967b45c2cb0 1-21
+results/gpt-5.4-paper-stream-none-20260711/tables/table2.csv
+  s_3f5e58f5c753ff::t_89d46ff5f050c4 1-2
+results/gpt-5.4-paper-stream-none-20260711/tables/table2.md
+  s_3f5e58f5c753ff::t_75dbe7065ad9f5 1-3
+results/gpt-5.4-paper-stream-none-20260711/tables/usage_and_cost.csv
+  s_3f5e58f5c753ff::t_02b223dfee8222 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/case_predictions.parquet
+  s_3f5e58f5c753ff::t_8c6cacfe0a16c0 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_ambiguous_conv.parquet
+  s_3f5e58f5c753ff::t_8b7f40985435d8 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_ambiguous_qa.parquet
+  s_3f5e58f5c753ff::t_abe5cbf12590b3 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_primary_conv.parquet
+  s_3f5e58f5c753ff::t_4629ea9e589b60 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/distributional_primary_qa.parquet
+  s_3f5e58f5c753ff::t_07367164de2d9a 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_166dd62f03d2a7 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_37b3ab078f78d7 1-3
+results/smoke-gpt-5-mini-medium-stream-20260711/exports/request_attempts.parquet
+  s_3f5e58f5c753ff::t_3eb785a2d416e6 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/case_predictions.parquet
+  s_3f5e58f5c753ff::t_e767c901e56649 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_ambiguous_conv.parquet
+  s_3f5e58f5c753ff::t_47702e0582907d 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_ambiguous_qa.parquet
+  s_3f5e58f5c753ff::t_28f7f85837e55b 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_primary_conv.parquet
+  s_3f5e58f5c753ff::t_b8a956141e5e79 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/distributional_primary_qa.parquet
+  s_3f5e58f5c753ff::t_195d6b1e0d4fe4 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/judged_samples.parquet
+  s_3f5e58f5c753ff::t_b557e0c99d4c43 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/raw_samples.parquet
+  s_3f5e58f5c753ff::t_f9f0875e7ca8b7 1-3
+results/smoke-gpt-5.4-none-stream-20260711/exports/request_attempts.parquet
+  s_3f5e58f5c753ff::t_4e4c67bdc86c72 1-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "54a733bb4a884c49c5b34d7c18382ccf08d63c56",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    },
+    "s_c23991ac800f3f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4e1c-36b3-7ff2-a109-2fb74cc70770",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
