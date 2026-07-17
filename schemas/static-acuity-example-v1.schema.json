@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:acuitybench:schema:static-acuity-example:v1",
+  "title": "Static acuity training or development example v1",
+  "description": "A provenance-linked, single-shot acuity example from a pool separate from AcuityBench evaluation data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "example_id",
+    "family_id",
+    "split",
+    "training_allowed",
+    "prompt",
+    "reference_acuity",
+    "label",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "static-acuity-example/v1"},
+    "example_id": {"$ref": "#/$defs/identifier"},
+    "family_id": {"$ref": "#/$defs/identifier"},
+    "split": {
+      "type": "string",
+      "enum": ["train", "development", "evaluation"]
+    },
+    "training_allowed": {"type": "boolean"},
+    "prompt": {
+      "allOf": [
+        {"$ref": "#/$defs/nonEmptyString"},
+        {"maxLength": 20000}
+      ]
+    },
+    "reference_acuity": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D"]
+    },
+    "target_rationale": {
+      "allOf": [
+        {"$ref": "#/$defs/nonEmptyString"},
+        {"maxLength": 8000}
+      ]
+    },
+    "label": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "source", "review_status"],
+      "properties": {
+        "basis": {"$ref": "#/$defs/nonEmptyString"},
+        "source": {
+          "type": "string",
+          "enum": ["source", "teacher", "clinician", "adjudicated"]
+        },
+        "review_status": {
+          "type": "string",
+          "enum": ["unreviewed", "sample_reviewed", "reviewed", "adjudicated"]
+        },
+        "reviewer_count": {"type": "integer", "minimum": 0},
+        "teacher_model": {"$ref": "#/$defs/nonEmptyString"},
+        "teacher_config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_dataset",
+        "source_id",
+        "source_revision",
+        "source_text_sha256",
+        "transformation"
+      ],
+      "properties": {
+        "source_dataset": {"$ref": "#/$defs/nonEmptyString"},
+        "source_id": {"$ref": "#/$defs/nonEmptyString"},
+        "source_revision": {"$ref": "#/$defs/nonEmptyString"},
+        "source_text_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "transformation": {"$ref": "#/$defs/nonEmptyString"},
+        "license": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"split": {"const": "evaluation"}},
+        "required": ["split"]
+      },
+      "then": {
+        "properties": {"training_allowed": {"const": false}}
+      },
+      "else": {
+        "properties": {"training_allowed": {"const": true}}
+      }
+    }
+  ],
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    }
+  }
+}

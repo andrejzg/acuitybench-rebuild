@@ -39,6 +39,7 @@ _REQUIRED_V2_COLUMNS: dict[str, set[str]] = {
         """run_id manifest_fingerprint model_id provider api_model
         model_config_json benchmark_path benchmark_sha256 tasks_json samples
         selected_cases expected_generations selection_json execution_config_json
+        experiment_contract_json
         status created_at updated_at""".split()
     ),
     "run_executions": set(
@@ -178,6 +179,11 @@ class EvaluationStore:
                     "ALTER TABLE runs ADD COLUMN execution_config_json "
                     "TEXT NOT NULL DEFAULT '{}'"
                 )
+            if "experiment_contract_json" not in run_columns:
+                self.connection.execute(
+                    "ALTER TABLE runs ADD COLUMN experiment_contract_json "
+                    "TEXT NOT NULL DEFAULT '{}'"
+                )
         for table in ("generations", "judgments"):
             if not self._table_exists(table):
                 continue
@@ -243,6 +249,7 @@ class EvaluationStore:
                 expected_generations INTEGER NOT NULL,
                 selection_json TEXT NOT NULL,
                 execution_config_json TEXT NOT NULL DEFAULT '{{}}',
+                experiment_contract_json TEXT NOT NULL DEFAULT '{{}}',
                 status TEXT NOT NULL,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
@@ -445,6 +452,11 @@ class EvaluationStore:
                 self.connection.execute(
                     "ALTER TABLE runs ADD COLUMN execution_config_json TEXT NOT NULL DEFAULT '{}'"
                 )
+            if "experiment_contract_json" not in run_columns:
+                self.connection.execute(
+                    "ALTER TABLE runs ADD COLUMN experiment_contract_json "
+                    "TEXT NOT NULL DEFAULT '{}'"
+                )
             for table in ("generations", "judgments"):
                 existing = self._column_names(table)
                 for name, declaration in _TIMING_COLUMNS:
@@ -611,8 +623,9 @@ class EvaluationStore:
                 run_id, manifest_fingerprint, model_id, provider, api_model,
                 model_config_json, benchmark_path, benchmark_sha256, tasks_json,
                 samples, selected_cases, expected_generations, selection_json,
-                execution_config_json, status, created_at, updated_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                execution_config_json, experiment_contract_json, status,
+                created_at, updated_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             (
                 manifest["run_id"],
@@ -629,6 +642,7 @@ class EvaluationStore:
                 manifest["expected_generations"],
                 json.dumps(manifest["selection"], sort_keys=True),
                 json.dumps(manifest.get("execution_config", {}), sort_keys=True),
+                json.dumps(manifest.get("experiment_contract", {}), sort_keys=True),
                 "created",
                 now,
                 now,
@@ -656,6 +670,7 @@ class EvaluationStore:
             "tasks_json",
             "selection_json",
             "execution_config_json",
+            "experiment_contract_json",
         ):
             result[key.removesuffix("_json")] = json.loads(result.pop(key))
         return result

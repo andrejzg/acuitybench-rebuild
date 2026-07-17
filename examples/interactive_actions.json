@@ -1,0 +1,20 @@
+[
+  {
+    "schema_version": "interactive-action/v1",
+    "type": "ASK",
+    "question_id": "red_flag.neurologic",
+    "wording": "Are you confused, unusually drowsy, weak, or having trouble speaking?"
+  },
+  {
+    "schema_version": "interactive-action/v1",
+    "type": "ASK",
+    "question_id": "red_flag.sepsis",
+    "wording": "Do you feel severely unwell with fever or shaking chills?"
+  },
+  {
+    "schema_version": "interactive-action/v1",
+    "type": "DISPOSE",
+    "acuity": "D",
+    "rationale": "Fever and confusion during chemotherapy require immediate emergency assessment."
+  }
+]

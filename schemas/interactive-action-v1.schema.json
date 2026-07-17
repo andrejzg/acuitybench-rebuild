@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:acuitybench:schema:interactive-action:v1",
+  "title": "AcuityBench interactive triage action v1",
+  "description": "A closed, discriminated wire format for one interactive triage policy action.",
+  "$defs": {
+    "questionId": {
+      "type": "string",
+      "enum": [
+        "concern.summary",
+        "demographic.age",
+        "demographic.sex",
+        "demographic.pregnancy",
+        "symptom.onset",
+        "symptom.course",
+        "symptom.severity",
+        "symptom.location",
+        "symptom.character",
+        "symptom.triggers",
+        "symptom.associated",
+        "context.fever",
+        "context.trauma",
+        "context.exposure",
+        "context.additional",
+        "function.impact",
+        "treatment.tried",
+        "history.conditions",
+        "history.medications",
+        "history.allergies",
+        "history.procedures",
+        "history.substance_use",
+        "red_flag.breathing",
+        "red_flag.chest_pain",
+        "red_flag.consciousness",
+        "red_flag.neurologic",
+        "red_flag.bleeding",
+        "red_flag.sepsis",
+        "red_flag.dehydration",
+        "red_flag.anaphylaxis",
+        "red_flag.pregnancy",
+        "red_flag.mental_health",
+        "logistics.support"
+      ]
+    },
+    "acuity": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D"]
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    }
+  },
+  "oneOf": [
+    {
+      "title": "ASK",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "type", "question_id", "wording"],
+      "properties": {
+        "schema_version": {
+          "const": "interactive-action/v1"
+        },
+        "type": {
+          "const": "ASK"
+        },
+        "question_id": {
+          "$ref": "#/$defs/questionId"
+        },
+        "wording": {
+          "allOf": [
+            {"$ref": "#/$defs/nonEmptyString"},
+            {"maxLength": 1000}
+          ],
+          "description": "Patient-facing wording for the catalogued question."
+        }
+      }
+    },
+    {
+      "title": "DISPOSE",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "type", "acuity", "rationale"],
+      "properties": {
+        "schema_version": {
+          "const": "interactive-action/v1"
+        },
+        "type": {
+          "const": "DISPOSE"
+        },
+        "acuity": {
+          "$ref": "#/$defs/acuity"
+        },
+        "rationale": {
+          "allOf": [
+            {"$ref": "#/$defs/nonEmptyString"},
+            {"maxLength": 2000}
+          ],
+          "description": "Concise explanation grounded only in facts revealed so far."
+        }
+      }
+    },
+    {
+      "title": "HANDOFF",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "type", "reason", "target"],
+      "properties": {
+        "schema_version": {
+          "const": "interactive-action/v1"
+        },
+        "type": {
+          "const": "HANDOFF"
+        },
+        "reason": {
+          "allOf": [
+            {"$ref": "#/$defs/nonEmptyString"},
+            {"maxLength": 1000}
+          ]
+        },
+        "target": {
+          "const": "human_clinician"
+        }
+      }
+    }
+  ]
+}

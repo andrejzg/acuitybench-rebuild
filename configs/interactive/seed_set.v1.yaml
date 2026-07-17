@@ -1,0 +1,40 @@
+schema_version: interactive-seed-config/v1
+seed_id: acuity-interactive-seed-v1
+selection_version: balanced-natural-inputs-v1
+intended_use: evaluation_only
+training_allowed: false
+benchmark_path: data/processed/acuitybench.parquet
+case_schema_path: schemas/interactive-case-card-v1.schema.json
+action_schema_path: schemas/interactive-action-v1.schema.json
+action_catalog_path: configs/interactive/action_catalog.v1.yaml
+question_catalog_path: configs/interactive/question_catalog.v1.yaml
+maximum_questions: 12
+unknown_response: "I'm not sure."
+selection:
+  split: primary
+  labels: [A, B, C, D]
+  cases_per_label: 25
+  allowed_datasets: [healthbench, pmr_reddit]
+  source_quotas:
+    A: {healthbench: 5, pmr_reddit: 20}
+    B: {healthbench: 10, pmr_reddit: 15}
+    C: {healthbench: 10, pmr_reddit: 15}
+    D: {healthbench: 15, pmr_reddit: 10}
+  minimum_user_text_characters: 120
+  maximum_user_text_characters: 4000
+  source_text_policy: user_messages_only
+  exclusion_patterns:
+    - '(?i)\b[\w.+-]+@[\w.-]+\.[a-z]{2,}\b'
+    - '(?i)https?://|www\.'
+    - '(?i)\bu/[a-z0-9_-]+'
+    - '(?i)\breply to this as\b'
+    - '(?i)\b(?:assume|take on|play) the role of (?:a|the) (?:doctor|physician|nurse)\b'
+    - '(?i)\bpretend (?:that )?you (?:are|were) (?:a|the)\b'
+    - '(?i)\b(?:my patient|my [^.\n]{1,40}\bpatient|one of my patients|caring for a patient|pediatric urology fellow|i have (?:an? |the |this )?[^.\n]{0,60}\bpatient|i (?:am|''m) (?:a|an|the) (?:doctor|physician|nurse|fellow|obstetrician|resident))\b'
+    - '(?i)\bnurse on (?:the|a) [^.\n]{0,80}\bfloor\b'
+    - '(?i)\bcrash cart\b'
+    - '(?i)\b(?:admitted|admit) to (?:the )?(?:floor|ward)\b'
+    - '(?i)^summary report\s+investigation\b'
+    - '(?i)\bact like (?:a|an|the) [^\n.]{0,80}\b(?:doctor|physician|specialist|nurse)\b'
+    - '(?i)\bpopulation of mexico\s+1975\b'
+  ranking: information_richness_then_case_id

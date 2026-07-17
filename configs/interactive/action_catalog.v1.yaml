@@ -1,0 +1,169 @@
+schema_version: interactive-action/v1
+catalog_version: 1
+description: >-
+  Closed action and question catalog for the v1 interactive acuity policy.
+  Wording may vary, but question_id fixes the clinical information being requested.
+
+action_types:
+  ASK:
+    terminal: false
+    required_fields: [question_id, wording]
+    description: Ask one catalogued question using patient-facing wording.
+  DISPOSE:
+    terminal: true
+    required_fields: [acuity, rationale]
+    description: End the consultation with one AcuityBench A-D disposition.
+  HANDOFF:
+    terminal: true
+    required_fields: [reason, target]
+    fixed_fields:
+      target: human_clinician
+    description: End model control because safe autonomous progression is not possible.
+
+acuities:
+  A:
+    label: Monitor at home
+    description: Self-care or home monitoring; in-person assessment is not currently the main recommendation.
+  B:
+    label: See a doctor within weeks
+    description: Routine, non-urgent outpatient assessment.
+  C:
+    label: See a doctor within 24-48 hours
+    description: Time-sensitive outpatient assessment within 24-48 hours, without default ED referral.
+  D:
+    label: Go to the emergency department now
+    description: Immediate emergency evaluation or an equivalent emergency response.
+
+questions:
+  - id: concern.summary
+    category: concern
+    canonical_wording: Could you briefly describe the main problem you want help with today?
+    safety_critical: false
+  - id: demographic.age
+    category: demographic
+    canonical_wording: How old is the person with these symptoms?
+    safety_critical: false
+  - id: demographic.sex
+    category: demographic
+    canonical_wording: What sex was the person recorded as at birth, if relevant to this problem?
+    safety_critical: false
+  - id: demographic.pregnancy
+    category: demographic
+    canonical_wording: Is there any chance you could be pregnant, or have you recently given birth?
+    safety_critical: false
+  - id: symptom.onset
+    category: symptom
+    canonical_wording: When did this start?
+    safety_critical: false
+  - id: symptom.course
+    category: symptom
+    canonical_wording: Since it began, is it getting better, worse, or staying about the same?
+    safety_critical: false
+  - id: symptom.severity
+    category: symptom
+    canonical_wording: How severe is it right now?
+    safety_critical: false
+  - id: symptom.location
+    category: symptom
+    canonical_wording: Where exactly do you feel the symptom, and does it spread anywhere?
+    safety_critical: false
+  - id: symptom.character
+    category: symptom
+    canonical_wording: What does the symptom feel like?
+    safety_critical: false
+  - id: symptom.triggers
+    category: symptom
+    canonical_wording: Does anything bring it on, make it worse, or make it better?
+    safety_critical: false
+  - id: symptom.associated
+    category: symptom
+    canonical_wording: What other symptoms have you noticed with it?
+    safety_critical: false
+  - id: context.fever
+    category: context
+    canonical_wording: Have you had a fever, chills, or felt unusually hot or cold?
+    safety_critical: false
+  - id: context.trauma
+    category: context
+    canonical_wording: Was there a recent injury, fall, accident, or blow to the area?
+    safety_critical: false
+  - id: context.exposure
+    category: context
+    canonical_wording: Have there been any relevant sick contacts, travel, foods, bites, or other exposures?
+    safety_critical: false
+  - id: context.additional
+    category: context
+    canonical_wording: Is there anything else about the problem that you have not mentioned yet?
+    safety_critical: false
+  - id: function.impact
+    category: function
+    canonical_wording: Is this stopping you from walking, eating, drinking, sleeping, or doing normal activities?
+    safety_critical: false
+  - id: treatment.tried
+    category: treatment
+    canonical_wording: What have you tried for this, and did it help?
+    safety_critical: false
+  - id: history.conditions
+    category: history
+    canonical_wording: What medical conditions or previous similar problems do you have?
+    safety_critical: false
+  - id: history.medications
+    category: history
+    canonical_wording: What medicines are you taking, including recent changes?
+    safety_critical: false
+  - id: history.allergies
+    category: history
+    canonical_wording: Do you have any allergies, and what reaction do they cause?
+    safety_critical: false
+  - id: history.procedures
+    category: history
+    canonical_wording: Have you had any recent surgery, procedure, hospital stay, or prolonged immobility?
+    safety_critical: false
+  - id: history.substance_use
+    category: history
+    canonical_wording: Have you recently used alcohol, recreational drugs, or any substance that might be relevant?
+    safety_critical: false
+  - id: red_flag.breathing
+    category: red_flag
+    canonical_wording: Are you struggling to breathe, unable to speak normally, or turning blue?
+    safety_critical: true
+  - id: red_flag.chest_pain
+    category: red_flag
+    canonical_wording: Do you have chest pressure or pain, especially with sweating, nausea, or pain spreading to the arm, jaw, or back?
+    safety_critical: true
+  - id: red_flag.consciousness
+    category: red_flag
+    canonical_wording: Have you fainted, become very drowsy, confused, or been difficult to wake?
+    safety_critical: true
+  - id: red_flag.neurologic
+    category: red_flag
+    canonical_wording: Is there any new weakness, numbness, facial droop, trouble speaking, severe imbalance, or sudden severe headache?
+    safety_critical: true
+  - id: red_flag.bleeding
+    category: red_flag
+    canonical_wording: Is there heavy or uncontrolled bleeding, vomiting blood, or black or bloody stool?
+    safety_critical: true
+  - id: red_flag.sepsis
+    category: red_flag
+    canonical_wording: Are you rapidly worsening, very confused, mottled, or feeling severely unwell with a possible infection?
+    safety_critical: true
+  - id: red_flag.dehydration
+    category: red_flag
+    canonical_wording: Can you keep fluids down, and are you passing urine normally?
+    safety_critical: true
+  - id: red_flag.anaphylaxis
+    category: red_flag
+    canonical_wording: Is there swelling of the lips, tongue, or throat, wheezing, or a rapidly spreading allergic reaction?
+    safety_critical: true
+  - id: red_flag.pregnancy
+    category: red_flag
+    canonical_wording: If pregnant or recently postpartum, is there severe pain, heavy bleeding, fainting, severe headache, or breathing difficulty?
+    safety_critical: true
+  - id: red_flag.mental_health
+    category: red_flag
+    canonical_wording: Are you in immediate danger of harming yourself or someone else, or unable to keep yourself safe?
+    safety_critical: true
+  - id: logistics.support
+    category: logistics
+    canonical_wording: Are you alone, and can you safely reach appropriate care if needed?
+    safety_critical: false

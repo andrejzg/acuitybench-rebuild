@@ -2,7 +2,7 @@
 
 This repository contains original reconstruction code together with pinned
 source snapshots, physician annotations, reconstructed benchmark files, and
-model-evaluation artifacts. Inclusion in this private repository does not grant
+model-evaluation artifacts. Inclusion in this public repository does not grant
 a licence to any third-party dataset, annotation, or generated derivative.
 
 The build downloads immutable, checksum-verified snapshots from these sources:
@@ -16,11 +16,14 @@ The build downloads immutable, checksum-verified snapshots from these sources:
 - AcuityBench physician annotations: released through an anonymous review
   repository whose README currently says that a licence is to be added.
 
-Accordingly, generated data is intended for local, non-commercial research
-until the AcuityBench authors publish final terms. Do not redistribute the
-downloaded annotations or benchmark without reviewing every upstream licence.
-The benchmark is an evaluation artifact, not a clinical decision system.
+Accordingly, the project treats generated data as non-commercial research
+material until the AcuityBench authors publish final terms. Do not reuse or
+redistribute the downloaded annotations or benchmark without reviewing every
+upstream licence. The benchmark is an evaluation artifact, not a clinical
+decision system.
 
-Keep the GitHub repository private while upstream annotation terms remain
-pending. `sources.lock.json` identifies the origin, revision, checksum, and
-known licence status of every source snapshot.
+The repository owner explicitly chose to keep the GitHub repository public on
+2026-07-17. That visibility decision does not resolve or supersede upstream
+terms. `sources.lock.json` identifies the origin, revision, checksum, and known
+licence status of every source snapshot; review those terms before reuse,
+redistribution, or commercial use.

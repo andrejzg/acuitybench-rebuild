@@ -52,6 +52,28 @@ def test_paper_openai_profiles_send_resolved_reasoning_and_service_tier() -> Non
     assert responses["service_tier"] == "default"
 
 
+def test_openai_compatible_client_uses_environment_base_url(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    class FakeClient:
+        def __init__(self, **kwargs: Any) -> None:
+            captured.update(kwargs)
+
+    monkeypatch.setattr(openai_provider_module, "AsyncOpenAI", FakeClient)
+    monkeypatch.setenv("STUDENT_API_KEY", "local-key")
+    monkeypatch.setenv("STUDENT_BASE_URL", "http://127.0.0.1:8000/v1")
+
+    provider = OpenAIProvider()
+    client = provider._client("STUDENT_API_KEY", "STUDENT_BASE_URL")
+
+    assert isinstance(client, FakeClient)
+    assert captured["api_key"] == "local-key"
+    assert captured["base_url"] == "http://127.0.0.1:8000/v1"
+    assert captured["max_retries"] == 0
+
+
 class FakeAsyncStream:
     def __init__(self, clock: FakeClock, events: list[tuple[float, Any]]) -> None:
         self.clock = clock

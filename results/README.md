@@ -22,6 +22,9 @@ This directory contains the complete local evaluation state and exports.
 - `model-comparison/` and `smoke-comparison/`: combined table exports.
   Each comparison includes ready-to-view accuracy-vs-cost and
   accuracy-vs-latency SVGs generated from `frontier.csv`.
+- `interactive-pilot-v1/`: deterministic planning estimate for the standalone
+  100-case clinician-review gate and an illustrative 500-case Tinker training
+  pilot. It is assumptions-based, not observed billing.
 
 Each new full run has 9,140 successful target generations and 4,570 successful
 GPT-4.1 judgments. GPT-5-mini returned `gpt-5-mini-2025-08-07`; GPT-5.4

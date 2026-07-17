@@ -1,0 +1,15 @@
+# Knowledge Bundle Update Log
+
+## 2026-07-17
+
+* **Decision**: Accepted the static-first sequence: train a complete-case-to-A/B/C/D student before undertaking multi-turn `ASK`/`DISPOSE`/`HANDOFF` training.
+* **Contract**: Added a versioned static-student plan, separate-example JSON Schema, contamination-aware validator and persisted evaluation contract.
+* **Serving**: Added model-registry support for OpenAI-compatible student endpoints with environment-based base URLs and stable deployment provenance.
+* **Evaluation**: Added `static-plan`, `static-data-validate` and paid `static-evaluate` commands; QA is primary and paired one-shot conversation remains available for paper/chart comparison.
+* **Creation**: Added an OKF v0.1 knowledge bundle for durable human/AI handover.
+* **Creation**: Added project, data, evaluation, interactive-triage, cost, decision, limitation and runbook concepts.
+* **Creation**: Added the conversation-data landscape, training strategy, concrete clinical-review protocol and a real abridged case-card example.
+* **Verification**: Ran 190 tests, the core/interactive/static validators and the durable artifact checksum inventory successfully.
+* **Decision**: Recorded the owner's explicit instruction to keep the GitHub repository public and updated stale private-repository wording.
+* **Risk**: Retained the distinction that public visibility does not waive CC BY-NC restrictions or resolve the pending physician-label licence.
+* **Integrity**: Removed ignored SQLite `-wal` and `-shm` runtime sidecars from the durable artifact checksum inventory.

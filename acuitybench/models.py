@@ -36,6 +36,8 @@ class ModelConfig:
     reasoning_effort_basis: str | None = None
     service_tier: str | None = None
     max_retry_output_tokens: int | None = None
+    base_url_env: str | None = None
+    deployment: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
         # Keep historical fingerprints stable when newly supported request
@@ -46,6 +48,8 @@ class ModelConfig:
             "reasoning_effort_basis",
             "service_tier",
             "max_retry_output_tokens",
+            "base_url_env",
+            "deployment",
         ):
             if payload[key] is None:
                 payload.pop(key)
@@ -128,6 +132,27 @@ class ModelRegistry:
                         f"{sorted(allowed_efforts)}"
                     )
             api_model = str(values["api_model"])
+            provider = str(values["provider"])
+            base_url_env = (
+                None
+                if values.get("base_url_env") is None
+                else str(values["base_url_env"])
+            )
+            deployment = (
+                None
+                if values.get("deployment") is None
+                else str(values["deployment"])
+            )
+            if provider == "openai_compatible" and not base_url_env:
+                raise ValueError(
+                    f"Model {model_id!r} uses openai_compatible and must set "
+                    "base_url_env"
+                )
+            if provider == "openai_compatible" and not deployment:
+                raise ValueError(
+                    f"Model {model_id!r} uses openai_compatible and must set "
+                    "a stable deployment description"
+                )
             send_temperature = bool(values.get("send_temperature", True))
             if (
                 _GPT_5_4_MODEL.fullmatch(api_model)
@@ -156,7 +181,7 @@ class ModelRegistry:
             models[model_id] = ModelConfig(
                 id=model_id,
                 display_name=str(values["display_name"]),
-                provider=str(values["provider"]),
+                provider=provider,
                 api_model=api_model,
                 endpoint=str(values["endpoint"]),
                 api_key_env=str(values["api_key_env"]),
@@ -185,6 +210,8 @@ class ModelRegistry:
                     else str(values["service_tier"])
                 ),
                 max_retry_output_tokens=max_retry_output_tokens,
+                base_url_env=base_url_env,
+                deployment=deployment,
             )
         return models
 
