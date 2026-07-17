@@ -1,7 +1,8 @@
 # Data inventory and provenance
 
-This private repository intentionally includes the complete data needed to
-inspect and reproduce the current benchmark.
+This public repository intentionally includes the complete data needed to
+inspect and reproduce the current benchmark. Public availability does not
+grant additional rights to third-party material.
 
 ## `cache/sources/`
 
@@ -26,9 +27,19 @@ private Qualtrics exports used during recruitment.
 The processed benchmark has 914 rows: 697 primary and 217 ambiguous. Of these,
 667 cases have five released anonymised physician-panel labels.
 
+## `interactive/`
+
+`interactive/seed_v1/` contains the deterministic, evaluation-only 100-case
+interactive seed and its manifest. The set is balanced at 25 clear A/B/C/D
+reference labels. Its manifest records exact source/config/schema digests and
+marks all transformed case content as requiring clinician review. See
+`interactive/README.md`; do not use these held-out cases for training.
+
 ## Integrity and terms
 
-`ARTIFACTS.sha256` inventories all committed data and result artifacts.
+`ARTIFACTS.sha256` inventories all committed data and result artifacts, while
+the interactive manifest additionally locks the exact inputs and schema files
+used to derive that seed.
 Licensing is mixed and the physician-annotation licence remains pending
-upstream. Keep this repository private and consult `NOTICE.md` before any
-redistribution or commercial use.
+upstream. The repository is intentionally public; consult `NOTICE.md` and each
+upstream licence before reuse, redistribution, or commercial use.

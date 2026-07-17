@@ -5,6 +5,8 @@ from pathlib import Path
 import pytest
 
 from acuitybench.models import ModelConfig, ModelRegistry
+from acuitybench.providers import get_provider
+from acuitybench.providers.openai import OpenAIProvider
 
 
 def _write_registry(
@@ -120,3 +122,46 @@ def test_legacy_model_config_payload_and_fingerprint_remain_stable() -> None:
         model.fingerprint
         == "7cee1618dbb0ece71704bce7d69f95eb6ba0d91dbd4c27ae1045860346d33b25"
     )
+
+
+def test_openai_compatible_student_profile_requires_endpoint_provenance(
+    tmp_path: Path,
+) -> None:
+    path = _write_registry(
+        tmp_path / "models.yaml",
+        api_model="student-checkpoint",
+        reasoning_effort=None,
+        send_temperature=True,
+    )
+    text = path.read_text(encoding="utf-8").replace(
+        "    provider: openai\n",
+        "    provider: openai_compatible\n"
+        "    base_url_env: STUDENT_BASE_URL\n"
+        "    deployment: vllm-a100-fixture\n",
+    )
+    path.write_text(text, encoding="utf-8")
+
+    model = ModelRegistry(path).get("candidate")
+
+    assert model.base_url_env == "STUDENT_BASE_URL"
+    assert model.deployment == "vllm-a100-fixture"
+    assert isinstance(get_provider(model.provider), OpenAIProvider)
+
+
+def test_openai_compatible_student_profile_rejects_missing_base_url(
+    tmp_path: Path,
+) -> None:
+    path = _write_registry(
+        tmp_path / "models.yaml",
+        api_model="student-checkpoint",
+        reasoning_effort=None,
+    )
+    text = path.read_text(encoding="utf-8").replace(
+        "    provider: openai\n",
+        "    provider: openai_compatible\n"
+        "    deployment: vllm-a100-fixture\n",
+    )
+    path.write_text(text, encoding="utf-8")
+
+    with pytest.raises(ValueError, match="must set base_url_env"):
+        ModelRegistry(path)

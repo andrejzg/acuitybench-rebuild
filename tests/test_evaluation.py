@@ -807,3 +807,48 @@ def test_generate_report_from_complete_synthetic_run(tmp_path: Path) -> None:
             output_root=tmp_path / "stale-reports",
             judge_id=judge_id,
         )
+
+
+def test_generate_report_supports_qa_only_static_run(tmp_path: Path) -> None:
+    model = ModelRegistry().get("gpt-5-mini")
+    run_id = "static-qa-only"
+    database = tmp_path / "static.sqlite3"
+    manifest = _manifest(
+        model,
+        run_id=run_id,
+        selected_cases=1,
+        samples=1,
+        tasks=("qa",),
+    )
+    manifest["experiment_contract"] = {
+        "schema_version": "static-student-evaluation/v1",
+        "strategy": "static_first",
+    }
+    with EvaluationStore(database) as store:
+        store.ensure_run(manifest)
+        store.upsert_generation(
+            _generation_row(
+                run_id=run_id,
+                model=model,
+                source_id="1",
+                task_type="qa",
+                sample_idx=0,
+                gold="A",
+                label="A",
+            )
+        )
+
+    destination = generate_report(
+        run_id=run_id,
+        store_path=database,
+        output_root=tmp_path / "reports",
+    )
+
+    table = pd.read_csv(destination / "tables/table2.csv", dtype=str)
+    report_manifest = json.loads(
+        (destination / "run_manifest.json").read_text(encoding="utf-8")
+    )
+    assert table.loc[0, "QA Exact"] == "1.000"
+    assert pd.isna(table.loc[0, "Conv Exact"])
+    assert report_manifest["run"]["experiment_contract"]["strategy"] == "static_first"
+    assert report_manifest["judge_status"] == {"expected": 0, "ok": 0}

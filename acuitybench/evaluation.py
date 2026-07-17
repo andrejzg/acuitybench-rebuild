@@ -214,6 +214,7 @@ def prepare_run(
     limit: int | None,
     run_id: str | None,
     stream: bool = True,
+    experiment_contract: dict[str, Any] | None = None,
 ) -> tuple[str, list[GenerationTask]]:
     if samples < 1:
         raise ValueError("--samples must be at least 1")
@@ -248,6 +249,8 @@ def prepare_run(
         "samples": samples,
         "selection": selection,
     }
+    if experiment_contract is not None:
+        identity["experiment_contract"] = experiment_contract
     fingerprint = sha256_text(_canonical_json(identity))
     actual_run_id = run_id or f"{model.id}-{fingerprint[:12]}"
     manifest = {
@@ -268,6 +271,8 @@ def prepare_run(
         # actual invocation records its own stream mode in run_executions.
         "execution_config": {"initial_stream": stream},
     }
+    if experiment_contract is not None:
+        manifest["experiment_contract"] = experiment_contract
     store.ensure_run(manifest)
 
     generation_tasks: list[GenerationTask] = []
@@ -1227,6 +1232,7 @@ def run_evaluation(
     include_judge: bool = True,
     store_path: Path | None = None,
     benchmark_path: Path | None = None,
+    experiment_contract: dict[str, Any] | None = None,
 ) -> str:
     registry = ModelRegistry()
     model = registry.get(model_id)
@@ -1241,6 +1247,7 @@ def run_evaluation(
             limit=limit,
             run_id=run_id,
             stream=stream,
+            experiment_contract=experiment_contract,
         )
         print(
             f"Run {actual_run_id}: {len(generation_tasks):,} expected target calls "

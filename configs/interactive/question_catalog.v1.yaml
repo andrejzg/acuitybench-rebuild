@@ -1,0 +1,36 @@
+schema_version: interactive-question-catalog/v1
+unknown_response: "I'm not sure."
+questions:
+  - {id: concern.summary, prompt: "Can you tell me what is worrying you today?", description: "Chief concern and reason for contact."}
+  - {id: demographic.age, prompt: "How old are you?", description: "Age stated in the source."}
+  - {id: demographic.sex, prompt: "What sex were you assigned at birth?", description: "Sex or gender stated in the source."}
+  - {id: demographic.pregnancy, prompt: "Could you be pregnant, or have you recently given birth?", description: "Pregnancy and postpartum context."}
+  - {id: symptom.onset, prompt: "When did this start, and was it sudden or gradual?", description: "Timing and mode of onset."}
+  - {id: symptom.course, prompt: "How has it changed since it started?", description: "Progression, recurrence, or improvement."}
+  - {id: symptom.severity, prompt: "How severe is it right now?", description: "Stated intensity or severity."}
+  - {id: symptom.location, prompt: "Where exactly do you feel it?", description: "Anatomical location."}
+  - {id: symptom.character, prompt: "What does it feel like?", description: "Quality or character of the symptom."}
+  - {id: symptom.triggers, prompt: "What brings it on or makes it better or worse?", description: "Triggers, relievers, and aggravators."}
+  - {id: symptom.associated, prompt: "What other symptoms have you noticed?", description: "Associated symptoms not captured by a specific safety screen."}
+  - {id: context.fever, prompt: "Have you had a fever or chills?", description: "Fever, measured temperature, or rigors."}
+  - {id: context.trauma, prompt: "Was there an injury or accident?", description: "Recent trauma or mechanism of injury."}
+  - {id: context.exposure, prompt: "Any recent illness, travel, sick contacts, or other exposure?", description: "Infectious, environmental, or occupational exposure."}
+  - {id: context.additional, prompt: "Is there anything else about this problem that I should know?", description: "Source-grounded details not captured by another question."}
+  - {id: function.impact, prompt: "Can you manage normal activities, walk, eat, and care for yourself?", description: "Effect on normal function."}
+  - {id: treatment.tried, prompt: "What have you tried for this, and did it help?", description: "Self-care and treatments already attempted."}
+  - {id: history.conditions, prompt: "What medical conditions or previous episodes do you have?", description: "Relevant past medical history."}
+  - {id: history.medications, prompt: "What medicines or supplements do you take?", description: "Medicines, supplements, and recent substances."}
+  - {id: history.allergies, prompt: "Do you have any allergies?", description: "Medication, food, and environmental allergies."}
+  - {id: history.procedures, prompt: "Have you had any relevant operations, procedures, or recent treatment?", description: "Procedural and treatment history."}
+  - {id: history.substance_use, prompt: "Have you recently used alcohol, recreational drugs, or tobacco?", description: "Substance-use context stated in the source."}
+  - {id: red_flag.breathing, prompt: "Are you short of breath or struggling to breathe?", description: "Respiratory-compromise screen."}
+  - {id: red_flag.chest_pain, prompt: "Do you have chest pain or pressure?", description: "Acute chest-symptom screen."}
+  - {id: red_flag.consciousness, prompt: "Have you fainted, become very drowsy, or been difficult to wake?", description: "Altered-consciousness screen."}
+  - {id: red_flag.neurologic, prompt: "Any new confusion, weakness, seizure, or trouble speaking?", description: "Acute-neurological screen."}
+  - {id: red_flag.bleeding, prompt: "Have you had any heavy or uncontrolled bleeding?", description: "Significant-bleeding screen."}
+  - {id: red_flag.sepsis, prompt: "Do you feel extremely unwell with fever, shaking chills, or confusion?", description: "Systemic-infection screen."}
+  - {id: red_flag.dehydration, prompt: "Can you keep fluids down, and are you passing urine?", description: "Dehydration and fluid-intolerance screen."}
+  - {id: red_flag.anaphylaxis, prompt: "Any swelling of your lips or tongue, widespread hives, or breathing trouble?", description: "Severe-allergic-reaction screen."}
+  - {id: red_flag.pregnancy, prompt: "If pregnant or recently postpartum, do you have severe pain, heavy bleeding, headache, or vision changes?", description: "Pregnancy-related emergency screen."}
+  - {id: red_flag.mental_health, prompt: "Are you thinking about harming yourself or someone else, or unable to keep yourself safe?", description: "Immediate mental-health safety screen."}
+  - {id: logistics.support, prompt: "Are you alone, and can someone help you get care if needed?", description: "Available support and access context."}

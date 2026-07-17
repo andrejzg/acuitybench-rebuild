@@ -1,0 +1,58 @@
+schema_version: static-student-plan/v1
+strategy: static_first
+status: evaluation_ready_training_not_implemented
+
+evaluation:
+  benchmark: data/processed/acuitybench_transformed.csv
+  benchmark_role: held_out_evaluation_only
+  expected_cases: 914
+  main_score:
+    split: primary
+    labels: [A, B, C, D]
+    expected_cases: 527
+  primary_task: qa
+  secondary_task: conv
+  samples_per_case: 5
+  output_contract: "ACUITY: <A|B|C|D>"
+  secondary_judge: paper-gpt-4.1
+  metrics:
+    - exact_agreement
+    - under_triage
+    - over_triage
+    - ordinal_distance
+    - p95_service_latency
+    - p95_ttft
+    - cost_per_1000_target_calls
+
+training_data:
+  schema: schemas/static-acuity-example-v1.schema.json
+  status: not_built
+  required_properties:
+    - separate_from_acuitybench
+    - source_and_label_provenance
+    - group_before_split
+    - exact_and_near_deduplication
+    - terms_review
+  prohibited_inputs:
+    - data/processed/acuitybench.csv
+    - data/processed/acuitybench.parquet
+    - data/processed/acuitybench_transformed.csv
+    - data/interactive/seed_v1
+
+serving:
+  supported_provider_paths:
+    - openai
+    - openai_compatible
+  primary_latency_metric: service_latency_ms
+  primary_latency_percentile: p95
+  secondary_latency_metric: ttft_ms
+  require_streaming_for_ttft: true
+
+progression_gate:
+  next_phase: interactive_ask_dispose_handoff
+  require:
+    - complete_static_qa_run
+    - reported_under_triage
+    - comparable_latency_profile
+    - measured_nonzero_cost_or_documented_self_hosted_cost_basis
+    - no_evaluation_contamination

@@ -273,19 +273,33 @@ class OpenAIProvider:
     def __init__(self) -> None:
         self._clients: dict[str, AsyncOpenAI] = {}
 
-    def _client(self, key_env: str) -> AsyncOpenAI:
+    def _client(
+        self, key_env: str, base_url_env: str | None = None
+    ) -> AsyncOpenAI:
         api_key = os.getenv(key_env)
         if not api_key:
             raise RuntimeError(
                 f"{key_env} is not set. Put it in .env or export it before running."
             )
-        if key_env not in self._clients:
+        base_url = None
+        if base_url_env is not None:
+            base_url = os.getenv(base_url_env)
+            if not base_url:
+                raise RuntimeError(
+                    f"{base_url_env} is not set. Put the OpenAI-compatible "
+                    "server URL in .env or export it before running."
+                )
+        client_key = key_env if base_url is None else f"{key_env}@{base_url}"
+        if client_key not in self._clients:
             # Retry accounting lives in the runner so attempts and backoff are
             # visible in SQLite rather than hidden inside the SDK.
-            self._clients[key_env] = AsyncOpenAI(
-                api_key=api_key, timeout=180.0, max_retries=0
+            self._clients[client_key] = AsyncOpenAI(
+                api_key=api_key,
+                base_url=base_url,
+                timeout=180.0,
+                max_retries=0,
             )
-        return self._clients[key_env]
+        return self._clients[client_key]
 
     async def close(self) -> None:
         for client in self._clients.values():
@@ -378,7 +392,7 @@ class OpenAIProvider:
     ) -> CompletionResult:
         kwargs = self._chat_kwargs(config, messages, max_output_tokens)
         request_contract = _request_contract(config, max_output_tokens)
-        client = self._client(config.api_key_env)
+        client = self._client(config.api_key_env, config.base_url_env)
         if not stream:
             raw = await client.chat.completions.with_raw_response.create(**kwargs)
             response = raw.parse()
@@ -697,7 +711,7 @@ class OpenAIProvider:
     ) -> CompletionResult:
         kwargs = self._response_kwargs(config, messages, max_output_tokens)
         request_contract = _request_contract(config, max_output_tokens)
-        client = self._client(config.api_key_env)
+        client = self._client(config.api_key_env, config.base_url_env)
         if not stream:
             raw = await client.responses.with_raw_response.create(**kwargs)
             response = raw.parse()

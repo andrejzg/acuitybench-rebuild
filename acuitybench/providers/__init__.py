@@ -6,7 +6,7 @@ from acuitybench.providers.base import CompletionResult, Provider
 
 
 def get_provider(name: str) -> Provider:
-    if name == "openai":
+    if name in {"openai", "openai_compatible"}:
         from acuitybench.providers.openai import OpenAIProvider
 
         return OpenAIProvider()

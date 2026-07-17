@@ -6,10 +6,17 @@ This project reconstructs the 914-case benchmark introduced in
 snapshots and the authors' released anonymised physician annotations. Every
 download is checked against a SHA-256 digest before it is used.
 
-This private repository includes the pinned source snapshots, reconstructed
+This public repository includes the pinned source snapshots, reconstructed
 benchmark and labels, and completed evaluation artifacts so a checkout is
-self-contained. See [Data, provenance, and licensing](#data-provenance-and-licensing)
-before changing repository visibility or redistributing files.
+self-contained. Public visibility is an explicit project choice, not a grant
+of rights to third-party material. See
+[Data, provenance, and licensing](#data-provenance-and-licensing) before reuse,
+redistribution, or commercial use.
+
+For continuation by another human or AI, begin with
+[`HANDOVER.md`](HANDOVER.md) and the agent-readable
+[OKF knowledge bundle](docs/knowledge/index.md). Repository-specific operating
+constraints are in [`AGENTS.md`](AGENTS.md).
 
 ## Goal
 
@@ -34,6 +41,69 @@ materialize the tracked objects:
 git lfs install
 git lfs pull
 ```
+
+## Static-first student plan
+
+The accepted first training target is deliberately simpler than a GP chat:
+one complete case goes in and one A/B/C/D acuity label comes out. QA exact
+agreement and under-triage are primary; the paper's one-shot conversational
+response plus GPT-4.1 judge is a secondary paired comparison. True multi-turn
+`ASK`/`DISPOSE`/`HANDOFF` work comes later, after a measured static student
+earns progression.
+
+The repository now has the versioned plan, strict separate-data schema,
+contamination checks, evaluation wrapper and OpenAI-compatible endpoint support:
+
+```bash
+uv run python -m acuitybench static-plan
+uv run python -m acuitybench static-data-validate --input <separate-training.jsonl>
+# Paid; paired by default. Add --qa-only for classification without a judge.
+uv run python -m acuitybench static-evaluate \
+  --model <student-model-id> \
+  --run-id <new-descriptive-run-id>
+```
+
+No training corpus, training loop or student checkpoint is included yet. The
+914 reconstructed benchmark cases—and every derivative or paraphrase—remain
+held-out evaluation only. The detailed contract and progression gate are in
+the [static-first OKF concept](docs/knowledge/static-first.md).
+
+## Later interactive triage pilot
+
+The repository now includes an executable v1 contract for the proposed
+multi-turn GP-style task:
+
+- strict, versioned [case-card](schemas/interactive-case-card-v1.schema.json)
+  and [action](schemas/interactive-action-v1.schema.json) schemas;
+- a closed 33-question catalog with `ASK`, `DISPOSE`, and safe `HANDOFF`
+  actions;
+- a deterministic patient simulator and trajectory evaluator; and
+- a provenance-linked [100-case seed](data/interactive/README.md), balanced at
+  25 clear reference cases per A/B/C/D acuity class.
+
+Of the 100 reference labels, 87 are released five-physician panel medians and
+13 are direct HealthBench physician-agreed emergency categories. Those gold
+labels remain the evaluation reference for this seed, but they are not a
+claim of clinical ground truth, and the newly routed interactive content has
+not been clinician reviewed. The cards are therefore explicitly
+`evaluation_only`, require review, and cannot be used as training data.
+
+```bash
+python -m acuitybench interactive-build
+python -m acuitybench interactive-validate
+python -m acuitybench interactive-simulate \
+  --case-id acuity-interactive-v1-038 \
+  --actions examples/interactive_actions.json
+python -m acuitybench interactive-cost
+```
+
+The deterministic build makes no API calls. Under the versioned planning
+assumptions, clinical preparation of the 100 cases is estimated at **$6,300**;
+the subsequent illustrative 500-case/2,000-teacher-trace training pilot is
+**$36,062.29**, of which only **$62.29** is Tinker token compute and **$36,000**
+is clinician review. These are assumptions, not observed billing. See the
+[interactive v1 design and next review gate](docs/interactive-triage-v1.md)
+and the committed [cost report](results/interactive-pilot-v1/cost_estimate.md).
 
 ## Build
 
@@ -217,10 +287,12 @@ five samples and resolves ties toward the more severe label. Boundary and
 ambiguous cases remain in the raw exports for separate analyses.
 
 To add another OpenAI model, copy an entry in `configs/models.yaml` and change
-its ID and API settings. A configuration change creates a different run
-fingerprint, preventing stale cached responses from being reused. A new model
-provider needs a provider adapter in `acuitybench/providers/` plus one registry
-entry in `get_provider()`.
+its ID and API settings. A local or hosted student with the same API shape can
+use `provider: openai_compatible` plus a `base_url_env` and stable `deployment`
+description; endpoint values and credentials remain in `.env`. A configuration
+change creates a different run fingerprint, preventing stale cached responses
+from being reused. A different provider protocol needs an adapter in
+`acuitybench/providers/` plus one registry entry in `get_provider()`.
 
 Model aliases are not immutable. The runner records both the requested alias
 and the exact model string returned by the API; a new run should be described
@@ -262,6 +334,8 @@ The repository tracks all data used for the current reconstruction and run:
 - `data/cache/sources/`: byte-for-byte upstream snapshots.
 - `data/processed/`: reconstructed benchmark, transformed prompts, Parquet
   output, and the build report.
+- `data/interactive/seed_v1/`: evaluation-only interactive case cards and a
+  manifest binding the source, configuration, schema, and artifact hashes.
 - `results/evaluations.sqlite3`: resumable sample-level generation and judge
   records, including usage and latency metadata.
 - `results/gpt-5-mini-paper-reproduction/`: exported GPT-5-mini results and
@@ -270,6 +344,8 @@ The repository tracks all data used for the current reconstruction and run:
   `results/gpt-5.4-paper-stream-none-20260711/`: the complete paired,
   instrumented runs used by the frontier charts.
 - `results/model-comparison/`: the combined frontier table and README graphs.
+- `results/interactive-pilot-v1/`: versioned seed-review and illustrative
+  training-pilot cost assumptions and reports.
 
 Provenance is retained at three levels:
 
@@ -285,8 +361,10 @@ Provenance is retained at three levels:
 data and result files. No API credentials or `.env` contents are tracked.
 
 Some inputs are CC BY-NC and the AcuityBench annotation release still lacks a
-final upstream licence. Keep the repository private and treat the data as
-non-commercial research material unless those terms change; see [NOTICE.md](NOTICE.md).
+final upstream licence. The repository is intentionally public, but downstream
+users must still treat the data as non-commercial research material unless the
+upstream terms change and must independently review redistribution rights; see
+[NOTICE.md](NOTICE.md).
 
 ## What is reproduced
 

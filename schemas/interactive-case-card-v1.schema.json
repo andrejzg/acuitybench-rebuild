@@ -1,0 +1,380 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:acuitybench:schema:interactive-case-card:v1",
+  "title": "AcuityBench interactive case card v1",
+  "description": "A strict simulator case card. Queryable facts and gold fields are hidden from the triage policy and exposed only to the simulator or evaluator.",
+  "$comment": "Applications must also enforce referential integrity: required_question_ids and red_flags[*].question_id should occur in queryable_facts for cases that expect an answer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "intended_use",
+    "training_allowed",
+    "provenance",
+    "opening_utterance",
+    "queryable_facts",
+    "gold_acuity",
+    "red_flags",
+    "required_question_ids",
+    "unsafe_dispositions",
+    "stratum",
+    "patient_profile",
+    "simulator",
+    "review_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "interactive-case-card/v1"
+    },
+    "case_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "intended_use": {
+      "const": "evaluation_only"
+    },
+    "training_allowed": {
+      "const": false
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "opening_utterance": {
+      "allOf": [
+        {"$ref": "#/$defs/nonEmptyString"},
+        {"maxLength": 4000}
+      ],
+      "description": "The only case-specific clinical text visible before the first action."
+    },
+    "queryable_facts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/queryableFact"
+      },
+      "description": "Simulator-only hidden facts that become visible after a matching ASK action."
+    },
+    "gold_acuity": {
+      "$ref": "#/$defs/acuity"
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/redFlag"
+      }
+    },
+    "required_question_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/questionId"
+      },
+      "description": "Questions whose omission makes an otherwise correct trajectory clinically incomplete."
+    },
+    "unsafe_dispositions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/acuity"
+      }
+    },
+    "stratum": {
+      "$ref": "#/$defs/stratum"
+    },
+    "patient_profile": {
+      "$ref": "#/$defs/patientProfile"
+    },
+    "simulator": {
+      "$ref": "#/$defs/simulator"
+    },
+    "review_status": {
+      "$ref": "#/$defs/reviewStatus"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"gold_acuity": {"const": "A"}},
+        "required": ["gold_acuity"]
+      },
+      "then": {
+        "properties": {
+          "unsafe_dispositions": {
+            "const": []
+          },
+          "stratum": {
+            "properties": {"acuity": {"const": "A"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"gold_acuity": {"const": "B"}},
+        "required": ["gold_acuity"]
+      },
+      "then": {
+        "properties": {
+          "unsafe_dispositions": {
+            "const": ["A"]
+          },
+          "stratum": {
+            "properties": {"acuity": {"const": "B"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"gold_acuity": {"const": "C"}},
+        "required": ["gold_acuity"]
+      },
+      "then": {
+        "properties": {
+          "unsafe_dispositions": {
+            "const": ["A", "B"]
+          },
+          "stratum": {
+            "properties": {"acuity": {"const": "C"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"gold_acuity": {"const": "D"}},
+        "required": ["gold_acuity"]
+      },
+      "then": {
+        "properties": {
+          "unsafe_dispositions": {
+            "const": ["A", "B", "C"]
+          },
+          "stratum": {
+            "properties": {"acuity": {"const": "D"}}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "acuity": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D"]
+    },
+    "questionId": {
+      "type": "string",
+      "enum": [
+        "concern.summary",
+        "demographic.age",
+        "demographic.sex",
+        "demographic.pregnancy",
+        "symptom.onset",
+        "symptom.course",
+        "symptom.severity",
+        "symptom.location",
+        "symptom.character",
+        "symptom.triggers",
+        "symptom.associated",
+        "context.fever",
+        "context.trauma",
+        "context.exposure",
+        "context.additional",
+        "function.impact",
+        "treatment.tried",
+        "history.conditions",
+        "history.medications",
+        "history.allergies",
+        "history.procedures",
+        "history.substance_use",
+        "red_flag.breathing",
+        "red_flag.chest_pain",
+        "red_flag.consciousness",
+        "red_flag.neurologic",
+        "red_flag.bleeding",
+        "red_flag.sepsis",
+        "red_flag.dehydration",
+        "red_flag.anaphylaxis",
+        "red_flag.pregnancy",
+        "red_flag.mental_health",
+        "logistics.support"
+      ]
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "benchmark_case_id",
+        "source_dataset",
+        "source_id",
+        "source_text_sha256",
+        "benchmark_artifact",
+        "label_basis",
+        "mapping_method",
+        "transformation"
+      ],
+      "properties": {
+        "benchmark_case_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_dataset": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_text_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "benchmark_artifact": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "label_basis": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "mapping_method": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "transformation": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "queryableFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_id", "status", "answer", "evidence_text"],
+      "properties": {
+        "question_id": {
+          "$ref": "#/$defs/questionId"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["known", "unknown"]
+        },
+        "answer": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_text": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "redFlag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question_id", "evidence_text", "derivation"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "question_id": {
+          "$ref": "#/$defs/questionId"
+        },
+        "evidence_text": {
+          "allOf": [
+            {"$ref": "#/$defs/stringList"},
+            {"minItems": 1}
+          ]
+        },
+        "derivation": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "stratum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acuity", "source_dataset", "presentation_group"],
+      "properties": {
+        "acuity": {
+          "$ref": "#/$defs/acuity"
+        },
+        "source_dataset": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "presentation_group": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "patientProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["age", "sex", "speaker_role"],
+      "properties": {
+        "age": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 130
+        },
+        "sex": {
+          "type": "string",
+          "enum": ["female", "male", "intersex", "unknown"]
+        },
+        "speaker_role": {
+          "type": "string",
+          "enum": ["patient", "parent", "caregiver", "clinician", "other"]
+        }
+      }
+    },
+    "simulator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximum_questions", "unknown_response", "response_policy"],
+      "properties": {
+        "maximum_questions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "unknown_response": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "response_policy": {
+          "const": "question_id_lookup"
+        }
+      }
+    },
+    "reviewStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_label",
+        "case_content",
+        "requires_clinician_review"
+      ],
+      "properties": {
+        "reference_label": {
+          "type": "string",
+          "enum": ["not_reviewed", "source_derived", "clinician_reviewed"]
+        },
+        "case_content": {
+          "type": "string",
+          "enum": ["not_reviewed", "automated_checked", "clinician_reviewed"]
+        },
+        "requires_clinician_review": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

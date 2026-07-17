@@ -17,6 +17,14 @@ from acuitybench.evaluation import (
     run_judge_async,
 )
 from acuitybench.models import ModelRegistry
+from acuitybench.interactive.costing import write_cost_report
+from acuitybench.interactive.seed import (
+    build_seed_set,
+    default_seed_output_dir,
+    load_case_cards,
+    validate_seed_set,
+)
+from acuitybench.interactive.simulator import run_action_trace
 from acuitybench.pipeline import build
 from acuitybench.reporting import combine_reports, generate_report
 from acuitybench.sources import (
@@ -27,6 +35,12 @@ from acuitybench.sources import (
 )
 from acuitybench.validation import read_reference_ids, validate_frame
 from acuitybench.store import EvaluationStore
+from acuitybench.static_student import (
+    inspect_static_plan,
+    load_static_plan,
+    static_evaluation_contract,
+    validate_static_examples,
+)
 
 
 def _data_dir(value: str | None) -> Path:
@@ -192,10 +206,15 @@ def _run_models(args: argparse.Namespace) -> int:
     for model in registry.models():
         temperature = model.temperature if model.send_temperature else "provider default"
         reasoning = model.reasoning_effort or "not applicable/provider default"
+        endpoint_detail = (
+            f", base_url_env={model.base_url_env}, deployment={model.deployment}"
+            if model.base_url_env
+            else ""
+        )
         print(
             f"  {model.id:16} {model.provider:8} {model.api_model:24} "
             f"{model.endpoint} (temperature={temperature}, reasoning={reasoning}, "
-            f"service_tier={model.service_tier or 'provider default'})"
+            f"service_tier={model.service_tier or 'provider default'}{endpoint_detail})"
         )
     print("\nJudges:")
     for judge in registry.judges():
@@ -305,6 +324,212 @@ def _run_compare(args: argparse.Namespace) -> int:
     return 0
 
 
+def _run_static_plan(args: argparse.Namespace) -> int:
+    report = inspect_static_plan(
+        plan_path=Path(args.config).expanduser().resolve() if args.config else None,
+        benchmark_path=(
+            Path(args.benchmark).expanduser().resolve() if args.benchmark else None
+        ),
+    )
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+def _run_static_data_validate(args: argparse.Namespace) -> int:
+    report = validate_static_examples(
+        Path(args.input).expanduser().resolve(),
+        benchmark_path=(
+            Path(args.benchmark).expanduser().resolve() if args.benchmark else None
+        ),
+        schema_path=(
+            Path(args.schema).expanduser().resolve() if args.schema else None
+        ),
+    )
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+def _add_static_evaluation_options(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--model", required=True, help="Model ID from configs/models.yaml")
+    parser.add_argument("--config", help="Static-student plan YAML")
+    parser.add_argument(
+        "--qa-only",
+        action="store_true",
+        help="Skip the secondary one-shot conversational task and GPT-4.1 judge",
+    )
+    parser.add_argument(
+        "--samples",
+        type=int,
+        help="Calls per case/task (default: plan value, currently 5)",
+    )
+    parser.add_argument("--datasets", nargs="+", help="Optional dataset subset")
+    parser.add_argument("--limit", type=int, help="Deterministic smoke-run case limit")
+    parser.add_argument("--run-id", help="Explicit resumable run ID")
+    parser.add_argument("--concurrency", type=int, default=20)
+    parser.add_argument(
+        "--no-stream",
+        action="store_false",
+        dest="stream",
+        help="Disable streaming (TTFT will be unavailable)",
+    )
+    parser.add_argument("--judge", default="paper-gpt-4.1")
+    parser.add_argument("--judge-concurrency", type=int, default=20)
+    parser.add_argument("--store", help="SQLite result store")
+    parser.add_argument("--benchmark", help="Transformed held-out benchmark CSV")
+
+
+def _run_static_evaluate(args: argparse.Namespace) -> int:
+    plan_path = Path(args.config).expanduser().resolve() if args.config else None
+    benchmark_path = _path(args.benchmark, default_benchmark_path())
+    inspect_static_plan(plan_path=plan_path, benchmark_path=benchmark_path)
+    plan = load_static_plan(plan_path)
+    include_conversation = not args.qa_only
+    tasks = ("qa", "conv") if include_conversation else ("qa",)
+    samples = (
+        int(plan["evaluation"]["samples_per_case"])
+        if args.samples is None
+        else args.samples
+    )
+    store_path = _path(args.store, default_store_path())
+    run_id = run_evaluation(
+        model_id=args.model,
+        tasks=tasks,
+        samples=samples,
+        datasets=tuple(args.datasets) if args.datasets else None,
+        limit=args.limit,
+        run_id=args.run_id,
+        concurrency=args.concurrency,
+        judge_id=args.judge,
+        judge_concurrency=args.judge_concurrency,
+        stream=args.stream,
+        include_judge=include_conversation,
+        store_path=store_path,
+        benchmark_path=benchmark_path,
+        experiment_contract=static_evaluation_contract(
+            plan, include_conversation=include_conversation
+        ),
+    )
+    output = generate_report(
+        run_id=run_id,
+        store_path=store_path,
+        judge_id=args.judge,
+    )
+    print(f"\nStatic student evaluation complete: {run_id}")
+    print(f"Report: {output}")
+    return 0
+
+
+def _run_interactive_build(args: argparse.Namespace) -> int:
+    result = build_seed_set(
+        config_path=Path(args.config).expanduser().resolve() if args.config else None,
+        benchmark_path=(
+            Path(args.benchmark).expanduser().resolve() if args.benchmark else None
+        ),
+        output_dir=(
+            Path(args.output_dir).expanduser().resolve()
+            if args.output_dir
+            else default_seed_output_dir()
+        ),
+    )
+    validation = validate_seed_set(
+        case_cards_path=result.case_cards_path,
+        manifest_path=result.manifest_path,
+        benchmark_path=(
+            Path(args.benchmark).expanduser().resolve() if args.benchmark else None
+        ),
+        config_path=Path(args.config).expanduser().resolve() if args.config else None,
+    )
+    print(json.dumps(validation, indent=2, sort_keys=True))
+    print(f"\nCase cards: {result.case_cards_path}")
+    print(f"Manifest:   {result.manifest_path}")
+    return 0
+
+
+def _run_interactive_validate(args: argparse.Namespace) -> int:
+    seed_dir = (
+        Path(args.seed_dir).expanduser().resolve()
+        if args.seed_dir
+        else default_seed_output_dir()
+    )
+    result = validate_seed_set(
+        case_cards_path=seed_dir / "case_cards.jsonl",
+        manifest_path=seed_dir / "manifest.json",
+        benchmark_path=(
+            Path(args.benchmark).expanduser().resolve() if args.benchmark else None
+        ),
+        config_path=Path(args.config).expanduser().resolve() if args.config else None,
+    )
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def _read_actions(path: Path) -> list[dict[str, object]]:
+    text = path.read_text(encoding="utf-8")
+    if path.suffix.lower() == ".json":
+        payload = json.loads(text)
+        if isinstance(payload, dict) and isinstance(payload.get("actions"), list):
+            payload = payload["actions"]
+        if not isinstance(payload, list) or not all(
+            isinstance(value, dict) for value in payload
+        ):
+            raise ValueError("Action JSON must be a list or an object with an actions list")
+        return [dict(value) for value in payload]
+    actions: list[dict[str, object]] = []
+    for line_number, line in enumerate(text.splitlines(), 1):
+        if not line.strip():
+            continue
+        value = json.loads(line)
+        if not isinstance(value, dict):
+            raise ValueError(f"Action at line {line_number} is not an object")
+        actions.append(dict(value))
+    return actions
+
+
+def _run_interactive_simulate(args: argparse.Namespace) -> int:
+    seed_dir = (
+        Path(args.seed_dir).expanduser().resolve()
+        if args.seed_dir
+        else default_seed_output_dir()
+    )
+    cards = {
+        str(card["case_id"]): card
+        for card in load_case_cards(seed_dir / "case_cards.jsonl")
+    }
+    if args.case_id not in cards:
+        raise ValueError(f"Unknown interactive case ID: {args.case_id}")
+    actions = _read_actions(Path(args.actions).expanduser().resolve())
+    evaluation = run_action_trace(cards[args.case_id], actions)
+    payload = {
+        "case_id": evaluation.case_id,
+        "terminal_action": evaluation.terminal_action,
+        "outcome": evaluation.outcome,
+        "transcript": list(evaluation.transcript),
+    }
+    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
+    return 0
+
+
+def _run_interactive_cost(args: argparse.Namespace) -> int:
+    output_dir = (
+        Path(args.output_dir).expanduser().resolve()
+        if args.output_dir
+        else project_root() / "results/interactive-pilot-v1"
+    )
+    paths = write_cost_report(
+        output_dir,
+        assumptions_path=(
+            Path(args.assumptions).expanduser().resolve()
+            if args.assumptions
+            else None
+        ),
+    )
+    report = json.loads(paths[0].read_text(encoding="utf-8"))
+    print(json.dumps(report["totals"], indent=2, sort_keys=True))
+    print(f"\nJSON:     {paths[0]}")
+    print(f"Markdown: {paths[1]}")
+    return 0
+
+
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="acuitybench",
@@ -387,6 +612,65 @@ def make_parser() -> argparse.ArgumentParser:
     compare_parser.add_argument("--results-root")
     compare_parser.add_argument("--output")
     compare_parser.set_defaults(handler=_run_compare)
+
+    static_plan_parser = subparsers.add_parser(
+        "static-plan",
+        help="Validate and summarize the versioned static-first student plan",
+    )
+    static_plan_parser.add_argument("--config")
+    static_plan_parser.add_argument("--benchmark")
+    static_plan_parser.set_defaults(handler=_run_static_plan)
+
+    static_data_parser = subparsers.add_parser(
+        "static-data-validate",
+        help="Validate a separate static training/development JSONL pool",
+    )
+    static_data_parser.add_argument("--input", required=True)
+    static_data_parser.add_argument("--schema")
+    static_data_parser.add_argument("--benchmark")
+    static_data_parser.set_defaults(handler=_run_static_data_validate)
+
+    static_evaluate_parser = subparsers.add_parser(
+        "static-evaluate",
+        help="Run the static AcuityBench-style student contract",
+    )
+    _add_static_evaluation_options(static_evaluate_parser)
+    static_evaluate_parser.set_defaults(handler=_run_static_evaluate)
+
+    interactive_build_parser = subparsers.add_parser(
+        "interactive-build",
+        help="Build the deterministic, evaluation-only 100-case interactive seed",
+    )
+    interactive_build_parser.add_argument("--config")
+    interactive_build_parser.add_argument("--benchmark")
+    interactive_build_parser.add_argument("--output-dir")
+    interactive_build_parser.set_defaults(handler=_run_interactive_build)
+
+    interactive_validate_parser = subparsers.add_parser(
+        "interactive-validate",
+        help="Validate provenance and invariants for the interactive seed",
+    )
+    interactive_validate_parser.add_argument("--seed-dir")
+    interactive_validate_parser.add_argument("--config")
+    interactive_validate_parser.add_argument("--benchmark")
+    interactive_validate_parser.set_defaults(handler=_run_interactive_validate)
+
+    interactive_simulate_parser = subparsers.add_parser(
+        "interactive-simulate",
+        help="Replay a JSON or JSONL action trace against one deterministic case",
+    )
+    interactive_simulate_parser.add_argument("--case-id", required=True)
+    interactive_simulate_parser.add_argument("--actions", required=True)
+    interactive_simulate_parser.add_argument("--seed-dir")
+    interactive_simulate_parser.set_defaults(handler=_run_interactive_simulate)
+
+    interactive_cost_parser = subparsers.add_parser(
+        "interactive-cost",
+        help="Regenerate the versioned interactive pilot cost estimate",
+    )
+    interactive_cost_parser.add_argument("--assumptions")
+    interactive_cost_parser.add_argument("--output-dir")
+    interactive_cost_parser.set_defaults(handler=_run_interactive_cost)
     return parser
 
 

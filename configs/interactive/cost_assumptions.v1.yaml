@@ -1,0 +1,91 @@
+schema_version: 1
+formula_version: 1
+
+# This is an explicit planning scenario, not a quote or observed billing. Keep
+# historical versions immutable; create v2 when formulas or assumptions change.
+assumption_set:
+  id: interactive-pilot-tinker-2026-07-17-v1
+  description: 500-case feasibility pilot with four accepted teacher rollouts per case
+  currency: USD
+  pricing_source_url: https://tinker-docs.thinkingmachines.ai/tinker/models/
+  pricing_effective_date: "2026-07-17"
+  pricing_accessed_date: "2026-07-17"
+
+# Tinker list prices per million tokens effective 2026-07-17. The teacher
+# scoring calculation below conservatively uses the teacher prefill rate.
+pricing_per_million_tokens_usd:
+  teacher:
+    model_id: Qwen/Qwen3.5-397B-A17B
+    prefill: 3.00
+    cached_prefill: 0.60
+    sample: 7.50
+  student:
+    model_id: Qwen/Qwen3.5-4B
+    prefill: 0.33
+    cached_prefill: 0.066
+    sample: 1.005
+    train: 0.737
+
+pilot:
+  unique_cases: 500
+  teacher_rollouts_per_case: 4
+  mean_gp_actions_per_rollout: 6
+
+# Cumulative prefill counts repeated, growing prompts across all turns in one
+# consultation. Zero cached share makes the default estimate conservative.
+teacher_generation:
+  cumulative_prefill_tokens_per_rollout: 5000
+  cached_prefill_fraction: 0.0
+  sampled_tokens_per_rollout: 400
+
+# Store each accepted consultation once and mask non-GP tokens, avoiding the
+# repeated prefixes produced by flattening every turn into a separate row.
+sft:
+  sequence_tokens_per_rollout: 1500
+  epochs: 3
+
+sweep:
+  learning_rates: [0.0001, 0.0003, 0.001]
+  lora_ranks: [32, 128]
+  rollout_fraction_per_configuration: 0.25
+  epochs_per_configuration: 1
+
+evaluation:
+  cases: 500
+  rollouts_per_case: 1
+  cumulative_prefill_tokens_per_rollout: 5000
+  cached_prefill_fraction: 0.0
+  sampled_tokens_per_rollout: 400
+
+# One on-policy correction round. Teacher-scored tokens use the teacher prefill
+# rate; the student rollout and gradient-bearing tokens are itemized separately.
+on_policy:
+  cases: 500
+  rollouts_per_case: 4
+  rounds: 1
+  student_cumulative_prefill_tokens_per_rollout: 5000
+  student_cached_prefill_fraction: 0.0
+  student_sampled_tokens_per_rollout: 400
+  teacher_scored_tokens_per_rollout: 1500
+  student_train_tokens_per_rollout: 1500
+
+# Illustrative fully loaded clinician rate and review protocol. This deliberately
+# exposes the human-work assumption because it dominates the compute estimate.
+clinician_review:
+  hourly_rate_usd: 180
+  training_cases_reviewed_fraction: 1.0
+  minutes_per_training_case: 10
+  generated_rollouts_reviewed_fraction: 0.25
+  minutes_per_reviewed_rollout: 3
+  evaluation_labels_per_case: 2
+  minutes_per_evaluation_label: 5
+  evaluation_adjudication_fraction: 0.20
+  minutes_per_adjudication: 5
+
+# Standalone estimate for preparing the actual seed evaluation set. This uses
+# the clinician-review assumptions above and is not added to the 500-case pilot
+# totals. Its deterministic local build/provider compute is zero; engineering
+# time is explicitly excluded.
+seed_evaluation_preparation:
+  version: 1
+  cases: 100

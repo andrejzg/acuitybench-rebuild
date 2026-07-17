@@ -3,6 +3,11 @@ version: 1
 # Add another OpenAI model by copying one of these entries. The runner derives
 # cache identity from the complete entry, so configuration changes never reuse
 # stale responses. New providers need a small adapter in acuitybench/providers/.
+# A self-hosted student exposed through an OpenAI-compatible server can use
+# provider: openai_compatible plus base_url_env and a stable deployment string.
+# Put both the server URL and token in .env, record measured/amortized serving
+# prices rather than zero, and use a new model ID for every checkpoint or
+# deployment/hardware change.
 models:
   gpt-5-mini:
     display_name: GPT-5 mini

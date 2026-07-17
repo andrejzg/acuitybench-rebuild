@@ -1,0 +1,108 @@
+{
+  "action_catalog": {
+    "path": "configs/interactive/action_catalog.v1.yaml",
+    "sha256": "317c7b7b56bf546d12e7b90e160075d636014ddf7d37db0b91789c2555c82340"
+  },
+  "action_schema_version": "interactive-action/v1",
+  "benchmark": {
+    "path": "data/processed/acuitybench.parquet",
+    "sha256": "90ef2d3b15e968f68372d728de392b3ed46d58e3786fb6e1aa01807678d193d7"
+  },
+  "builder_version": "0.4.0",
+  "candidate_counts_by_label_source": {
+    "A:healthbench": 6,
+    "A:pmr_reddit": 43,
+    "B:healthbench": 27,
+    "B:pmr_reddit": 57,
+    "C:healthbench": 11,
+    "C:pmr_reddit": 37,
+    "D:healthbench": 110,
+    "D:pmr_reddit": 41
+  },
+  "case_count": 100,
+  "case_schema_version": "interactive-case-card/v1",
+  "clinician_content_reviewed_cases": 0,
+  "config": {
+    "path": "configs/interactive/seed_set.v1.yaml",
+    "sha256": "3214237207819c64429b3b7353b686218bd8b7c832f6b836c8306c826fc0c971"
+  },
+  "files": {
+    "case_cards.jsonl": {
+      "bytes": 896113,
+      "sha256": "882037b01df43f9155a21969c1a29b55c4458b96dd1ff6053791bce4adfd3f65"
+    }
+  },
+  "intended_use": "evaluation_only",
+  "label_counts": {
+    "A": 25,
+    "B": 25,
+    "C": 25,
+    "D": 25
+  },
+  "label_source_counts": {
+    "A:healthbench": 5,
+    "A:pmr_reddit": 20,
+    "B:healthbench": 10,
+    "B:pmr_reddit": 15,
+    "C:healthbench": 10,
+    "C:pmr_reddit": 15,
+    "D:healthbench": 15,
+    "D:pmr_reddit": 10
+  },
+  "limitations": [
+    "Reference acuity is inherited from the released benchmark; transformed dialogue content has not been clinician reviewed.",
+    "Queryable facts are deterministic text routing, not newly inferred or generated patient facts.",
+    "A whole source fragment may be reused under multiple question IDs; turn-efficiency and consultation-latency conclusions require clinician fact splitting first.",
+    "The set is held-out evaluation data and must not be used for training."
+  ],
+  "presentation_group_counts": {
+    "cardiopulmonary": 12,
+    "eye_ent_dental": 11,
+    "gastrointestinal": 10,
+    "general_other": 11,
+    "infection_systemic": 10,
+    "injury_bleeding": 13,
+    "medication_toxicology": 4,
+    "mental_health": 4,
+    "musculoskeletal": 4,
+    "neurologic": 9,
+    "reproductive_urinary": 7,
+    "skin_allergy": 5
+  },
+  "question_catalog": {
+    "path": "configs/interactive/question_catalog.v1.yaml",
+    "question_count": 33,
+    "sha256": "db0ea6fffe173b63ff272dd50e7388690f68810b3384752d7d8f4c2f1530e383"
+  },
+  "reference_label_basis_counts": {
+    "healthbench_physician_agreed_emergent_category": 13,
+    "released_five_physician_panel_median": 87
+  },
+  "schema_version": "interactive-seed-manifest/v1",
+  "schemas": {
+    "action": {
+      "path": "schemas/interactive-action-v1.schema.json",
+      "sha256": "bc249a98a6ab647410126cdd9584b57289c0ad88f0e1b03b69f11aa7ace35ad8"
+    },
+    "case_card": {
+      "path": "schemas/interactive-case-card-v1.schema.json",
+      "sha256": "799fcf9a7a11c08c4636c80dc66fabe3df7cb57cc8544e6d75e682f59c290c6b"
+    }
+  },
+  "seed_id": "acuity-interactive-seed-v1",
+  "selection_version": "balanced-natural-inputs-v1",
+  "source_counts": {
+    "healthbench": 40,
+    "pmr_reddit": 60
+  },
+  "sources_lock": {
+    "dataset_to_source_name": {
+      "healthbench": "healthbench_consensus",
+      "pmr_reddit": "pmr_reddit_test",
+      "reference_labels": "physician_labels"
+    },
+    "path": "sources.lock.json",
+    "sha256": "4310f028f54be44b8ffbe950837a3c832e7bc43b8941bf286fb9d7a551b8906b"
+  },
+  "training_allowed": false
+}

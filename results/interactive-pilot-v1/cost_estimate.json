@@ -1,0 +1,161 @@
+{
+  "assumptions": {
+    "currency": "USD",
+    "description": "500-case feasibility pilot with four accepted teacher rollouts per case",
+    "fingerprint_sha256": "e401a4c797f94bbb07eb33cc202cedb28779924ae6862264d8905e4c2f25c407",
+    "id": "interactive-pilot-tinker-2026-07-17-v1",
+    "pricing_accessed_date": "2026-07-17",
+    "pricing_effective_date": "2026-07-17",
+    "pricing_source_url": "https://tinker-docs.thinkingmachines.ai/tinker/models/",
+    "schema_version": 1
+  },
+  "components": [
+    {
+      "category": "tinker_compute",
+      "cost_usd": 36,
+      "formula": "(uncached_prefill_tokens * teacher_prefill_rate + cached_prefill_tokens * teacher_cached_prefill_rate + sampled_tokens * teacher_sample_rate) / 1_000_000",
+      "id": "teacher_generation",
+      "quantities": {
+        "cached_prefill_cost_usd": 0,
+        "cached_prefill_tokens": 0,
+        "rollouts": 2000,
+        "sample_cost_usd": 6,
+        "sampled_tokens": 800000,
+        "uncached_prefill_cost_usd": 30,
+        "uncached_prefill_tokens": 10000000
+      }
+    },
+    {
+      "category": "tinker_compute",
+      "cost_usd": 6.633,
+      "formula": "teacher_rollouts * sequence_tokens_per_rollout * epochs * student_train_rate / 1_000_000",
+      "id": "sft",
+      "quantities": {
+        "epochs": 3,
+        "sequence_tokens_per_rollout": 1500,
+        "teacher_rollouts": 2000,
+        "train_tokens": 9000000
+      }
+    },
+    {
+      "category": "tinker_compute",
+      "cost_usd": 3.3165,
+      "formula": "teacher_rollouts * rollout_fraction * learning_rate_count * lora_rank_count * sequence_tokens_per_rollout * sweep_epochs * student_train_rate / 1_000_000",
+      "id": "sweep",
+      "quantities": {
+        "configurations": 6,
+        "epochs_per_configuration": 1,
+        "learning_rate_count": 3,
+        "lora_rank_count": 2,
+        "rollouts_per_configuration": 500,
+        "train_tokens": 4500000
+      }
+    },
+    {
+      "category": "tinker_compute",
+      "cost_usd": 1.026,
+      "formula": "(uncached_prefill_tokens * student_prefill_rate + cached_prefill_tokens * student_cached_prefill_rate + sampled_tokens * student_sample_rate) / 1_000_000",
+      "id": "evaluation",
+      "quantities": {
+        "cached_prefill_cost_usd": 0,
+        "cached_prefill_tokens": 0,
+        "rollouts": 500,
+        "sample_cost_usd": 0.201,
+        "sampled_tokens": 200000,
+        "uncached_prefill_cost_usd": 0.825,
+        "uncached_prefill_tokens": 2500000
+      }
+    },
+    {
+      "category": "tinker_compute",
+      "cost_usd": 15.315,
+      "formula": "student_generation_cost + teacher_scored_tokens * teacher_prefill_rate / 1_000_000 + student_train_tokens * student_train_rate / 1_000_000",
+      "id": "on_policy",
+      "quantities": {
+        "cached_prefill_cost_usd": 0,
+        "cached_prefill_tokens": 0,
+        "rollouts": 2000,
+        "rounds": 1,
+        "sample_cost_usd": 0.804,
+        "sampled_tokens": 800000,
+        "student_train_tokens": 3000000,
+        "student_training_cost_usd": 2.211,
+        "teacher_scored_tokens": 3000000,
+        "teacher_scoring_cost_usd": 9,
+        "uncached_prefill_cost_usd": 3.3,
+        "uncached_prefill_tokens": 10000000
+      }
+    },
+    {
+      "category": "human_review",
+      "cost_usd": 36000,
+      "formula": "(training_case_review_hours + rollout_review_hours + evaluation_label_hours + adjudication_hours) * clinician_hourly_rate",
+      "id": "clinician_review",
+      "quantities": {
+        "adjudication_hours": 8.333333,
+        "evaluation_label_hours": 83.333333,
+        "hourly_rate_usd": 180,
+        "rollout_review_hours": 25,
+        "total_hours": 200,
+        "training_case_review_hours": 83.333333
+      }
+    }
+  ],
+  "estimate_type": "planning_assumptions_not_observed_billing",
+  "formula_version": 1,
+  "models": {
+    "student": {
+      "cached_prefill_usd_per_million": 0.066,
+      "model_id": "Qwen/Qwen3.5-4B",
+      "prefill_usd_per_million": 0.33,
+      "sample_usd_per_million": 1.005,
+      "train_usd_per_million": 0.737
+    },
+    "teacher": {
+      "cached_prefill_usd_per_million": 0.6,
+      "model_id": "Qwen/Qwen3.5-397B-A17B",
+      "prefill_usd_per_million": 3,
+      "sample_usd_per_million": 7.5
+    }
+  },
+  "scenario": {
+    "evaluation_cases": 500,
+    "mean_gp_actions_per_rollout": 6,
+    "on_policy_rollouts": 2000,
+    "supervised_action_targets": 12000,
+    "teacher_rollouts": 2000,
+    "unique_cases": 500
+  },
+  "schema_version": 1,
+  "standalone_estimates": {
+    "seed_evaluation_preparation": {
+      "cases": 100,
+      "costs": {
+        "clinician_review_usd": 6300,
+        "local_build_and_provider_compute_usd": 0,
+        "total_usd": 6300
+      },
+      "engineering_cost": "excluded",
+      "formula": "cases * (content_review_minutes_per_case + independent_labels_per_case * minutes_per_label + adjudication_fraction * minutes_per_adjudication) / 60 * clinician_hourly_rate",
+      "included_in_pilot_totals": false,
+      "quantities": {
+        "adjudication_fraction": 0.2,
+        "adjudication_hours": 1.666667,
+        "clinician_hourly_rate_usd": 180,
+        "content_review_hours": 16.666667,
+        "content_review_minutes_per_case": 10,
+        "independent_label_hours": 16.666667,
+        "independent_labels_per_case": 2,
+        "minutes_per_adjudication": 5,
+        "minutes_per_label": 5,
+        "total_clinician_hours": 35
+      },
+      "version": 1
+    }
+  },
+  "totals": {
+    "clinician_review_usd": 36000,
+    "overall_usd": 36062.2905,
+    "tinker_compute_usd": 62.2905
+  }
+}
