@@ -1,0 +1,294 @@
+acuitybench/models.py
+  s_3f5e58f5c753ff::t_b388f7deb0b190 39-40,51-52,135-155,184,213-214
+docs/knowledge/glossary.md
+  s_3f5e58f5c753ff::t_2c197b338ad6ad 1-59,62-66,70-79
+  s_3f5e58f5c753ff::t_601ce7216619cf 60-61,67-69
+tests/test_interactive_schema_validation.py
+  s_3f5e58f5c753ff::t_85dd1a65d4379f 1-43
+tests/test_interactive_schemas.py
+  s_3f5e58f5c753ff::t_15c649cf2a1f1f 1-442
+acuitybench/providers/__init__.py
+  s_3f5e58f5c753ff::t_b388f7deb0b190 9
+configs/models.yaml
+  s_3f5e58f5c753ff::t_74d5cabe0f2fb4 6-10
+tests/test_models.py
+  s_3f5e58f5c753ff::t_d9d010057da852 8-9,125-167
+tests/test_knowledge_bundle.py
+  s_3f5e58f5c753ff::t_ca7a8d7b3a32a7 13,41-42,52-61
+  s_3f5e58f5c753ff::t_8694ee02e754ec 1-12,14-40,43-51,62-68
+docs/knowledge/data-and-labels.md
+  s_3f5e58f5c753ff::t_2c197b338ad6ad 1-12,18-158
+  s_3f5e58f5c753ff::t_72869ae0d8377d 13-17
+data/processed/README.md
+  s_3f5e58f5c753ff::t_99736ff340f382 4-9
+configs/interactive/action_catalog.v1.yaml
+  s_3f5e58f5c753ff::t_e403b075821eef 1-93,98-169
+  s_3f5e58f5c753ff::t_bd3747b9d399f6 94-97
+acuitybench/cli.py
+  s_3f5e58f5c753ff::t_1e73efaea3bf78 388-392
+  s_3f5e58f5c753ff::t_b65c5bc8959b36 38-43,209-213,217,327-387,393-418,615-638
+  s_3f5e58f5c753ff::t_1341276348836f 20-27,419-532,639-673
+configs/interactive/seed_set.v1.yaml
+  s_3f5e58f5c753ff::t_1a09f4704923fc 9
+  s_3f5e58f5c753ff::t_fb1e5b665e0683 31
+  s_3f5e58f5c753ff::t_31ab3c31af3ca6 34-35
+  s_3f5e58f5c753ff::t_ddffd94e4652f6 1-8,10-25,40
+  s_3f5e58f5c753ff::t_0191d2c3d307b6 33
+  s_3f5e58f5c753ff::t_396f2e900d7a89 26-30
+  s_3f5e58f5c753ff::t_7a650e75fb9334 32
+  s_3f5e58f5c753ff::t_199cbac8e857ac 36,39
+  s_3f5e58f5c753ff::t_ca48f664fafc32 37-38
+acuitybench/interactive/costing.py
+  s_3f5e58f5c753ff::t_d412557c72986f 28-39,1116-1120,1265-1268,1286
+  s_3f5e58f5c753ff::t_865bc8357cf9c6 1-24,26-27,40-123,130-145,147-505,533-554,556-607,611-917,942,944-1007,1061-1066
+  s_3f5e58f5c753ff::t_534df81eb8e3f7 25,124-129,146,506-532,555,608-610,918-941,943,1008-1060,1130-1145,1188-1221
+  s_3f5e58f5c753ff::t_a94921bac7dfc6 1067-1115,1121-1129,1146-1187,1222-1264,1269-1285,1287-1348
+acuitybench/providers/openai.py
+  s_3f5e58f5c753ff::t_b388f7deb0b190 276-278,284-293,296-300,302,395,714
+results/interactive-pilot-v1/cost_estimate.json
+  s_3f5e58f5c753ff::t_241148018c13b6 5,130-155
+  s_3f5e58f5c753ff::t_88d8ebd0a8ef98 1-4,6-129,156-161
+docs/knowledge/interactive-triage.md
+  s_3f5e58f5c753ff::t_eb74e8aa6a6711 1-222
+docs/knowledge/training-strategy.md
+  s_3f5e58f5c753ff::t_5d6692e66f33cf 1-3,5-12,38-53,55-104,106-195,210,212,214,216,218-246
+  s_3f5e58f5c753ff::t_4d0a7b9238208a 37
+  s_3f5e58f5c753ff::t_cb9a01d0b12a70 4,13-36,54,105,196-209,211,213,215,217
+docs/interactive-triage-v1.md
+  s_3f5e58f5c753ff::t_56278da3714411 21,78-80
+  s_3f5e58f5c753ff::t_d34d35b9a2a0be 1-20,22-40,42-63,66-77,81-149
+  s_3f5e58f5c753ff::t_4cfb2d9cf848f2 41,64-65
+acuitybench/store.py
+  s_3f5e58f5c753ff::t_26f9077d012ef5 42,182-186,252,455-459,626-628,645,673
+docs/knowledge/index.md
+  s_3f5e58f5c753ff::t_cb9a01d0b12a70 12
+  s_3f5e58f5c753ff::t_a3ad4f9d3acecf 1-11,13-19,21-22,24-29,31-54
+  s_3f5e58f5c753ff::t_4d0a7b9238208a 20,23,30
+README.md
+  s_3f5e58f5c753ff::t_601ce7216619cf 45-68,70-71
+  s_3f5e58f5c753ff::t_af6c3214ceab90 69
+  s_3f5e58f5c753ff::t_4cfb2d9cf848f2 84-85,95
+  s_3f5e58f5c753ff::t_a2a560628e4cde 72-77,79-83,89-94,96-107
+  s_3f5e58f5c753ff::t_f9a77a50410736 86-88
+  s_3f5e58f5c753ff::t_bfdf2cd62f579d 290-295
+  s_3f5e58f5c753ff::t_a0913f1d865abf 16-19
+  s_3f5e58f5c753ff::t_99736ff340f382 9,11-14,364-367
+  s_3f5e58f5c753ff::t_56278da3714411 78
+  s_3f5e58f5c753ff::t_153637a0f775ac 337-338,347-348
+  s_3f5e58f5c753ff::t_d73942c66fc65a 15
+tests/test_openai_streaming.py
+  s_3f5e58f5c753ff::t_d9d010057da852 55-76
+docs/knowledge/model-evaluation.md
+  s_3f5e58f5c753ff::t_90ce981d253b8f 1-22,37-67,69-138,164-193
+  s_3f5e58f5c753ff::t_00f04530618ce2 23-36
+  s_3f5e58f5c753ff::t_c29b741f361e6e 68
+  s_3f5e58f5c753ff::t_601ce7216619cf 139-163
+acuitybench/interactive/seed.py
+  s_3f5e58f5c753ff::t_2aaf9a743e65bf 259,301-302
+  s_3f5e58f5c753ff::t_1e315ce600e71e 485-487,490,498,515-518,522-523
+  s_3f5e58f5c753ff::t_1d2175472710d0 1-14,16-24,30-73,78-102,138-258,263-265,271-272,278-279,284-300,304-401,413-419,421,484,542-557,587,649-673,675-677,681-696,698-700,702-707,709-785,796-814,816-825,827-829,831-832,835-884,897-909,911-924,926-935,941-968,970,977,979,981-992,994-1006,1011,1013-1015,1017-1018,1033-1034,1036-1037,1047-1055,1057-1082,1097-1114,1116,1118-1121,1132-1148,1163-1167,1169-1175,1177-1181,1193-1209,1245-1247,1258-1263,1265-1266
+  s_3f5e58f5c753ff::t_8ce6b533e4891a 402-412,697,708,830,833-834,1038-1046
+  s_3f5e58f5c753ff::t_278c116a532871 424,426-428,434
+  s_3f5e58f5c753ff::t_09251ee7b6a679 74-77,1012,1016,1021,1026,1030,1035
+  s_3f5e58f5c753ff::t_61c37886033b9f 281-282,491-492
+  s_3f5e58f5c753ff::t_31ab3c31af3ca6 15,303,420,422-423,429,433,435-436,444-450,465-469,476-479,499-503,509-514,524-528,674,678-680,701
+  s_3f5e58f5c753ff::t_7a650e75fb9334 488-489,497,583,589-591
+  s_3f5e58f5c753ff::t_a5ab89bbe7a573 558-560,566-573,581-582,586,593-597,608-648,826
+  s_3f5e58f5c753ff::t_1a09f4704923fc 103-137,885-896,1019-1020,1022-1025,1027-1029,1031-1032,1083-1096,1210-1230,1233-1244
+  s_3f5e58f5c753ff::t_eea44bf8031c7f 452,493-496,506-508
+  s_3f5e58f5c753ff::t_396f2e900d7a89 925,936-940
+  s_3f5e58f5c753ff::t_792929374a82be 1007-1010
+  s_3f5e58f5c753ff::t_56278da3714411 574-578
+  s_3f5e58f5c753ff::t_199cbac8e857ac 425,430-432,437-443,459-464,480-483,563,579-580
+  s_3f5e58f5c753ff::t_e145d80f8cfd25 266-267,504-505
+  s_3f5e58f5c753ff::t_bc4440e5ad61df 1115,1122-1131,1168,1176,1182-1192,1231-1232,1248-1257,1264
+  s_3f5e58f5c753ff::t_0191d2c3d307b6 561-562,564-565
+  s_3f5e58f5c753ff::t_550de0dbc32ec3 451,453-458
+  s_3f5e58f5c753ff::t_aff6a8dea67349 910,1149-1162
+  s_3f5e58f5c753ff::t_fb1e5b665e0683 584,1056
+  s_3f5e58f5c753ff::t_ac1d096962ddec 25,993
+  s_3f5e58f5c753ff::t_9aab3a82b72412 26-29,1117
+  s_3f5e58f5c753ff::t_d071cd418ccbd2 260-262,470-475,529-541,598-607
+  s_3f5e58f5c753ff::t_eeafd5bad6a65b 786-795,815,969,971-976,978,980
+  s_3f5e58f5c753ff::t_451462ad2cc03f 268-270,273,277,280,283
+  s_3f5e58f5c753ff::t_9efe03e2055f0d 585,588,592
+  s_3f5e58f5c753ff::t_fcfdeada2844fa 274-276,519-521
+NOTICE.md
+  s_3f5e58f5c753ff::t_0bb7fbe0c959dc 19-23
+  s_3f5e58f5c753ff::t_99736ff340f382 5,25-29
+docs/README.md
+  s_3f5e58f5c753ff::t_64a64a3529920a 1-15
+data/README.md
+  s_3f5e58f5c753ff::t_99736ff340f382 3-5,44-45
+  s_3f5e58f5c753ff::t_9e5dab8eafcd52 30-37,40-42
+schemas/static-acuity-example-v1.schema.json
+  s_3f5e58f5c753ff::t_b1be3a649be5ac 1-116
+acuitybench/static_student.py
+  s_3f5e58f5c753ff::t_b1be3a649be5ac 1-213
+configs/interactive/cost_assumptions.v1.yaml
+  s_3f5e58f5c753ff::t_534df81eb8e3f7 84-91
+  s_3f5e58f5c753ff::t_865bc8357cf9c6 1-83
+acuitybench/evaluation.py
+  s_3f5e58f5c753ff::t_cab18b70a915ed 217,252-253,274-275,1235,1250
+configs/interactive/question_catalog.v1.yaml
+  s_3f5e58f5c753ff::t_bd3747b9d399f6 18
+  s_3f5e58f5c753ff::t_ddffd94e4652f6 1-3
+  s_3f5e58f5c753ff::t_49f3d3d2f04fd3 4-17,19-36
+acuitybench/interactive/simulator.py
+  s_3f5e58f5c753ff::t_6e167d237e97eb 348-349,352-355
+  s_3f5e58f5c753ff::t_96026c319ad305 1-16,21-93,98-122,124-137,164-211,213-218,222-285,287-347,350-351,356-369,372-384,389-398
+  s_3f5e58f5c753ff::t_0d476af9b18d2a 94-97
+  s_3f5e58f5c753ff::t_e81177c028c156 138-163,212,219-221,286,370-371,385-388
+  s_3f5e58f5c753ff::t_d889f9ff3fd429 17-20,123
+examples/interactive_actions.json
+  s_3f5e58f5c753ff::t_62fec256797735 1-20
+AGENTS.md
+  s_3f5e58f5c753ff::t_a0913f1d865abf 1-20,32-36,42-69,71-78,83-93
+  s_3f5e58f5c753ff::t_99736ff340f382 37-41,79-82
+  s_3f5e58f5c753ff::t_425d3786818826 21-22
+  s_3f5e58f5c753ff::t_cb9a01d0b12a70 23-31,70
+acuitybench/interactive/schema_validation.py
+  s_3f5e58f5c753ff::t_bde2c9ebe2dd37 12,40-49,209,217
+  s_3f5e58f5c753ff::t_9aab3a82b72412 1-11,13-39,50-208,210-216
+acuitybench/__init__.py
+  s_3f5e58f5c753ff::t_ac1d096962ddec 3
+docs/knowledge/current-state.md
+  s_3f5e58f5c753ff::t_a3ad4f9d3acecf 1-25,27-28,33,35,39-43,48-67,87-102,104-108,115-122
+  s_3f5e58f5c753ff::t_99736ff340f382 34,36-38,44-47,112-114
+  s_3f5e58f5c753ff::t_bfdf2cd62f579d 26
+  s_3f5e58f5c753ff::t_cb9a01d0b12a70 68-86,103,109-110
+  s_3f5e58f5c753ff::t_af6c3214ceab90 111
+  s_3f5e58f5c753ff::t_809f9fb9aed7f0 29-32
+schemas/interactive-case-card-v1.schema.json
+  s_3f5e58f5c753ff::t_aa302e2e9882a2 103,119,135,151
+  s_3f5e58f5c753ff::t_bd3747b9d399f6 193
+  s_3f5e58f5c753ff::t_d67c2f4fdece5e 1-102,104-118,120-134,136-150,152-192,194-380
+docs/knowledge/runbook.md
+  s_3f5e58f5c753ff::t_bfdf2cd62f579d 162
+  s_3f5e58f5c753ff::t_90ce981d253b8f 1-97,100-106,111-143,180-240,243-254
+  s_3f5e58f5c753ff::t_7d8908332b093f 99
+  s_3f5e58f5c753ff::t_3ba78fb0c1c262 107-110
+  s_3f5e58f5c753ff::t_601ce7216619cf 98,144-161,163-179,241-242
+docs/knowledge/clinical-review-protocol.md
+  s_3f5e58f5c753ff::t_eb74e8aa6a6711 1-184,191-198,202-324
+  s_3f5e58f5c753ff::t_72869ae0d8377d 185-190,199-201
+ARTIFACTS.sha256
+  s_3f5e58f5c753ff::t_34f894b16da22e 1-2,14
+  s_3f5e58f5c753ff::t_7ff755a1707ac5 3-4
+  s_3f5e58f5c753ff::t_35c0fefde690f3 19-21
+docs/knowledge/case-card-example.md
+  s_3f5e58f5c753ff::t_eb74e8aa6a6711 1-225
+docs/knowledge/decisions.md
+  s_3f5e58f5c753ff::t_cb9a01d0b12a70 140-156,162
+  s_3f5e58f5c753ff::t_2c197b338ad6ad 1-139,157-161,163-165
+tests/test_interactive_costing.py
+  s_3f5e58f5c753ff::t_534df81eb8e3f7 64-85,199-204,245-249,274-276
+  s_3f5e58f5c753ff::t_a94921bac7dfc6 13-14,16,228-244,250-273,277-292
+  s_3f5e58f5c753ff::t_865bc8357cf9c6 1-12,15,17-63,86-198,205-227
+results/interactive-pilot-v1/cost_estimate.md
+  s_3f5e58f5c753ff::t_241148018c13b6 11,26-42
+  s_3f5e58f5c753ff::t_5447c7bcab4467 57-62,70,84,122,141
+  s_3f5e58f5c753ff::t_88d8ebd0a8ef98 1-10,12-25,43-56,63-69,71-83,85-121,123-140,142-156
+schemas/interactive-action-v1.schema.json
+  s_3f5e58f5c753ff::t_bd3747b9d399f6 24
+  s_3f5e58f5c753ff::t_d67c2f4fdece5e 1-23,25-128
+data/interactive/seed_v1/case_cards.jsonl
+  s_3f5e58f5c753ff::t_52b2849ae9125f 1-100
+docs/knowledge/static-first.md
+  s_3f5e58f5c753ff::t_4022d453e40877 1-179
+tests/test_static_student.py
+  s_3f5e58f5c753ff::t_d9d010057da852 1-183
+results/README.md
+  s_3f5e58f5c753ff::t_9e5dab8eafcd52 25-27
+docs/knowledge/next-steps.md
+  s_3f5e58f5c753ff::t_4d0a7b9238208a 219
+  s_3f5e58f5c753ff::t_f8b66466bc3287 4-5,10,12-13,15-18,20,22-23,25-27,30-31,34-188,190-214,218,220-223
+  s_3f5e58f5c753ff::t_2c197b338ad6ad 1-3,6-9,11,14,19,21,24,28-29,32-33,189,215-217
+docs/knowledge/project-overview.md
+  s_3f5e58f5c753ff::t_0f50729cb00357 40-46
+  s_3f5e58f5c753ff::t_4d0a7b9238208a 99-100
+  s_3f5e58f5c753ff::t_601ce7216619cf 15-16,70-71,73-78,80-82,97
+  s_3f5e58f5c753ff::t_a3ad4f9d3acecf 1-14,17-39,47-69,72,79,83-96,98,101-105
+acuitybench/interactive/__init__.py
+  s_3f5e58f5c753ff::t_84d670c0b0d667 10-15,21-27,31-32,34-36,38,41-42,45
+  s_3f5e58f5c753ff::t_a94921bac7dfc6 7-8,40,46
+  s_3f5e58f5c753ff::t_865bc8357cf9c6 1-6,9,28-30,37,39,47
+  s_3f5e58f5c753ff::t_9aab3a82b72412 16-20,33,43-44
+pyproject.toml
+  s_3f5e58f5c753ff::t_ac1d096962ddec 7
+HANDOVER.md
+  s_3f5e58f5c753ff::t_4d0a7b9238208a 100,103-104,109
+  s_3f5e58f5c753ff::t_99736ff340f382 61,87-89
+  s_3f5e58f5c753ff::t_a0913f1d865abf 1-12,16-30,34-41,55-60,62-64,66-68,70-86,90-96,98-99,101-102,105-108
+  s_3f5e58f5c753ff::t_bfdf2cd62f579d 69
+  s_3f5e58f5c753ff::t_cb9a01d0b12a70 13-15,31-33,42-54,65,97
+tests/test_evaluation.py
+  s_3f5e58f5c753ff::t_d9d010057da852 810-854
+data/interactive/README.md
+  s_3f5e58f5c753ff::t_56278da3714411 35-38
+  s_3f5e58f5c753ff::t_4cfb2d9cf848f2 21-22
+  s_3f5e58f5c753ff::t_d34d35b9a2a0be 1-20,23-34,39-60
+  s_3f5e58f5c753ff::t_99736ff340f382 61-63
+configs/static_student.v1.yaml
+  s_3f5e58f5c753ff::t_b1be3a649be5ac 1-58
+tests/test_interactive_simulator.py
+  s_3f5e58f5c753ff::t_d889f9ff3fd429 28-37,48-50,64-73,78-82
+  s_3f5e58f5c753ff::t_0e6610ee58095e 136-144,182-186
+  s_3f5e58f5c753ff::t_e81177c028c156 208-211
+  s_3f5e58f5c753ff::t_6e167d237e97eb 153-154
+  s_3f5e58f5c753ff::t_b448b1e7dc1c5e 1-27,38-47,51-63,74-77,83-135,145-152,155-181,187-207
+docs/knowledge/costs.md
+  s_3f5e58f5c753ff::t_90ce981d253b8f 1-139
+data/interactive/seed_v1/manifest.json
+  s_3f5e58f5c753ff::t_463fb34af7a335 1,6-10,12-14,18,21-26,28-30,33-54,56-59,63-68,70-73,76-81,92-108
+  s_3f5e58f5c753ff::t_52b2849ae9125f 4,15-17,19-20,27,31-32,55,60-62,69,74-75,85,89
+  s_3f5e58f5c753ff::t_1bf192883465e2 2-3,5,82-84,86-88,90-91
+  s_3f5e58f5c753ff::t_a102dfbe57b7ed 11
+tests/test_interactive_seed.py
+  s_3f5e58f5c753ff::t_2ea29f14caee58 153,161-164
+  s_3f5e58f5c753ff::t_6511cd82489d49 7-8
+  s_3f5e58f5c753ff::t_e145d80f8cfd25 159-160
+  s_3f5e58f5c753ff::t_7a650e75fb9334 149-150,154-155,186-187
+  s_3f5e58f5c753ff::t_fcfdeada2844fa 165-166
+  s_3f5e58f5c753ff::t_56278da3714411 10-11,44,59-65,85-90,93-99,110-115,118-121,145,158,167-180,183,185,188-195
+  s_3f5e58f5c753ff::t_550de0dbc32ec3 133-144,147-148,156-157
+  s_3f5e58f5c753ff::t_278c116a532871 122-130,146
+  s_3f5e58f5c753ff::t_6e94df97d83a4d 100-102,105-109
+  s_3f5e58f5c753ff::t_b448b1e7dc1c5e 1-6,9,12-43,45-58,66-84,116-117,196-203
+  s_3f5e58f5c753ff::t_fb1e5b665e0683 181-182
+  s_3f5e58f5c753ff::t_d071cd418ccbd2 103-104,184
+  s_3f5e58f5c753ff::t_199cbac8e857ac 91-92,131-132,151-152
+docs/knowledge/repository-map.md
+  s_3f5e58f5c753ff::t_9ee727dd44c356 26-27
+  s_3f5e58f5c753ff::t_a3ad4f9d3acecf 1-14,16,18-20,22-25,28-46,48-55,63-98,102-106
+  s_3f5e58f5c753ff::t_601ce7216619cf 15,17,21,47,56-62,99-101
+docs/knowledge/conversation-data-landscape.md
+  s_3f5e58f5c753ff::t_5d6692e66f33cf 1-155
+docs/knowledge/log.md
+  s_3f5e58f5c753ff::t_a3ad4f9d3acecf 1-4,9-10
+  s_3f5e58f5c753ff::t_601ce7216619cf 5-8
+  s_3f5e58f5c753ff::t_4d0a7b9238208a 11,15
+  s_3f5e58f5c753ff::t_99736ff340f382 13-14
+  s_3f5e58f5c753ff::t_bfdf2cd62f579d 12
+docs/knowledge/known-limitations.md
+  s_3f5e58f5c753ff::t_601ce7216619cf 61-66,71-72,141
+  s_3f5e58f5c753ff::t_2c197b338ad6ad 1-60,67-70,73-140,142-150
+uv.lock
+  s_3f5e58f5c753ff::t_9f77d21ef65879 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9db4f78009a7cb87bd7ac807111ef1876377b98c",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
