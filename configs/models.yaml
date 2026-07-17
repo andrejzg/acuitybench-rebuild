@@ -9,6 +9,40 @@ version: 1
 # prices rather than zero, and use a new model ID for every checkpoint or
 # deployment/hardware change.
 models:
+  claude-fable-5:
+    display_name: Claude Fable 5
+    provider: anthropic
+    api_model: claude-fable-5
+    endpoint: messages
+    api_key_env: ANTHROPIC_API_KEY
+    temperature: null
+    send_temperature: false
+    max_output_tokens: 2048
+    reasoning_effort: medium
+    reasoning_effort_basis: synthetic_pilot_balanced_quality_latency_choice
+    service_tier: standard
+    token_parameter: max_tokens
+    input_cost_per_million: 10.00
+    cached_input_cost_per_million: 1.00
+    output_cost_per_million: 50.00
+
+  gpt-5.6-terra:
+    display_name: GPT-5.6 Terra
+    provider: openai
+    api_model: gpt-5.6-terra
+    endpoint: responses
+    api_key_env: OPENAI_API_KEY
+    temperature: null
+    send_temperature: false
+    max_output_tokens: 1024
+    reasoning_effort: low
+    reasoning_effort_basis: synthetic_pilot_independent_labeler_latency_choice
+    service_tier: default
+    token_parameter: max_output_tokens
+    input_cost_per_million: 2.50
+    cached_input_cost_per_million: 0.25
+    output_cost_per_million: 15.00
+
   gpt-5-mini:
     display_name: GPT-5 mini
     provider: openai

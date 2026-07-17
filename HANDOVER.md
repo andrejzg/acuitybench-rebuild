@@ -34,6 +34,9 @@ Success means moving toward the top-left of both frontier plots:
 - A versioned 20-case fictional static-pilot scaffold with deterministic
   requests, strict generation/label schemas, resumable double-blinded teacher
   labelling, leakage checks, fake-provider tests and a zero-call manifest.
+- A separate completed 200-case fictional v1 run: Fable 5 generated all 200
+  balanced static vignettes, Terra and GPT-5.4 supplied 400 blinded labels,
+  and 131 candidates passed machine gates. All remain training-blocked.
 - A strict interactive case-card/action contract, deterministic simulator,
   trajectory evaluator, and balanced 100-case evaluation seed.
 - A versioned cost model for the 100-case clinician review gate and an
@@ -42,11 +45,11 @@ Success means moving toward the top-left of both frontier plots:
 
 ## Immediate next move
 
-Start with the [20-case fictional pilot](docs/knowledge/synthetic-pilot.md).
-Select a generator and independent labeler, review their terms, calculate the
-maximum cost for 60 calls, and obtain explicit spend authorization. Then run
-the generation/double-label workflow and manually inspect all 20 candidates.
-This proves the pipeline only; it does not produce a useful training corpus.
+Start with the completed [fictional-pilot evidence](docs/knowledge/synthetic-pilot.md).
+Review all 200 v1 cases (including the 69 machine rejections), add the missing
+semantic-similarity gate, and decide whether the 68 ambiguity-flag rejections
+reflect real data defects or an overly broad flag policy. Do not promote the
+131 machine-screened candidates until that review is recorded.
 
 If that check succeeds, build a separately sourced, family-grouped pool of
 roughly 500–1,000 cases, validate it with `static-data-validate`, generate
@@ -67,15 +70,15 @@ progression decision is recorded.
 | --- | --- |
 | Repository | `andrejzg/acuitybench-rebuild` |
 | Visibility | **Public by explicit owner decision (2026-07-17)** |
-| Branch/remote baseline | `main` at `78e5706` / `origin/main` before the current fictional-pilot work |
+| Branch/remote baseline | `main` at `ea96b00`; current v1 run and adapter work are local until explicitly published |
 | Package | `acuitybench-rebuild` 0.4.0 |
 | Benchmark | 914 cases; 527 clear primary cases in the paper-style main score |
 | Static-student capability | Plan/schema/validator/evaluation/serving adapter ready; no training pool or checkpoint yet |
-| Fictional pilot | 20 balanced requests initialized; zero provider calls; no generated cases; not training-ready |
+| Fictional pilot | v0 remains a zero-call 20-case scaffold; v1 completed 200 generations + 400 labels, 131 machine passes, not training-ready |
 | Interactive seed | 100 cases, 25 per A/B/C/D, evaluation-only |
 | Seed label basis | 87 five-physician medians; 13 direct HealthBench emergency labels |
 | Seed content review | 0 clinician-reviewed cards |
-| Latest full tests | 195 passing, including synthetic-pilot, static-contract and handover/OKF integrity tests |
+| Latest full tests | 201 passing after the completed v1 provider/data run |
 | Best measured paired run | GPT-5.4: 77.324% average exact, 6.983s p95 service latency |
 | Fast/cheap comparison | GPT-5-mini: 73.719% average exact, 17.234s p95, $2.09/1K target calls |
 | Standalone 100-case review estimate | $6,300, excluding engineering |

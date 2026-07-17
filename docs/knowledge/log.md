@@ -2,6 +2,10 @@
 
 ## 2026-07-17
 
+* **Run**: Completed the 200-case fictional static v1 contract with 200 Fable 5 generations and 400 blinded labels split between GPT-5.6 Terra and GPT-5.4 through standard APIs.
+* **Result**: 131 cases passed current machine gates, 69 were rejected (68 with ambiguity flags), and zero crossed held-out lexical-contamination thresholds; every candidate remains training-blocked.
+* **Economics**: Recorded $11.398655 in estimated successful-call cost plus model-level token and p50/p95 end-to-end latency summaries; TTFT is unavailable because the run was non-streaming.
+* **Providers**: Added an Anthropic Messages adapter, provider-native structured outputs, safe schema-dialect normalization, refusal metadata and explicit standard-tier provenance.
 * **Pipeline**: Added a versioned 20-case fictional static-pilot scaffold with deterministic slots, strict prompts/schemas, resumable generation and blinded double-labelling, lexical leakage checks and fake-provider tests.
 * **Safety**: Initialized the scaffold with zero provider calls and kept training blocked pending paid generation, semantic screening and manual review of all 20 candidates.
 * **Operations**: Added free `synthetic-plan`, `synthetic-init` and incomplete-validation commands plus explicit spend/terms gates for `synthetic-generate` and `synthetic-label`.

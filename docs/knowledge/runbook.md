@@ -199,6 +199,18 @@ uv run python -m acuitybench synthetic-label \
   --model <labeler-profile> --confirm-spend --terms-reviewed
 ```
 
+The authorised 200-case v1 contract pins its models in configuration, so no
+model flags are required:
+
+```bash
+uv run python -m acuitybench synthetic-generate \
+  --config configs/static/synthetic_pilot.v1.yaml \
+  --concurrency 1 --confirm-spend --terms-reviewed
+uv run python -m acuitybench synthetic-label \
+  --config configs/static/synthetic_pilot.v1.yaml \
+  --confirm-spend --terms-reviewed
+```
+
 Choose the exact model profiles, review provider terms, calculate a cost
 ceiling and obtain explicit spend authorization first. After completion, run
 `synthetic-validate` without `--allow-incomplete` and manually review all 20

@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+from dotenv import load_dotenv
 
 from acuitybench import __version__
 from acuitybench.evaluation import (
@@ -47,6 +48,7 @@ from acuitybench.synthetic import (
     initialize_synthetic_pilot,
     inspect_synthetic_plan,
     label_synthetic_cases,
+    load_synthetic_plan,
     validate_synthetic_pilot,
 )
 
@@ -475,29 +477,53 @@ def _require_paid_synthetic_confirmation(args: argparse.Namespace) -> None:
 async def _run_synthetic_provider_phase(
     args: argparse.Namespace, *, phase: str
 ) -> dict[str, object]:
+    load_dotenv(project_root() / ".env", override=False)
     registry = ModelRegistry()
-    model = registry.get(args.model)
-    provider = get_provider(model.provider)
-    kwargs = {
-        "provider": provider,
-        "model": model,
-        "config_path": (
-            Path(args.config).expanduser().resolve() if args.config else None
-        ),
-        "output_dir": (
-            Path(args.output_dir).expanduser().resolve()
-            if args.output_dir
-            else None
-        ),
-    }
+    config_path = Path(args.config).expanduser().resolve() if args.config else None
+    plan = load_synthetic_plan(config_path)
+    output_dir = (
+        Path(args.output_dir).expanduser().resolve() if args.output_dir else None
+    )
+    providers = []
     try:
         if phase == "generate":
-            return await generate_synthetic_cases(**kwargs)
+            model_id = args.model or plan["generation"].get("model_id")
+            if not model_id:
+                raise ValueError("Select a generator with --model or generation.model_id")
+            model = registry.get(str(model_id))
+            provider = get_provider(model.provider)
+            providers.append(provider)
+            return await generate_synthetic_cases(
+                provider=provider,
+                model=model,
+                config_path=config_path,
+                output_dir=output_dir,
+                concurrency=args.concurrency,
+            )
         if phase == "label":
-            return await label_synthetic_cases(**kwargs)
+            model_ids = args.models or plan["labeling"].get("model_ids")
+            if model_ids is None and args.model:
+                model_ids = [args.model] * int(
+                    plan["labeling"]["independent_samples_per_case"]
+                )
+            if not model_ids:
+                raise ValueError("Select labelers with --models or labeling.model_ids")
+            pairs = []
+            for model_id in model_ids:
+                model = registry.get(str(model_id))
+                provider = get_provider(model.provider)
+                providers.append(provider)
+                pairs.append((provider, model))
+            return await label_synthetic_cases(
+                provider_models=pairs,
+                config_path=config_path,
+                output_dir=output_dir,
+                concurrency=args.concurrency,
+            )
         raise ValueError(f"Unknown synthetic phase: {phase}")
     finally:
-        await provider.close()
+        for provider in providers:
+            await provider.close()
 
 
 def _run_synthetic_generate(args: argparse.Namespace) -> int:
@@ -750,7 +776,7 @@ def make_parser() -> argparse.ArgumentParser:
 
     synthetic_plan_parser = subparsers.add_parser(
         "synthetic-plan",
-        help="Inspect the free, fictional 20-case pilot plan and paid call count",
+        help="Inspect a free, versioned fictional pilot plan and paid call count",
     )
     synthetic_plan_parser.add_argument("--config")
     synthetic_plan_parser.set_defaults(handler=_run_synthetic_plan)
@@ -777,10 +803,20 @@ def make_parser() -> argparse.ArgumentParser:
     ):
         synthetic_paid_parser = subparsers.add_parser(command, help=help_text)
         synthetic_paid_parser.add_argument(
-            "--model", required=True, help="Model ID from configs/models.yaml"
+            "--model", help="One model ID (legacy override) from configs/models.yaml"
+        )
+        synthetic_paid_parser.add_argument(
+            "--models",
+            nargs="+",
+            help="Ordered model IDs, one per independent label sample",
         )
         synthetic_paid_parser.add_argument("--config")
         synthetic_paid_parser.add_argument("--output-dir")
+        synthetic_paid_parser.add_argument(
+            "--concurrency",
+            type=int,
+            help="Override only the runner's in-flight request count",
+        )
         synthetic_paid_parser.add_argument(
             "--confirm-spend",
             action="store_true",

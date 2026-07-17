@@ -7,6 +7,7 @@ they are never treated as clinical ground truth.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 import time
@@ -29,6 +30,10 @@ from acuitybench.static_student import LABELS
 
 
 PLAN_SCHEMA_VERSION = "synthetic-static-pilot/v0"
+SUPPORTED_PLAN_SCHEMA_VERSIONS = {
+    PLAN_SCHEMA_VERSION,
+    "synthetic-static-pilot/v1",
+}
 REQUEST_SCHEMA_VERSION = "synthetic-generation-request/v0"
 MANIFEST_SCHEMA_VERSION = "synthetic-pilot-manifest/v0"
 GENERATION_SCHEMA_VERSION = "synthetic-acuity-generation/v0"
@@ -79,7 +84,7 @@ def load_synthetic_plan(path: Path | None = None) -> dict[str, Any]:
     raw = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
         raise ValueError(f"Synthetic pilot plan must be a mapping: {plan_path}")
-    if raw.get("schema_version") != PLAN_SCHEMA_VERSION:
+    if raw.get("schema_version") not in SUPPORTED_PLAN_SCHEMA_VERSIONS:
         raise ValueError(f"Unsupported synthetic pilot schema: {plan_path}")
     if raw.get("purpose", {}).get("fictional_only") is not True:
         raise ValueError("Synthetic pilot must declare fictional_only: true")
@@ -122,6 +127,16 @@ def load_synthetic_plan(path: Path | None = None) -> dict[str, Any]:
         raise ValueError("Independent labeler must remain blinded to generator intent")
     if int(labeling.get("independent_samples_per_case", 0)) < 2:
         raise ValueError("Synthetic pilot requires at least two label samples per case")
+    label_model_ids = labeling.get("model_ids")
+    if label_model_ids is not None:
+        if not isinstance(label_model_ids, list) or not all(
+            isinstance(value, str) and value for value in label_model_ids
+        ):
+            raise ValueError("labeling.model_ids must be a non-empty string list")
+        if len(label_model_ids) != int(labeling["independent_samples_per_case"]):
+            raise ValueError(
+                "labeling.model_ids must have one model per independent sample"
+            )
     for key in (
         "require_generation_intended_label_match",
         "require_unanimous_teacher_labels",
@@ -148,18 +163,24 @@ def build_generation_requests(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
     groups = list(design["presentation_groups"])
     cases_per_cell = int(design["cases_per_cell"])
     development_per_label = int(design["development_cases_per_label"])
+    id_prefix = str(design.get("id_prefix", "fictional-static-v0"))
     base_seed = int(plan["seed"])
     requests: list[dict[str, Any]] = []
     counter = 0
     for label_index, label in enumerate(LABELS):
-        development_cells = {
-            (label_index + offset) % len(groups)
-            for offset in range(development_per_label)
+        base_development_per_group, remainder = divmod(
+            development_per_label, len(groups)
+        )
+        extra_development_groups = {
+            (label_index + offset) % len(groups) for offset in range(remainder)
         }
         for group_index, group in enumerate(groups):
             for cell_index in range(cases_per_cell):
                 counter += 1
-                case_id = f"fictional-static-v0-{counter:03d}"
+                case_id = f"{id_prefix}-{counter:03d}"
+                development_quota = base_development_per_group + int(
+                    group_index in extra_development_groups
+                )
                 requests.append(
                     {
                         "schema_version": REQUEST_SCHEMA_VERSION,
@@ -167,7 +188,7 @@ def build_generation_requests(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
                         "family_id": case_id,
                         "split": (
                             "development"
-                            if group_index in development_cells and cell_index == 0
+                            if cell_index < development_quota
                             else "train"
                         ),
                         "intended_acuity": label,
@@ -204,7 +225,7 @@ def inspect_synthetic_plan(path: Path | None = None) -> dict[str, Any]:
     generation_calls = len(requests) * int(plan["generation"]["samples_per_slot"])
     labeling_calls = len(requests) * label_samples
     return {
-        "schema_version": PLAN_SCHEMA_VERSION,
+        "schema_version": plan["schema_version"],
         "pilot_id": plan["pilot_id"],
         "status": plan["status"],
         "fictional_only": True,
@@ -221,7 +242,7 @@ def inspect_synthetic_plan(path: Path | None = None) -> dict[str, Any]:
         "manual_review": plan["leakage"]["manual_review"],
         "ready_for_paid_generation": False,
         "paid_generation_blockers": [
-            "select and fingerprint generator/labeler models",
+            "verify and fingerprint configured generator/labeler models",
             "review provider terms and data handling",
             "estimate spend",
             "obtain explicit spend confirmation",
@@ -294,7 +315,7 @@ def initialize_synthetic_pilot(
             "independent labeling not run",
             "lexical leakage report not complete",
             "semantic similarity review not implemented",
-            "manual review of all 20 cases not recorded",
+            f"manual review of all {len(requests)} cases not recorded",
         ],
         "config": {
             "path": _portable_path(plan_path),
@@ -423,20 +444,36 @@ def _append_jsonl(path: Path, value: Mapping[str, Any]) -> None:
         handle.flush()
 
 
-def _result_metadata(result: CompletionResult) -> dict[str, Any]:
-    return {
+def _result_metadata(
+    result: CompletionResult, model: ModelConfig | None = None
+) -> dict[str, Any]:
+    metadata = {
         "response_id": result.response_id,
         "request_id": result.request_id,
         "returned_model": result.returned_model,
         "finish_reason": result.finish_reason,
         "input_tokens": result.input_tokens,
         "cached_input_tokens": result.cached_input_tokens,
+        "cache_write_tokens": result.cache_write_tokens,
         "output_tokens": result.output_tokens,
         "reasoning_tokens": result.reasoning_tokens,
         "total_tokens": result.total_tokens,
+        "first_event_ms": result.first_event_ms,
+        "ttft_ms": result.ttft_ms,
+        "time_after_first_token_ms": result.time_after_first_token_ms,
+        "first_token_at": result.first_token_at,
         "server_processing_ms": result.server_processing_ms,
         "provider_metadata": result.provider_metadata,
     }
+    if model is not None and result.input_tokens is not None and result.output_tokens is not None:
+        cached = result.cached_input_tokens or 0
+        uncached = max(result.input_tokens - cached, 0)
+        metadata["estimated_cost_usd"] = (
+            uncached * model.input_cost_per_million
+            + cached * model.cached_input_cost_per_million
+            + result.output_tokens * model.output_cost_per_million
+        ) / 1_000_000
+    return metadata
 
 
 def _attempt_number(records: list[dict[str, Any]], key: tuple[Any, ...]) -> int:
@@ -456,6 +493,66 @@ def _latest_successes(
         if record.get("status") == "success":
             latest[tuple(record.get(field) for field in key_fields)] = record
     return latest
+
+
+def _percentile(values: list[float], fraction: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * fraction
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    weight = position - lower
+    return ordered[lower] * (1 - weight) + ordered[upper] * weight
+
+
+def _provider_usage_summary(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in records:
+        grouped[str(record.get("requested_model_id", "unknown"))].append(record)
+    summary: dict[str, Any] = {}
+    for model_id, attempts in sorted(grouped.items()):
+        successful = [item for item in attempts if item.get("status") == "success"]
+        responses = [item.get("response", {}) for item in successful]
+        durations = [float(item["duration_ms"]) for item in successful]
+        ttfts = [
+            float(response["ttft_ms"])
+            for response in responses
+            if response.get("ttft_ms") is not None
+        ]
+        summary[model_id] = {
+            "attempts": len(attempts),
+            "successful_calls": len(successful),
+            "failed_calls": len(attempts) - len(successful),
+            "input_tokens": sum(
+                int(response.get("input_tokens") or 0) for response in responses
+            ),
+            "cached_input_tokens": sum(
+                int(response.get("cached_input_tokens") or 0)
+                for response in responses
+            ),
+            "output_tokens": sum(
+                int(response.get("output_tokens") or 0) for response in responses
+            ),
+            "reasoning_tokens": sum(
+                int(response.get("reasoning_tokens") or 0) for response in responses
+            ),
+            "estimated_cost_usd": sum(
+                float(response.get("estimated_cost_usd") or 0.0)
+                for response in responses
+            ),
+            "end_to_end_latency_ms": {
+                "p50": _percentile(durations, 0.50),
+                "p95": _percentile(durations, 0.95),
+                "mean": sum(durations) / len(durations) if durations else None,
+            },
+            "ttft_ms": {
+                "available": bool(ttfts),
+                "p50": _percentile(ttfts, 0.50),
+                "p95": _percentile(ttfts, 0.95),
+            },
+        }
+    return summary
 
 
 def _render_generation_prompt(template: str, request: Mapping[str, Any]) -> str:
@@ -480,6 +577,7 @@ async def generate_synthetic_cases(
     model: ModelConfig,
     config_path: Path | None = None,
     output_dir: Path | None = None,
+    concurrency: int | None = None,
 ) -> dict[str, Any]:
     plan = load_synthetic_plan(config_path)
     paths = initialize_synthetic_pilot(config_path=config_path, output_dir=output_dir)
@@ -495,58 +593,67 @@ async def generate_synthetic_cases(
     model_hash = _sha256_text(_canonical_json(model.as_dict()))
     new_successes = 0
     new_failures = 0
-    for request in requests:
+    lock = asyncio.Lock()
+    effective_concurrency = concurrency or int(
+        plan["generation"].get("concurrency", 1)
+    )
+    if effective_concurrency < 1:
+        raise ValueError("concurrency must be positive")
+    semaphore = asyncio.Semaphore(effective_concurrency)
+
+    async def generate_one(request: dict[str, Any]) -> None:
+        nonlocal new_successes, new_failures
         key = (request["case_id"],)
         if key in complete:
-            continue
-        started_at = _utc_now()
-        started = time.perf_counter()
-        record: dict[str, Any] = {
-            "schema_version": "synthetic-generation-attempt/v0",
-            "case_id": request["case_id"],
-            "attempt": _attempt_number(records, key),
-            "status": "failed",
-            "started_at": started_at,
-            "requested_model_id": model.id,
-            "requested_api_model": model.api_model,
-            "model_config_sha256": model_hash,
-            "prompt_sha256": _sha256_text(_render_generation_prompt(template, request)),
-        }
-        try:
-            result = await provider.complete(
-                config=model,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": _render_generation_prompt(template, request),
-                    }
-                ],
-                max_output_tokens=int(plan["generation"]["max_output_tokens"]),
-                stream=bool(plan["generation"]["stream"]),
-            )
-            output = _parse_json_object(result.text)
-            validate_instance(output, schema)
-            if output.get("schema_version") != GENERATION_SCHEMA_VERSION:
-                raise ValueError("Unsupported generation output version")
-            if output["intended_acuity"] != request["intended_acuity"]:
-                raise ValueError("Generation output changed the intended acuity")
-            if output["presentation_group"] != request["presentation_group"]:
-                raise ValueError("Generation output changed the presentation group")
-            record.update(
-                {
-                    "status": "success",
-                    "raw_text": result.text,
-                    "output": output,
-                    "response": _result_metadata(result),
-                }
-            )
-            new_successes += 1
-        except Exception as exc:
-            record["error"] = f"{type(exc).__name__}: {exc}"
-            new_failures += 1
-        record["duration_ms"] = (time.perf_counter() - started) * 1000
-        _append_jsonl(paths.generated_raw, record)
-        records.append(record)
+            return
+        async with semaphore:
+            prompt = _render_generation_prompt(template, request)
+            started = time.perf_counter()
+            record: dict[str, Any] = {
+                "schema_version": "synthetic-generation-attempt/v0",
+                "case_id": request["case_id"],
+                "attempt": _attempt_number(records, key),
+                "status": "failed",
+                "started_at": _utc_now(),
+                "requested_model_id": model.id,
+                "requested_api_model": model.api_model,
+                "model_config_sha256": model_hash,
+                "prompt_sha256": _sha256_text(prompt),
+                "runner_concurrency": effective_concurrency,
+            }
+            try:
+                result = await provider.complete(
+                    config=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_output_tokens=int(plan["generation"]["max_output_tokens"]),
+                    stream=bool(plan["generation"]["stream"]),
+                    output_schema=schema,
+                    output_schema_name="synthetic_acuity_generation",
+                )
+                record["response"] = _result_metadata(result, model)
+                if result.finish_reason == "refusal":
+                    raise ValueError("Provider refused the fictional generation request")
+                output = _parse_json_object(result.text)
+                validate_instance(output, schema)
+                if output.get("schema_version") != GENERATION_SCHEMA_VERSION:
+                    raise ValueError("Unsupported generation output version")
+                if output["intended_acuity"] != request["intended_acuity"]:
+                    raise ValueError("Generation output changed the intended acuity")
+                if output["presentation_group"] != request["presentation_group"]:
+                    raise ValueError("Generation output changed the presentation group")
+                record.update(
+                    {"status": "success", "raw_text": result.text, "output": output}
+                )
+                new_successes += 1
+            except Exception as exc:
+                record["error"] = f"{type(exc).__name__}: {exc}"
+                new_failures += 1
+            record["duration_ms"] = (time.perf_counter() - started) * 1000
+            async with lock:
+                _append_jsonl(paths.generated_raw, record)
+                records.append(record)
+
+    await asyncio.gather(*(generate_one(request) for request in requests))
     _update_manifest(paths, plan)
     return {
         "planned_cases": len(requests),
@@ -561,10 +668,12 @@ async def generate_synthetic_cases(
 
 async def label_synthetic_cases(
     *,
-    provider: Provider,
-    model: ModelConfig,
+    provider: Provider | None = None,
+    model: ModelConfig | None = None,
+    provider_models: list[tuple[Provider, ModelConfig]] | None = None,
     config_path: Path | None = None,
     output_dir: Path | None = None,
+    concurrency: int | None = None,
 ) -> dict[str, Any]:
     plan = load_synthetic_plan(config_path)
     paths = initialize_synthetic_pilot(config_path=config_path, output_dir=output_dir)
@@ -582,16 +691,34 @@ async def label_synthetic_cases(
         _resolve_root_path(str(plan["labeling"]["output_schema"]))
     )
     samples = int(plan["labeling"]["independent_samples_per_case"])
-    model_hash = _sha256_text(_canonical_json(model.as_dict()))
+    if provider_models is None:
+        if provider is None or model is None:
+            raise ValueError("labeling requires provider/model or provider_models")
+        provider_models = [(provider, model) for _ in range(samples)]
+    if len(provider_models) != samples:
+        raise ValueError("provider_models must contain one entry per label sample")
     new_successes = 0
     new_failures = 0
-    for (case_id,), generation in sorted(generations.items()):
-        vignette = str(generation["output"]["vignette"])
-        for sample_index in range(samples):
-            key = (case_id, sample_index)
-            if key in complete:
-                continue
+    lock = asyncio.Lock()
+    effective_concurrency = concurrency or int(plan["labeling"].get("concurrency", 1))
+    if effective_concurrency < 1:
+        raise ValueError("concurrency must be positive")
+    semaphore = asyncio.Semaphore(effective_concurrency)
+
+    async def label_one(
+        case_id: str,
+        vignette: str,
+        sample_index: int,
+        sample_provider: Provider,
+        sample_model: ModelConfig,
+    ) -> None:
+        nonlocal new_successes, new_failures
+        key = (case_id, sample_index)
+        if key in complete:
+            return
+        async with semaphore:
             prompt = _render_label_prompt(template, vignette)
+            model_hash = _sha256_text(_canonical_json(sample_model.as_dict()))
             started = time.perf_counter()
             record: dict[str, Any] = {
                 "schema_version": "synthetic-label-attempt/v0",
@@ -600,38 +727,55 @@ async def label_synthetic_cases(
                 "attempt": _attempt_number(records, key),
                 "status": "failed",
                 "started_at": _utc_now(),
-                "requested_model_id": model.id,
-                "requested_api_model": model.api_model,
+                "requested_model_id": sample_model.id,
+                "requested_api_model": sample_model.api_model,
                 "model_config_sha256": model_hash,
                 "prompt_sha256": _sha256_text(prompt),
                 "intended_label_revealed": False,
+                "runner_concurrency": effective_concurrency,
             }
             try:
-                result = await provider.complete(
-                    config=model,
+                result = await sample_provider.complete(
+                    config=sample_model,
                     messages=[{"role": "user", "content": prompt}],
                     max_output_tokens=int(plan["labeling"]["max_output_tokens"]),
                     stream=bool(plan["labeling"]["stream"]),
+                    output_schema=schema,
+                    output_schema_name="synthetic_acuity_label",
                 )
+                record["response"] = _result_metadata(result, sample_model)
+                if result.finish_reason in {"refusal", "content_filter"}:
+                    raise ValueError("Provider refused the fictional labeling request")
                 output = _parse_json_object(result.text)
                 validate_instance(output, schema)
                 if output.get("schema_version") != LABEL_SCHEMA_VERSION:
                     raise ValueError("Unsupported label output version")
                 record.update(
-                    {
-                        "status": "success",
-                        "raw_text": result.text,
-                        "output": output,
-                        "response": _result_metadata(result),
-                    }
+                    {"status": "success", "raw_text": result.text, "output": output}
                 )
                 new_successes += 1
             except Exception as exc:
                 record["error"] = f"{type(exc).__name__}: {exc}"
                 new_failures += 1
             record["duration_ms"] = (time.perf_counter() - started) * 1000
-            _append_jsonl(paths.labels_raw, record)
-            records.append(record)
+            async with lock:
+                _append_jsonl(paths.labels_raw, record)
+                records.append(record)
+
+    tasks = []
+    for (case_id,), generation in sorted(generations.items()):
+        vignette = str(generation["output"]["vignette"])
+        for sample_index, (sample_provider, sample_model) in enumerate(provider_models):
+            tasks.append(
+                label_one(
+                    case_id,
+                    vignette,
+                    sample_index,
+                    sample_provider,
+                    sample_model,
+                )
+            )
+    await asyncio.gather(*tasks)
     finalize = finalize_synthetic_pilot(config_path=config_path, output_dir=output_dir)
     return {
         "generated_cases": len(generations),
@@ -855,36 +999,51 @@ def finalize_synthetic_pilot(
             vignette = str(generation["output"]["vignette"])
             label_record = label_records[0]
             model_hash = str(label_record["model_config_sha256"])
-            examples.append(
-                {
-                    "schema_version": "synthetic-acuity-candidate/v0",
-                    "candidate_id": case_id,
-                    "family_id": request["family_id"],
-                    "intended_split": request["split"],
-                    "training_allowed": False,
-                    "review_status": "machine_screened_manual_review_pending",
-                    "vignette": vignette,
-                    "reference_acuity": teacher_labels[0],
-                    "target_rationale": outputs[0]["rationale"],
-                    "teacher": {
-                        "basis": (
-                            f"{samples_per_case} independent teacher samples "
-                            "agreed with fictional generator intent; manual review pending"
-                        ),
-                        "sample_count": samples_per_case,
-                        "model_id": label_record["requested_model_id"],
-                        "config_sha256": model_hash,
-                    },
-                    "provenance": {
-                        "source_dataset": plan["provenance"]["source_dataset"],
-                        "source_id": case_id,
-                        "source_revision": plan["provenance"]["source_revision"],
-                        "source_text_sha256": _sha256_text(vignette),
-                        "transformation": plan["provenance"]["transformation"],
-                        "license": plan["provenance"]["license_note"],
-                    },
-                }
+            candidate: dict[str, Any] = {
+                "schema_version": "synthetic-acuity-candidate/v0",
+                "candidate_id": case_id,
+                "family_id": request["family_id"],
+                "intended_split": request["split"],
+                "training_allowed": False,
+                "review_status": "machine_screened_manual_review_pending",
+                "vignette": vignette,
+                "reference_acuity": teacher_labels[0],
+                "target_rationale": outputs[0]["rationale"],
+                "provenance": {
+                    "source_dataset": plan["provenance"]["source_dataset"],
+                    "source_id": case_id,
+                    "source_revision": plan["provenance"]["source_revision"],
+                    "source_text_sha256": _sha256_text(vignette),
+                    "transformation": plan["provenance"]["transformation"],
+                    "license": plan["provenance"]["license_note"],
+                },
+            }
+            basis = (
+                f"{samples_per_case} independent teacher samples agreed with "
+                "fictional generator intent; manual review pending"
             )
+            if plan["schema_version"] == "synthetic-static-pilot/v1":
+                candidate["schema_version"] = "synthetic-acuity-candidate/v1"
+                candidate["teachers"] = {
+                    "basis": basis,
+                    "sample_count": samples_per_case,
+                    "models": [
+                        {
+                            "sample_index": int(record["sample_index"]),
+                            "model_id": record["requested_model_id"],
+                            "config_sha256": record["model_config_sha256"],
+                        }
+                        for record in label_records
+                    ],
+                }
+            else:
+                candidate["teacher"] = {
+                    "basis": basis,
+                    "sample_count": samples_per_case,
+                    "model_id": label_record["requested_model_id"],
+                    "config_sha256": model_hash,
+                }
+            examples.append(candidate)
         else:
             rejected.append(
                 {
@@ -907,7 +1066,9 @@ def finalize_synthetic_pilot(
         "rejected_cases": len(rejected),
         "lexically_blocked_cases": contamination["blocked_cases"],
         "training_ready": False,
-        "training_blocker": "manual review of all 20 cases is not recorded",
+        "training_blocker": (
+            f"manual review of all {len(requests)} cases is not recorded"
+        ),
         "semantic_similarity_status": plan["leakage"]["semantic_embedding_check"],
     }
 
@@ -942,12 +1103,18 @@ def _update_manifest(paths: SyntheticPaths, plan: Mapping[str, Any]) -> None:
         "accepted_examples": len(examples),
         "rejected_cases": len(rejected),
     }
-    manifest["paid_provider_calls_recorded"] = len(
-        _load_jsonl(paths.generated_raw, allow_missing=True)
-    ) + len(_load_jsonl(paths.labels_raw, allow_missing=True))
+    generation_attempts = _load_jsonl(paths.generated_raw, allow_missing=True)
+    label_attempts = _load_jsonl(paths.labels_raw, allow_missing=True)
+    all_attempts = generation_attempts + label_attempts
+    manifest["paid_provider_calls_recorded"] = len(all_attempts)
+    manifest["provider_usage"] = _provider_usage_summary(all_attempts)
+    manifest["estimated_successful_call_cost_usd"] = sum(
+        float(value["estimated_cost_usd"])
+        for value in manifest["provider_usage"].values()
+    )
     manifest["training_ready"] = False
     manifest["training_blockers"] = [
-        "manual review of all 20 cases not recorded",
+        f"manual review of all {planned} cases not recorded",
         "semantic embedding similarity is not implemented for this scaffold",
     ]
     for name, artifact_path in (
@@ -1059,7 +1226,11 @@ def validate_synthetic_pilot(
         "accepted_examples": len(examples),
         "rejected_cases": len(_load_jsonl(paths.rejected)),
         "candidate_validation": {
-            "schema": "synthetic-acuity-candidate/v0",
+            "schema": (
+                str(examples[0]["schema_version"])
+                if examples
+                else "no_machine_accepted_candidates"
+            ),
             "candidates": len(examples),
             "training_allowed": False,
         },

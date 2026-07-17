@@ -1,0 +1,85 @@
+schema_version: synthetic-static-pilot/v1
+pilot_id: fictional-static-pilot-v1-200
+status: configured_generation_not_run
+seed: 20260720
+
+purpose:
+  task: complete_case_to_acuity
+  fictional_only: true
+  clinical_status: research_dataset_candidate_not_clinically_validated
+  training_status: blocked_until_generation_label_review_and_leakage_checks
+  benchmark_role: acuitybench_held_out_evaluation_only
+
+design:
+  id_prefix: fictional-static-v1
+  labels: [A, B, C, D]
+  cases_per_label: 50
+  cases_per_cell: 10
+  development_cases_per_label: 10
+  presentation_groups:
+    - infection_systemic
+    - cardiopulmonary
+    - abdominal_urinary
+    - neurologic
+    - skin_musculoskeletal
+
+generation:
+  prompt: prompts/synthetic_case_generator.v0.md
+  output_schema: schemas/synthetic-generation-v0.schema.json
+  model_id: claude-fable-5
+  samples_per_slot: 1
+  max_output_tokens: 2048
+  concurrency: 5
+  stream: false
+  include_acuitybench_content: false
+
+labeling:
+  prompt: prompts/synthetic_labeler.v0.md
+  output_schema: schemas/synthetic-label-v0.schema.json
+  model_ids: [gpt-5.6-terra, gpt-5.4]
+  independent_samples_per_case: 2
+  max_output_tokens: 1024
+  concurrency: 10
+  stream: false
+  reveal_intended_label: false
+
+acceptance:
+  require_generation_intended_label_match: true
+  require_unanimous_teacher_labels: true
+  require_teacher_intended_label_match: true
+  reject_any_ambiguity_flags: true
+  require_no_lexical_leakage: true
+  clinician_review: required_before_training
+
+leakage:
+  benchmark: data/processed/acuitybench_transformed.csv
+  benchmark_text_field: normalized_prompt_text
+  sequence_similarity_threshold: 0.82
+  token_trigram_containment_threshold: 0.65
+  minimum_normalized_characters: 40
+  semantic_embedding_check: not_implemented_manual_review_required
+  manual_review: all_200_cases_before_training
+
+provenance:
+  source_dataset: fictional_synthetic
+  source_revision: fictional-static-pilot-v1-200
+  transformation: fable5_generated_fictional_vignette_dual_model_label/v1
+  license_note: project-generated fictional content; Anthropic and OpenAI provider terms reviewed before generation and downstream use
+  real_patient_data: prohibited
+  source_case_conditioning: prohibited
+
+outputs:
+  directory: data/static/synthetic_pilot_v1
+  candidate_schema: schemas/synthetic-candidate-v1.schema.json
+  generation_requests: generation_requests.jsonl
+  generated_raw: generated_raw.jsonl
+  labels_raw: labels_raw.jsonl
+  examples: examples.jsonl
+  rejected: rejected.jsonl
+  contamination_report: contamination_report.json
+  manifest: manifest.json
+
+paid_run_gates:
+  require_explicit_spend_confirmation: true
+  require_provider_terms_confirmation: true
+  require_new_model_and_prompt_provenance: true

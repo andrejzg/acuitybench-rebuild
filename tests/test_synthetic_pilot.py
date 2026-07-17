@@ -36,6 +36,8 @@ class FakeSyntheticProvider:
         messages: list[dict[str, str]],
         max_output_tokens: int | None = None,
         stream: bool = True,
+        output_schema: Any = None,
+        output_schema_name: str | None = None,
     ) -> CompletionResult:
         self.calls += 1
         prompt = messages[0]["content"]
@@ -101,6 +103,23 @@ def _test_plan(tmp_path: Path) -> Path:
     return destination
 
 
+def _test_v1_plan(tmp_path: Path) -> Path:
+    root = Path(__file__).resolve().parents[1]
+    plan = yaml.safe_load(
+        (root / "configs/static/synthetic_pilot.v0.yaml").read_text(encoding="utf-8")
+    )
+    plan["schema_version"] = "synthetic-static-pilot/v1"
+    plan["design"]["id_prefix"] = "fictional-static-test-v1"
+    plan["labeling"].pop("model_id", None)
+    plan["labeling"]["model_ids"] = ["gpt-5.6-terra", "gpt-5.4"]
+    plan["outputs"]["candidate_schema"] = "schemas/synthetic-candidate-v1.schema.json"
+    plan["leakage"]["sequence_similarity_threshold"] = 1.1
+    plan["leakage"]["token_trigram_containment_threshold"] = 1.1
+    destination = tmp_path / "synthetic-test-v1.yaml"
+    destination.write_text(yaml.safe_dump(plan, sort_keys=False), encoding="utf-8")
+    return destination
+
+
 def test_synthetic_plan_is_balanced_and_explicitly_blocked() -> None:
     report = inspect_synthetic_plan()
 
@@ -112,6 +131,20 @@ def test_synthetic_plan_is_balanced_and_explicitly_blocked() -> None:
     assert report["planned_total_provider_calls"] == 60
     assert report["ready_for_paid_generation"] is False
     assert report["acuitybench_content_in_generation"] is False
+
+
+def test_200_case_plan_is_balanced_and_uses_distinct_labelers() -> None:
+    root = Path(__file__).resolve().parents[1]
+    path = root / "configs/static/synthetic_pilot.v1.yaml"
+    report = inspect_synthetic_plan(path)
+    plan = load_synthetic_plan(path)
+
+    assert report["planned_cases"] == 200
+    assert report["label_counts"] == {"A": 50, "B": 50, "C": 50, "D": 50}
+    assert report["split_counts"] == {"development": 40, "train": 160}
+    assert report["planned_total_provider_calls"] == 600
+    assert plan["generation"]["model_id"] == "claude-fable-5"
+    assert plan["labeling"]["model_ids"] == ["gpt-5.6-terra", "gpt-5.4"]
 
 
 def test_synthetic_init_is_deterministic_and_free(tmp_path: Path) -> None:
@@ -130,6 +163,45 @@ def test_synthetic_init_is_deterministic_and_free(tmp_path: Path) -> None:
     )
     assert validation["scaffold_valid"] is True
     assert validation["pipeline_complete"] is False
+
+
+def test_v1_candidates_retain_both_distinct_teacher_profiles(tmp_path: Path) -> None:
+    plan_path = _test_v1_plan(tmp_path)
+    output = tmp_path / "pilot-v1"
+    generator = FakeSyntheticProvider()
+    registry = ModelRegistry()
+    asyncio.run(
+        generate_synthetic_cases(
+            provider=generator,
+            model=registry.get("claude-fable-5"),
+            config_path=plan_path,
+            output_dir=output,
+        )
+    )
+    terra_provider = FakeSyntheticProvider()
+    gpt_provider = FakeSyntheticProvider()
+    terra_provider.intended = dict(generator.intended)
+    gpt_provider.intended = dict(generator.intended)
+
+    result = asyncio.run(
+        label_synthetic_cases(
+            provider_models=[
+                (terra_provider, registry.get("gpt-5.6-terra")),
+                (gpt_provider, registry.get("gpt-5.4")),
+            ],
+            config_path=plan_path,
+            output_dir=output,
+        )
+    )
+
+    assert result["finalize"]["accepted_examples"] == 20
+    first = json.loads((output / "examples.jsonl").read_text().splitlines()[0])
+    assert first["schema_version"] == "synthetic-acuity-candidate/v1"
+    assert [item["model_id"] for item in first["teachers"]["models"]] == [
+        "gpt-5.6-terra",
+        "gpt-5.4",
+    ]
+    assert first["training_allowed"] is False
 
 
 def test_fake_provider_runs_complete_resumable_pipeline(tmp_path: Path) -> None:

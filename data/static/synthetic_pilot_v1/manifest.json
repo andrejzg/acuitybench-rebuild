@@ -1,0 +1,143 @@
+{
+  "artifacts": {
+    "contamination_report": {
+      "path": "data/static/synthetic_pilot_v1/contamination_report.json",
+      "sha256": "911a9df2178c775bf1766c52a3386ec1032b0a4968d3869c8575595a3f13a899"
+    },
+    "examples": {
+      "path": "data/static/synthetic_pilot_v1/examples.jsonl",
+      "sha256": "5c4b22403ae53c7d73ade5fd03e2c7a71adb29105697e3598ea172c014bbabc4"
+    },
+    "generated_raw": {
+      "path": "data/static/synthetic_pilot_v1/generated_raw.jsonl",
+      "sha256": "8b70abcb603eb034a96b45773953430af1cc8c9e7c9b22d8f99d41ee242c836b"
+    },
+    "generation_requests": {
+      "path": "data/static/synthetic_pilot_v1/generation_requests.jsonl",
+      "sha256": "6d493558da763a344d8772da03967231a48084a8b3fa3c3d34d9c162f1bbb9dc"
+    },
+    "labels_raw": {
+      "path": "data/static/synthetic_pilot_v1/labels_raw.jsonl",
+      "sha256": "a1a6b4890710aafc84616a01ddfb8b14e1935a9ebdd1febbd4d056e01abd92aa"
+    },
+    "rejected": {
+      "path": "data/static/synthetic_pilot_v1/rejected.jsonl",
+      "sha256": "10823f2375735400e83ae10c916620f45df4c5cb81a68ba14359be0762a7835d"
+    }
+  },
+  "config": {
+    "path": "configs/static/synthetic_pilot.v1.yaml",
+    "sha256": "9d8af3484676845ca384439599a49df5c64882db0cbe9a25164e3317c43d2878"
+  },
+  "counts": {
+    "accepted_examples": 131,
+    "planned_cases": 200,
+    "rejected_cases": 69,
+    "successful_generations": 200,
+    "successful_label_calls": 400
+  },
+  "estimated_successful_call_cost_usd": 11.398655,
+  "fictional_only": true,
+  "held_out_benchmark": {
+    "path": "data/processed/acuitybench_transformed.csv",
+    "sha256": "47010d1c7a27f97c4c5100929715e9a56d0cb5d6cde82f0e8441821defac5956",
+    "used_for_generation": false,
+    "used_for_lexical_screening_only": true
+  },
+  "paid_provider_calls_recorded": 1386,
+  "pilot_id": "fictional-static-pilot-v1-200",
+  "prompts": {
+    "generation": {
+      "path": "prompts/synthetic_case_generator.v0.md",
+      "sha256": "cdfaec027c7fbe4d8e6f4788d1a8606d0c3f71fe4e27f42ea84cf29259dbe85e"
+    },
+    "labeling": {
+      "path": "prompts/synthetic_labeler.v0.md",
+      "sha256": "b75b919251b015ed670e5af64a4845e5d1b015f09f2947b34bf0eee7a1eeb2d0"
+    }
+  },
+  "provider_usage": {
+    "claude-fable-5": {
+      "attempts": 586,
+      "cached_input_tokens": 0,
+      "end_to_end_latency_ms": {
+        "mean": 14477.613957050125,
+        "p50": 14040.020957996603,
+        "p95": 17975.218578850032
+      },
+      "estimated_cost_usd": 10.24105,
+      "failed_calls": 386,
+      "input_tokens": 260240,
+      "output_tokens": 152773,
+      "reasoning_tokens": 5879,
+      "successful_calls": 200,
+      "ttft_ms": {
+        "available": false,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "gpt-5.4": {
+      "attempts": 400,
+      "cached_input_tokens": 0,
+      "end_to_end_latency_ms": {
+        "mean": 2825.331018529905,
+        "p50": 2469.162437497289,
+        "p95": 3841.0034646025406
+      },
+      "estimated_cost_usd": 0.602625,
+      "failed_calls": 200,
+      "input_tokens": 94758,
+      "output_tokens": 24382,
+      "reasoning_tokens": 0,
+      "successful_calls": 200,
+      "ttft_ms": {
+        "available": false,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "gpt-5.6-terra": {
+      "attempts": 400,
+      "cached_input_tokens": 0,
+      "end_to_end_latency_ms": {
+        "mean": 2509.92384521036,
+        "p50": 1796.8518545021652,
+        "p95": 4004.524841651433
+      },
+      "estimated_cost_usd": 0.55498,
+      "failed_calls": 200,
+      "input_tokens": 93958,
+      "output_tokens": 21339,
+      "reasoning_tokens": 991,
+      "successful_calls": 200,
+      "ttft_ms": {
+        "available": false,
+        "p50": null,
+        "p95": null
+      }
+    }
+  },
+  "schema_version": "synthetic-pilot-manifest/v0",
+  "schemas": {
+    "candidate": {
+      "path": "schemas/synthetic-candidate-v1.schema.json",
+      "sha256": "38f046315ceebd2c5d79017e804a80d51c32f82915af4a12648f447d3b738298"
+    },
+    "generation": {
+      "path": "schemas/synthetic-generation-v0.schema.json",
+      "sha256": "0a6107d085cbc7db74e57bdd4cc529569a0d3035e11703a4181a8a4fe5fb0aa3"
+    },
+    "labeling": {
+      "path": "schemas/synthetic-label-v0.schema.json",
+      "sha256": "3d777d666f5260e4652d3f763071c5eb96a068502f5a9021bf261fa526af7570"
+    }
+  },
+  "status": "machine_screened_manual_review_required",
+  "training_blockers": [
+    "manual review of all 200 cases not recorded",
+    "semantic embedding similarity is not implemented for this scaffold"
+  ],
+  "training_ready": false,
+  "updated_at": "2026-07-17T13:33:28.113531+00:00"
+}
