@@ -22,12 +22,18 @@ acuity label out. QA exact agreement is primary. The paper's one-shot
 conversational response plus GPT-4.1 rubric judge is secondary and preserves
 an apples-to-apples comparison; it is not a multi-turn consultation.
 
-Build the first pilot from roughly 500–1,000 separately sourced, family-grouped
-cases. Generate and review teacher targets, train a small student, and compare
+First prove the mechanics with the versioned zero-call
+[20-case fictional pipeline check](synthetic-pilot.md). After model/terms/cost
+approval, it plans 20 generation calls and 40 blinded label calls, followed by
+manual review of every candidate. This is not enough data to train a useful
+student.
+
+Build the first learning pilot from roughly 500–1,000 separately sourced,
+family-grouped cases. Generate and review teacher targets, train a small student, and compare
 accuracy, under-triage, p95 service latency, TTFT and cost against the measured
 frontier. The repository implements the plan, schema, validation, evaluation
-contract and OpenAI-compatible serving adapter, but not the training data,
-teacher-generation workflow or training loop. See
+contract, OpenAI-compatible serving adapter and fictional pilot workflow, but
+not an accepted training set, semantic leakage screen or training loop. See
 [`static-first.md`](static-first.md).
 
 Interactive `ASK`/`DISPOSE`/`HANDOFF` is a later phase. Before it becomes a
@@ -195,26 +201,28 @@ unique prompt count are all needed to interpret that number.
 
 1. **Freeze the static contract.** Use `static-plan` and preserve AcuityBench
    exclusively as held-out evaluation.
-2. **Build static training cases.** Acquire, deduplicate, group and split a
+2. **Check the fictional pipeline.** Run the 20-case generate/double-label/
+   reject/review workflow only after terms, cost and spend authorization.
+3. **Build static training cases.** Acquire, deduplicate, group and split a
    separate 500–1,000-case pilot with provenance and licences; validate it
    with `static-data-validate`.
-3. **Train and evaluate the static student.** Generate reviewed targets, train
+4. **Train and evaluate the static student.** Generate reviewed targets, train
    a small model, measure QA first, then the paired paper comparison, and
    record a human progression decision.
-4. **Review and freeze interactive evaluation.** Complete the 100-card
+5. **Review and freeze interactive evaluation.** Complete the 100-card
    clinician gate only when progressing to multi-turn work.
-5. **Build interactive training cases.** Acquire and split another appropriate
+6. **Build interactive training cases.** Acquire and split another appropriate
    separate pool; never derive it from the held-out static or interactive
    benchmarks.
-6. **Pipeline check.** Generate and inspect 400 consultations from 200 cases;
+7. **Pipeline check.** Generate and inspect 400 consultations from 200 cases;
    prove schema validity, provenance, replay, safety metrics and timing.
-7. **First interactive pilot.** Generate 2,000 accepted consultations, train a small
+8. **First interactive pilot.** Generate 2,000 accepted consultations, train a small
    baseline and start the learning curve.
-8. **Targeted data improvement.** Add cases for weak strata and under-triage
+9. **Targeted data improvement.** Add cases for weak strata and under-triage
    failures rather than scaling uniformly.
-9. **Credible interactive v1.** Compare simple SFT, a small hyperparameter sweep and, only
+10. **Credible interactive v1.** Compare simple SFT, a small hyperparameter sweep and, only
    if useful, one on-policy correction round.
-10. **Scale conditionally.** Attempt a strong research run only after the
+11. **Scale conditionally.** Attempt a strong research run only after the
    smaller stages show reproducible gains and the review process can support
    the volume.
 

@@ -177,6 +177,33 @@ uv run python -m acuitybench static-evaluate \
 All ordinary spend-authorisation, smoke-run and fresh-run-ID rules still
 apply. No command in this repository trains a model yet.
 
+# Fictional static-pilot workflow
+
+Inspect and initialize the deterministic 20-case scaffold without provider
+calls:
+
+```bash
+uv run python -m acuitybench synthetic-plan
+uv run python -m acuitybench synthetic-init
+uv run python -m acuitybench synthetic-validate --allow-incomplete
+```
+
+The initialized manifest must report zero paid calls and
+`training_ready: false`. Generation and blinded double-labelling are paid and
+must not be used as routine verification:
+
+```bash
+uv run python -m acuitybench synthetic-generate \
+  --model <generator-profile> --confirm-spend --terms-reviewed
+uv run python -m acuitybench synthetic-label \
+  --model <labeler-profile> --confirm-spend --terms-reviewed
+```
+
+Choose the exact model profiles, review provider terms, calculate a cost
+ceiling and obtain explicit spend authorization first. After completion, run
+`synthetic-validate` without `--allow-incomplete` and manually review all 20
+candidates. Machine acceptance does not authorize training use.
+
 # Model evaluation
 
 The following commands can make paid external API calls:
@@ -184,6 +211,9 @@ The following commands can make paid external API calls:
 - `infer`
 - `evaluate`
 - `judge`
+- `static-evaluate`
+- `synthetic-generate`
+- `synthetic-label`
 
 Do not launch even a smoke evaluation without explicit API-spend
 authorisation. Before a paid run, record the model, sample count, selected

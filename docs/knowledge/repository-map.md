@@ -13,11 +13,14 @@ status: active
 acuitybench/                 Python package and CLI
   providers/                 Provider abstraction and OpenAI adapter
   static_student.py          Static-first plan/data/evaluation contracts
+  synthetic.py               Fictional-pilot generation, labels and leakage checks
   interactive/               Interactive seed, schemas, simulator and costing logic
 configs/                     Model, rubric, static and interactive versioned configuration
 data/cache/sources/          Pinned source snapshots (Git LFS)
 data/processed/              Reconstructed benchmark and build report
 data/interactive/            Evaluation-only interactive seed and manifest
+data/static/                 Separate static-pilot requests, outputs and manifests
+prompts/                     Versioned synthetic generation and labelling prompts
 schemas/                     Strict JSON Schemas for static and interactive contracts
 results/                     SQLite state, reports, exports and frontier plots
 tests/                       Unit and integration-style deterministic tests
@@ -45,6 +48,7 @@ ARTIFACTS.sha256             Checksums for committed data/result artifacts
 | `acuitybench/reporting.py` | Tables, exports, costs, latency and manifests. |
 | `acuitybench/plotting.py` | Deterministic frontier SVG generation. |
 | `acuitybench/static_student.py` | Static plan inspection, separate-data validation and evaluation-contract construction. |
+| `acuitybench/synthetic.py` | Deterministic fictional slots, resumable generation/double labelling, acceptance and lexical leakage checks. |
 | `acuitybench/interactive/seed.py` | Seed selection, transformation, provenance and validation. |
 | `acuitybench/interactive/simulator.py` | Closed action validation, deterministic replay and scoring. |
 | `acuitybench/interactive/costing.py` | Versioned Tinker/human-work cost formulas. |
@@ -58,6 +62,9 @@ ARTIFACTS.sha256             Checksums for committed data/result artifacts
 - [`../../configs/static_student.v1.yaml`](../../configs/static_student.v1.yaml):
   accepted static-first objective, metrics, training boundary and progression
   gate.
+- [`../../configs/static/synthetic_pilot.v0.yaml`](../../configs/static/synthetic_pilot.v0.yaml):
+  balanced 20-case fictional-pilot slots, prompts, schemas, acceptance gates
+  and output contract.
 - [`../../schemas/static-acuity-example-v1.schema.json`](../../schemas/static-acuity-example-v1.schema.json):
   separately sourced static training/example contract.
 - [`../../configs/rubric.yaml`](../../configs/rubric.yaml): A-D disposition
@@ -81,6 +88,8 @@ trail:
 - raw/request-attempt exports preserve model outputs, retries, usage and timing;
 - comparison CSVs are the source for frontier plots; and
 - interactive manifests bind the seed to schemas, configs, sources and hashes.
+- fictional-pilot manifests bind deterministic requests to prompts, schemas,
+  benchmark-screening input, provider-call counts and training blockers.
 
 # Source-of-truth hierarchy
 

@@ -1,0 +1,62 @@
+{
+  "artifacts": {
+    "generation_requests": {
+      "path": "data/static/synthetic_pilot_v0/generation_requests.jsonl",
+      "sha256": "b70e6e625c25906974954483d3f165e41b1be7844ce300b2da8c18759584f087"
+    }
+  },
+  "config": {
+    "path": "configs/static/synthetic_pilot.v0.yaml",
+    "sha256": "4f214d54c50543bf36ea37cecd12246b82d351eaf0f20e9916cca2e771c8d0f3"
+  },
+  "counts": {
+    "accepted_examples": 0,
+    "planned_cases": 20,
+    "rejected_cases": 0,
+    "successful_generations": 0,
+    "successful_label_calls": 0
+  },
+  "fictional_only": true,
+  "held_out_benchmark": {
+    "path": "data/processed/acuitybench_transformed.csv",
+    "sha256": "47010d1c7a27f97c4c5100929715e9a56d0cb5d6cde82f0e8441821defac5956",
+    "used_for_generation": false,
+    "used_for_lexical_screening_only": true
+  },
+  "paid_provider_calls_recorded": 0,
+  "pilot_id": "fictional-static-pilot-v0",
+  "prompts": {
+    "generation": {
+      "path": "prompts/synthetic_case_generator.v0.md",
+      "sha256": "806c0da840f5340c7153263c2a2fd815d7da05604c998ae8d2cf6216d458904e"
+    },
+    "labeling": {
+      "path": "prompts/synthetic_labeler.v0.md",
+      "sha256": "d6a83ef136be57114dc82f2439d7703efffb3779cb7a8368e1cc6e19d69519f9"
+    }
+  },
+  "schema_version": "synthetic-pilot-manifest/v0",
+  "schemas": {
+    "candidate": {
+      "path": "schemas/synthetic-candidate-v0.schema.json",
+      "sha256": "d3bf214bc9e9f74be527cb79c4d23db5c49448d49478665388618c8377ab48d8"
+    },
+    "generation": {
+      "path": "schemas/synthetic-generation-v0.schema.json",
+      "sha256": "89821e712f726c7b46e38cd334062a0aa27423c30330f44f463bb41baefc8c96"
+    },
+    "labeling": {
+      "path": "schemas/synthetic-label-v0.schema.json",
+      "sha256": "3d777d666f5260e4652d3f763071c5eb96a068502f5a9021bf261fa526af7570"
+    }
+  },
+  "status": "scaffold_initialized",
+  "training_blockers": [
+    "generation not run",
+    "independent labeling not run",
+    "lexical leakage report not complete",
+    "semantic similarity review not implemented",
+    "manual review of all 20 cases not recorded"
+  ],
+  "training_ready": false
+}

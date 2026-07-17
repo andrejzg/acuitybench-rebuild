@@ -35,6 +35,13 @@ reference labels. Its manifest records exact source/config/schema digests and
 marks all transformed case content as requiring clinician review. See
 `interactive/README.md`; do not use these held-out cases for training.
 
+## `static/`
+
+`static/synthetic_pilot_v0/` contains a deterministic, zero-call scaffold for
+the first 20-case fictional static-data experiment. It records only generation
+slots and provenance hashes at this stage; no vignette, teacher label or
+training-ready example exists. See `static/README.md` and the pilot README.
+
 ## Integrity and terms
 
 `ARTIFACTS.sha256` inventories all committed data and result artifacts, while

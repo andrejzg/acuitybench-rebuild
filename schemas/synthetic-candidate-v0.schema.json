@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:acuitybench:schema:synthetic-candidate:v0",
+  "title": "Machine-screened fictional static candidate v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "family_id",
+    "intended_split",
+    "training_allowed",
+    "review_status",
+    "vignette",
+    "reference_acuity",
+    "target_rationale",
+    "teacher",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "synthetic-acuity-candidate/v0"},
+    "candidate_id": {"$ref": "#/$defs/identifier"},
+    "family_id": {"$ref": "#/$defs/identifier"},
+    "intended_split": {"enum": ["train", "development"]},
+    "training_allowed": {"const": false},
+    "review_status": {"const": "machine_screened_manual_review_pending"},
+    "vignette": {"$ref": "#/$defs/nonEmptyString"},
+    "reference_acuity": {"enum": ["A", "B", "C", "D"]},
+    "target_rationale": {"$ref": "#/$defs/nonEmptyString"},
+    "teacher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "sample_count", "model_id", "config_sha256"],
+      "properties": {
+        "basis": {"$ref": "#/$defs/nonEmptyString"},
+        "sample_count": {"type": "integer", "minimum": 2},
+        "model_id": {"$ref": "#/$defs/nonEmptyString"},
+        "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_dataset",
+        "source_id",
+        "source_revision",
+        "source_text_sha256",
+        "transformation",
+        "license"
+      ],
+      "properties": {
+        "source_dataset": {"$ref": "#/$defs/nonEmptyString"},
+        "source_id": {"$ref": "#/$defs/nonEmptyString"},
+        "source_revision": {"$ref": "#/$defs/nonEmptyString"},
+        "source_text_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "transformation": {"$ref": "#/$defs/nonEmptyString"},
+        "license": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    }
+  }
+}

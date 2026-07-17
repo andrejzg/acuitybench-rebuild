@@ -68,6 +68,7 @@ uv run --extra dev pytest
 uv run python -m acuitybench validate
 uv run python -m acuitybench interactive-validate
 uv run python -m acuitybench static-plan
+uv run python -m acuitybench synthetic-validate --allow-incomplete
 ```
 
 For data or result changes, also verify:
@@ -76,10 +77,11 @@ For data or result changes, also verify:
 shasum -a 256 -c ARTIFACTS.sha256
 ```
 
-Full model evaluations incur API cost. Do not launch `infer`, `judge`, or
-`evaluate` without explicit spend authorisation, and never launch one merely
-as a generic verification step. Smoke runs and full runs must use new,
-descriptive run IDs when the transport or configuration changes.
+Provider execution incurs API cost. Do not launch `infer`, `judge`,
+`evaluate`, `static-evaluate`, `synthetic-generate`, or `synthetic-label`
+without explicit spend authorisation, and never launch one merely as a generic
+verification step. Smoke runs and full runs must use new, descriptive run IDs
+when the transport or configuration changes.
 
 ## Documentation maintenance
 
