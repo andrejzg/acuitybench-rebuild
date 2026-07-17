@@ -51,8 +51,10 @@ response plus GPT-4.1 judge is a secondary paired comparison. True multi-turn
 `ASK`/`DISPOSE`/`HANDOFF` work comes later, after a measured static student
 earns progression.
 
-The repository now has the versioned plan, strict separate-data schema,
-contamination checks, evaluation wrapper and OpenAI-compatible endpoint support:
+The repository now has the versioned plan, strict separate-data schema, an
+exact source-identity contamination guard, family-split checks, an evaluation
+wrapper and OpenAI-compatible endpoint support. Semantic and paraphrase
+deduplication remains a required external data-preparation step:
 
 ```bash
 uv run python -m acuitybench static-plan
@@ -196,7 +198,7 @@ uv run python -m acuitybench evaluate \
 Each command makes 9,140 target-model calls (914 cases × two formats × five
 samples) and 4,570 GPT-4.1 rubric-judge calls. Run them sequentially: identical
 streaming, concurrency, and `default` service-tier settings make the latency
-points comparable. Every result is committed immediately to
+points comparable. Every result is persisted immediately to
 `results/evaluations.sqlite3`; rerunning the identical command skips completed
 work. Use `acuitybench infer`, `acuitybench judge`, and `acuitybench report` to
 run those stages separately, `acuitybench runs` to inspect cached runs, or
@@ -225,7 +227,7 @@ the latency study. The resolution is pinned to the official
 GPT-5-mini and the [GPT-5.4 model page](https://developers.openai.com/api/docs/models/gpt-5.4),
 with an access date in each run manifest.
 
-The completed paired run produced:
+The completed paired runs produced:
 
 | Model | Reasoning | Avg exact | Paper delta | Target cost / 1K successful calls | p95 service latency | p95 TTFT |
 |---|---:|---:|---:|---:|---:|---:|
@@ -374,7 +376,7 @@ cases. The validation step checks every released reference case ID as well as
 all published source, split, method, and label distributions.
 
 The build commands do not call a model API. Only the explicit `infer`, `judge`,
-or `evaluate` commands spend provider credits.
+`evaluate`, or `static-evaluate` commands can spend provider credits.
 
 See [NOTICE.md](NOTICE.md) before publishing or using the generated artifacts
 commercially. [AUDIT.md](AUDIT.md) records inconsistencies found between the
