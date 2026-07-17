@@ -62,13 +62,12 @@ the benchmark is explicitly evaluation-only. **Status: complete locally.**
 Start with 500–1,000 unique cases as a pipeline and learning-curve pilot. This
 is a planning heuristic, not a sample-size guarantee.
 
-Before that paid build, use the implemented
-[20-case fictional pilot](synthetic-pilot.md) to verify the mechanics. Its
-deterministic zero-call scaffold is complete. The next decision is to select
-the generator and independent labeler profiles, review provider terms,
-calculate a 60-call cost ceiling and obtain explicit spend authorization.
-Every generated candidate must then be inspected manually; the scaffold alone
-does not satisfy Gate S2.
+The [fictional pilot](synthetic-pilot.md) has now verified the paid mechanics at
+200-case scale: all generations and blinded labels completed, with 131 current
+machine passes and 69 rejections. Before the larger build, add semantic
+screening, manually inspect all 200 cases, and record whether ambiguity flags
+should remain an automatic rejection or be separated from substantive acuity
+disagreement. The completed API run alone does not satisfy Gate S2.
 
 For every case:
 

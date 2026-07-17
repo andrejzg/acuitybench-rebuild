@@ -7,7 +7,7 @@ import os
 import time
 from datetime import datetime, timezone
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, Mapping
 
 import openai
 from openai import AsyncOpenAI
@@ -38,6 +38,20 @@ _SERVER_HEADERS = (
     "cf-ray",
 )
 
+_UNSUPPORTED_STRICT_SCHEMA_KEYWORDS = {
+    "$id",
+    "$schema",
+    "maximum",
+    "maxItems",
+    "maxLength",
+    "minimum",
+    "minItems",
+    "minLength",
+    "pattern",
+    "title",
+    "uniqueItems",
+}
+
 
 def _value(obj: object | None, name: str) -> Any:
     return getattr(obj, name, None) if obj is not None else None
@@ -52,6 +66,31 @@ def _float(value: object | None) -> float | None:
         return float(value) if value is not None else None
     except (TypeError, ValueError):
         return None
+
+
+def _provider_safe_schema(value: Any) -> Any:
+    if isinstance(value, dict):
+        result = {
+            key: _provider_safe_schema(item)
+            for key, item in value.items()
+            if key not in _UNSUPPORTED_STRICT_SCHEMA_KEYWORDS
+        }
+        if "const" in result and "type" not in result:
+            constant = result["const"]
+            if isinstance(constant, str):
+                result["type"] = "string"
+            elif isinstance(constant, bool):
+                result["type"] = "boolean"
+            elif isinstance(constant, int):
+                result["type"] = "integer"
+            elif isinstance(constant, float):
+                result["type"] = "number"
+            elif constant is None:
+                result["type"] = "null"
+        return result
+    if isinstance(value, list):
+        return [_provider_safe_schema(item) for item in value]
+    return value
 
 
 def _usage_metadata(
@@ -343,6 +382,8 @@ class OpenAIProvider:
         messages: list[dict[str, str]],
         max_output_tokens: int | None = None,
         stream: bool = True,
+        output_schema: Mapping[str, Any] | None = None,
+        output_schema_name: str | None = None,
     ) -> CompletionResult:
         if config.endpoint == "chat_completions":
             return await self._chat_completion(
@@ -350,6 +391,8 @@ class OpenAIProvider:
                 messages=messages,
                 max_output_tokens=max_output_tokens,
                 stream=stream,
+                output_schema=output_schema,
+                output_schema_name=output_schema_name,
             )
         if config.endpoint == "responses":
             return await self._response(
@@ -357,6 +400,8 @@ class OpenAIProvider:
                 messages=messages,
                 max_output_tokens=max_output_tokens,
                 stream=stream,
+                output_schema=output_schema,
+                output_schema_name=output_schema_name,
             )
         raise ValueError(
             f"OpenAI endpoint {config.endpoint!r} is not supported; use "
@@ -368,6 +413,8 @@ class OpenAIProvider:
         config: ModelConfig,
         messages: list[dict[str, str]],
         max_output_tokens: int | None,
+        output_schema: Mapping[str, Any] | None = None,
+        output_schema_name: str | None = None,
     ) -> dict[str, Any]:
         kwargs: dict[str, Any] = {
             "model": config.api_model,
@@ -380,6 +427,15 @@ class OpenAIProvider:
             kwargs["reasoning_effort"] = config.reasoning_effort
         if config.service_tier is not None:
             kwargs["service_tier"] = config.service_tier
+        if output_schema is not None:
+            kwargs["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": output_schema_name or "structured_output",
+                    "strict": True,
+                    "schema": _provider_safe_schema(dict(output_schema)),
+                },
+            }
         return kwargs
 
     async def _chat_completion(
@@ -389,9 +445,23 @@ class OpenAIProvider:
         messages: list[dict[str, str]],
         max_output_tokens: int | None,
         stream: bool,
+        output_schema: Mapping[str, Any] | None = None,
+        output_schema_name: str | None = None,
     ) -> CompletionResult:
-        kwargs = self._chat_kwargs(config, messages, max_output_tokens)
+        kwargs = self._chat_kwargs(
+            config,
+            messages,
+            max_output_tokens,
+            output_schema,
+            output_schema_name,
+        )
         request_contract = _request_contract(config, max_output_tokens)
+        request_contract["structured_output"] = output_schema is not None
+        request_contract["structured_output_schema_constraints_removed"] = (
+            sorted(_UNSUPPORTED_STRICT_SCHEMA_KEYWORDS)
+            if output_schema is not None
+            else []
+        )
         client = self._client(config.api_key_env, config.base_url_env)
         if not stream:
             raw = await client.chat.completions.with_raw_response.create(**kwargs)
@@ -633,6 +703,8 @@ class OpenAIProvider:
         config: ModelConfig,
         messages: list[dict[str, str]],
         max_output_tokens: int | None,
+        output_schema: Mapping[str, Any] | None = None,
+        output_schema_name: str | None = None,
     ) -> dict[str, Any]:
         kwargs: dict[str, Any] = {
             "model": config.api_model,
@@ -646,6 +718,15 @@ class OpenAIProvider:
             kwargs["reasoning"] = {"effort": config.reasoning_effort}
         if config.service_tier is not None:
             kwargs["service_tier"] = config.service_tier
+        if output_schema is not None:
+            kwargs["text"] = {
+                "format": {
+                    "type": "json_schema",
+                    "name": output_schema_name or "structured_output",
+                    "strict": True,
+                    "schema": _provider_safe_schema(dict(output_schema)),
+                }
+            }
         return kwargs
 
     @staticmethod
@@ -708,9 +789,23 @@ class OpenAIProvider:
         messages: list[dict[str, str]],
         max_output_tokens: int | None,
         stream: bool,
+        output_schema: Mapping[str, Any] | None = None,
+        output_schema_name: str | None = None,
     ) -> CompletionResult:
-        kwargs = self._response_kwargs(config, messages, max_output_tokens)
+        kwargs = self._response_kwargs(
+            config,
+            messages,
+            max_output_tokens,
+            output_schema,
+            output_schema_name,
+        )
         request_contract = _request_contract(config, max_output_tokens)
+        request_contract["structured_output"] = output_schema is not None
+        request_contract["structured_output_schema_constraints_removed"] = (
+            sorted(_UNSUPPORTED_STRICT_SCHEMA_KEYWORDS)
+            if output_schema is not None
+            else []
+        )
         client = self._client(config.api_key_env, config.base_url_env)
         if not stream:
             raw = await client.responses.with_raw_response.create(**kwargs)

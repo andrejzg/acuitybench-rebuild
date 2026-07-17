@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import Any, Mapping, Protocol
 
 from acuitybench.models import ModelConfig
 
@@ -39,6 +39,8 @@ class Provider(Protocol):
         messages: list[dict[str, str]],
         max_output_tokens: int | None = None,
         stream: bool = True,
+        output_schema: Mapping[str, Any] | None = None,
+        output_schema_name: str | None = None,
     ) -> CompletionResult: ...
 
     async def close(self) -> None: ...

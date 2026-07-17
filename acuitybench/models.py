@@ -124,6 +124,7 @@ class ModelRegistry:
                     "medium",
                     "high",
                     "xhigh",
+                    "max",
                 }
                 if reasoning_effort not in allowed_efforts:
                     raise ValueError(

@@ -9,6 +9,7 @@ description = "Checksum-pinned reconstruction of the AcuityBench clinical acuity
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+  "anthropic>=0.80,<1.0",
   "openai>=2.8,<3.0",
   "pandas>=2.2,<3.0",
   "pyarrow>=16,<22",

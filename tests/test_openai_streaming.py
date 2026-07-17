@@ -52,6 +52,51 @@ def test_paper_openai_profiles_send_resolved_reasoning_and_service_tier() -> Non
     assert responses["service_tier"] == "default"
 
 
+def test_openai_structured_output_is_wired_for_both_endpoints() -> None:
+    registry = ModelRegistry()
+    schema = {"type": "object", "properties": {"acuity": {"type": "string"}}}
+    chat = OpenAIProvider._chat_kwargs(
+        registry.get("gpt-5.4"),
+        [{"role": "user", "content": "case"}],
+        None,
+        schema,
+        "synthetic_label",
+    )
+    responses = OpenAIProvider._response_kwargs(
+        registry.get("gpt-5.6-terra"),
+        [{"role": "user", "content": "case"}],
+        None,
+        schema,
+        "synthetic_label",
+    )
+
+    assert chat["response_format"]["json_schema"]["strict"] is True
+    assert chat["response_format"]["json_schema"]["schema"] == schema
+    assert responses["text"]["format"]["name"] == "synthetic_label"
+    assert responses["text"]["format"]["schema"] == schema
+
+
+def test_openai_provider_schema_adds_type_for_const_only_fields() -> None:
+    schema = {
+        "type": "object",
+        "properties": {"schema_version": {"const": "example/v0"}},
+        "required": ["schema_version"],
+        "additionalProperties": False,
+    }
+    kwargs = OpenAIProvider._response_kwargs(
+        ModelRegistry().get("gpt-5.6-terra"),
+        [{"role": "user", "content": "case"}],
+        None,
+        schema,
+        "example",
+    )
+
+    assert kwargs["text"]["format"]["schema"]["properties"]["schema_version"] == {
+        "const": "example/v0",
+        "type": "string",
+    }
+
+
 def test_openai_compatible_client_uses_environment_base_url(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

@@ -10,7 +10,7 @@ timestamp: 2026-07-17T00:00:00+01:00
 * [Current state](current-state.md) - Dated implementation, repository and risk snapshot.
 * [Next steps](next-steps.md) - Prioritised work queue and acceptance gates.
 * [Static-first student plan](static-first.md) - Accepted first-stage objective, executable contract, training boundary and progression gate.
-* [Fictional static pilot](synthetic-pilot.md) - Zero-call 20-case generation/label pipeline check, review gates and paid-run boundary.
+* [Fictional static pilot](synthetic-pilot.md) - Zero-call v0 scaffold, completed 200-case v1 run, machine-screen evidence and remaining review gates.
 * [Project overview](project-overview.md) - Mission, scope, success criteria and non-goals.
 * [Known limitations](known-limitations.md) - Claims that must not be made and unresolved risks.
 

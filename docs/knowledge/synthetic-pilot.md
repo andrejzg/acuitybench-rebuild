@@ -1,7 +1,7 @@
 ---
 type: Experiment Strategy
-title: Fictional Static Pilot v0
-description: Zero-call scaffold for a 20-case fictional pipeline check before building the larger static training pool.
+title: Fictional Static Pilots
+description: Versioned 20-case pipeline check and 200-case Fable/dual-labeler research run.
 tags: [synthetic-data, static-first, teacher-labels, leakage, pilot]
 timestamp: 2026-07-17T00:00:00+01:00
 status: scaffold-ready
@@ -9,6 +9,58 @@ last_verified: 2026-07-17
 ---
 
 # Purpose and current status
+
+## Version 1: authorised 200-case run
+
+[`../../configs/static/synthetic_pilot.v1.yaml`](../../configs/static/synthetic_pilot.v1.yaml)
+is a separate immutable contract for 200 fictional vignettes: 50 per acuity
+label and 40 per presentation group, split into 160 training candidates and 40
+development candidates. It plans 200 generation calls and 400 blinded label
+calls. The fixed model assignment is:
+
+- Claude Fable 5, Anthropic standard Messages API, adaptive thinking at
+  `medium` effort, for generation;
+- GPT-5.6 Terra at `low` effort for independent label sample 0; and
+- GPT-5.4 at `none` for independent label sample 1.
+
+The run is complete: 200/200 generations and 400/400 valid blinded labels.
+The strict machine screen retained 131 candidates and rejected 69; 68 rejected
+cases contained at least one teacher ambiguity flag, seven contained a
+teacher/intended-target disagreement, and five contained teacher disagreement
+(reasons overlap). Zero cases crossed the lexical-contamination thresholds.
+All 200 still require review, including machine rejections.
+
+Provider-native structured output is followed by the repository's stricter
+local schema validation. Anthropic's structured-output compiler does not
+support several validation-only constraints (including integer ranges), so
+the request schema omits those keywords while the unchanged local schema
+still enforces them as hard acceptance checks. Fable refusals are retained as
+failed attempts with refusal metadata and are never silently replaced.
+
+The Anthropic token-count preflight is free. For this frozen request set it
+reported 260,240 Fable input tokens ($2.6024 at the recorded price). Actual
+successful-call cost was $10.24105 for Fable, $0.55498 for Terra and $0.602625
+for GPT-5.4: **$11.398655 total**. Provider-rejected setup attempts reported no
+usage and are excluded from this total.
+
+```bash
+uv run python -m acuitybench synthetic-generate \
+  --config configs/static/synthetic_pilot.v1.yaml \
+  --concurrency 1 --confirm-spend --terms-reviewed
+
+uv run python -m acuitybench synthetic-label \
+  --config configs/static/synthetic_pilot.v1.yaml \
+  --confirm-spend --terms-reviewed
+```
+
+The explicit concurrency override reflects the observed Anthropic connection
+limit for the authorised key; it changes only runner scheduling, not the
+frozen model/prompt/data contract. The durable v1 artifacts live in
+[`../../data/static/synthetic_pilot_v1/`](../../data/static/synthetic_pilot_v1/).
+They remain blocked from training until semantic screening and manual clinical
+review are complete.
+
+## Version 0: 20-case pipeline check
 
 The first implementation step is a deliberately tiny, wholly fictional
 pipeline check—not a useful training set and not a clinical dataset. Version 0

@@ -20,15 +20,15 @@ below.
 | --- | --- |
 | Remote | `https://github.com/andrejzg/acuitybench-rebuild.git` |
 | Branch | `main` |
-| Baseline HEAD | `78e5706` (`origin/main` before the current fictional-pilot work) |
+| Baseline HEAD | `ea96b00` (`main`/`origin/main` before the current v1 run work) |
 | GitHub visibility | **PUBLIC** |
 | Package version | `0.4.0` |
-| Test baseline | 195 passing, including synthetic-pilot, static-contract and handover/OKF integrity tests |
+| Test baseline | 201 passing after the completed v1 provider/data run |
 
-The fictional-pilot implementation and documentation are local uncommitted
-work at the time of this snapshot. Git LFS 3.7.1 is installed in the verified
-environment; ordinary `git status` is still required to distinguish current
-work from unrelated local changes.
+The completed v1 run, Anthropic adapter, dual-model labeling support and
+documentation are local uncommitted work at the time of this snapshot. Git
+LFS 3.7.1 is installed; ordinary `git status` is still required before any
+publication step.
 
 # Public-repository policy and licensing risk
 
@@ -100,6 +100,16 @@ student checkpoint exists yet.
   generated cases. Semantic screening is not implemented and every candidate
   requires manual review, so candidate records require
   `training_allowed: false` and the manifest is `training_ready: false`.
+- `configs/static/synthetic_pilot.v1.yaml` separately freezes 200 balanced
+  cases, Fable 5 generation at medium effort, and one Terra-low plus one
+  GPT-5.4-none blinded label per case through standard (non-batch) APIs.
+- All 200 generations and 400 labels completed. 131 candidates passed current
+  machine gates; 69 were rejected, predominantly because at least one teacher
+  supplied an ambiguity flag. Lexical contamination blocks were zero.
+- Successful-call usage was 448,956 input and 198,494 output tokens, with an
+  estimated total cost of $11.398655. Fable p50/p95 end-to-end latency was
+  14.040/17.975 seconds; Terra 1.797/4.005; GPT-5.4 2.469/3.841. These were
+  non-streaming calls, so TTFT is correctly unavailable.
 
 ## Interactive triage
 
@@ -118,19 +128,18 @@ student checkpoint exists yet.
 - No natural free-form patient simulator has been validated.
 - No teacher-policy interactive benchmark has been run.
 - No separate static or interactive training pool has been built.
-- The fictional pilot has not made provider calls and has no accepted teacher
-  targets; it is pipeline infrastructure, not training data.
+- The 131 v1 machine-screened candidates have not passed semantic or clinician
+  review and remain prohibited from training.
 - No student model has been trained.
 - No measured result occupies the aspirational green frontier point.
 
 # Immediate handoff
 
-Follow the [fictional-pilot contract](synthetic-pilot.md). The immediate
-decision is generator/labeler selection, provider-terms review and a maximum
-cost for 60 calls before requesting spend authorization. The following build
-is the separately sourced 500–1,000-case static learning pilot; clinician
-review remains a later prerequisite for freezing a defensible interactive
-evaluation set.
+Follow the [fictional-pilot contract](synthetic-pilot.md). The immediate work
+is semantic screening plus blinded manual review of all 200 v1 cases, followed
+by a recorded decision on the ambiguity-flag gate and promotion of any approved
+candidates. Only then use the evidence to design the separately sourced
+500–1,000-case static learning pilot.
 The continuing governance gate is source-by-source licence review before new
 publication, redistribution, or commercial use; public visibility itself is a
 settled owner decision.
@@ -140,6 +149,7 @@ settled owner decision.
 - [`../../data/processed/build_report.json`](../../data/processed/build_report.json)
 - [`../../data/interactive/seed_v1/manifest.json`](../../data/interactive/seed_v1/manifest.json)
 - [`../../data/static/synthetic_pilot_v0/manifest.json`](../../data/static/synthetic_pilot_v0/manifest.json)
+- [`../../data/static/synthetic_pilot_v1/manifest.json`](../../data/static/synthetic_pilot_v1/manifest.json)
 - [`../../results/README.md`](../../results/README.md)
 - [`../../NOTICE.md`](../../NOTICE.md)
 - [`../../sources.lock.json`](../../sources.lock.json)

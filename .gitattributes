@@ -5,6 +5,11 @@ data/cache/sources/*.parquet filter=lfs diff=lfs merge=lfs -text
 data/processed/*.csv filter=lfs diff=lfs merge=lfs -text
 data/processed/*.parquet filter=lfs diff=lfs merge=lfs -text
 
+# Append-only synthetic provider traces can grow quickly. Deterministic
+# requests, manifests, screened examples and summaries stay readable in Git.
+data/static/synthetic_pilot_v*/generated_raw.jsonl filter=lfs diff=lfs merge=lfs -text
+data/static/synthetic_pilot_v*/labels_raw.jsonl filter=lfs diff=lfs merge=lfs -text
+
 # Durable evaluation database and sample-level exports. Small manifests and
 # summary tables remain ordinary Git files for readable review diffs.
 results/*.sqlite3 filter=lfs diff=lfs merge=lfs -text

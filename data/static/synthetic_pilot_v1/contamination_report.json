@@ -1,0 +1,2626 @@
+{
+  "benchmark": {
+    "cases": 914,
+    "path": "/Users/agregoric/Documents/acuity bench/data/processed/acuitybench_transformed.csv",
+    "sha256": "47010d1c7a27f97c4c5100929715e9a56d0cb5d6cde82f0e8441821defac5956",
+    "used_for_generation": false
+  },
+  "blocked_cases": 0,
+  "candidate_cases": 200,
+  "checks": {
+    "generated_internal_duplicates": "complete",
+    "manual_review": "all_200_cases_before_training",
+    "normalized_exact": "complete",
+    "semantic_embedding_similarity": "not_implemented_manual_review_required",
+    "sequence_similarity": "complete",
+    "token_trigram_containment": "complete"
+  },
+  "results": [
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.261271676300578,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-001",
+      "normalized_characters": 677
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23841059602649006,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-002",
+      "normalized_characters": 721
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.26730310262529833,
+        "source_id": "83458f3a-d9bc-4585-8c4a-489a6ecaea9e",
+        "token_trigram_containment": 0.037037037037037035
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-003",
+      "normalized_characters": 659
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22706422018348624,
+        "source_id": "229fdef0-70b6-401c-b538-6cf265692310",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-004",
+      "normalized_characters": 686
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.28428927680798005,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-005",
+      "normalized_characters": 614
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2302158273381295,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-006",
+      "normalized_characters": 781
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24423963133640553,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-007",
+      "normalized_characters": 681
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "pmr_reddit",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.25829383886255924,
+        "source_id": "0439152abd87",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-008",
+      "normalized_characters": 664
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24263038548752835,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.02631578947368421
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-009",
+      "normalized_characters": 690
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24228028503562946,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-010",
+      "normalized_characters": 654
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23588709677419356,
+        "source_id": "5b05fcac-cada-4ac1-b546-3ead42332592",
+        "token_trigram_containment": 0.030303030303030304
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-011",
+      "normalized_characters": 794
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "pmr_reddit",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24568965517241378,
+        "source_id": "0439152abd87",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-012",
+      "normalized_characters": 748
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2516703786191537,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-013",
+      "normalized_characters": 721
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2190082644628099,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-014",
+      "normalized_characters": 781
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2773393461104848,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-015",
+      "normalized_characters": 702
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2469437652811736,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-016",
+      "normalized_characters": 651
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23122529644268774,
+        "source_id": "15b80728-f476-4793-95ea-567cab354a46",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-017",
+      "normalized_characters": 813
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2545018007202881,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-018",
+      "normalized_characters": 660
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2564102564102564,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-019",
+      "normalized_characters": 712
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21063394683026584,
+        "source_id": "616e980f-7d80-4bd6-864e-6be62ac20d18",
+        "token_trigram_containment": 0.030303030303030304
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-020",
+      "normalized_characters": 786
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24379719525350593,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-021",
+      "normalized_characters": 740
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24843423799582465,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-022",
+      "normalized_characters": 770
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.09943502824858758,
+        "source_id": "cff1bbb3-cdbb-4777-aa2f-fca8cacdaa9e",
+        "token_trigram_containment": 0.18181818181818182
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-023",
+      "normalized_characters": 821
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24713375796178344,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-024",
+      "normalized_characters": 618
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.26066350710900477,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-025",
+      "normalized_characters": 677
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.10804851157662625,
+        "source_id": "cff1bbb3-cdbb-4777-aa2f-fca8cacdaa9e",
+        "token_trigram_containment": 0.18181818181818182
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-026",
+      "normalized_characters": 843
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23694779116465864,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.03225806451612903
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-027",
+      "normalized_characters": 808
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.12559241706161137,
+        "source_id": "cff1bbb3-cdbb-4777-aa2f-fca8cacdaa9e",
+        "token_trigram_containment": 0.18181818181818182
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-028",
+      "normalized_characters": 780
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21428571428571427,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.03225806451612903
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-029",
+      "normalized_characters": 792
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22940563086548488,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.06451612903225806
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-030",
+      "normalized_characters": 771
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2110912343470483,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-031",
+      "normalized_characters": 926
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2016057091882248,
+        "source_id": "9769ea1d-a87f-4560-bd64-e0d17478ca6a",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-032",
+      "normalized_characters": 950
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23387096774193547,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-033",
+      "normalized_characters": 807
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21912350597609562,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-034",
+      "normalized_characters": 819
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2470713525026624,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-035",
+      "normalized_characters": 755
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20335820895522388,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-036",
+      "normalized_characters": 895
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24299065420560748,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-037",
+      "normalized_characters": 778
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22549019607843138,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-038",
+      "normalized_characters": 836
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20372010628875112,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-039",
+      "normalized_characters": 942
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2309278350515464,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-040",
+      "normalized_characters": 785
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2082082082082082,
+        "source_id": "15b80728-f476-4793-95ea-567cab354a46",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-041",
+      "normalized_characters": 800
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21689059500959693,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-042",
+      "normalized_characters": 855
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2553191489361702,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-043",
+      "normalized_characters": 575
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24110218140068887,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-044",
+      "normalized_characters": 686
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2275449101796407,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-045",
+      "normalized_characters": 817
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24330900243309003,
+        "source_id": "9769ea1d-a87f-4560-bd64-e0d17478ca6a",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-046",
+      "normalized_characters": 651
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21714285714285714,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-047",
+      "normalized_characters": 865
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2296137339055794,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-048",
+      "normalized_characters": 747
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20892687559354226,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-049",
+      "normalized_characters": 869
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2222222222222222,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-050",
+      "normalized_characters": 706
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.029304029304029304,
+        "source_id": "42",
+        "token_trigram_containment": 0.19047619047619047
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-051",
+      "normalized_characters": 873
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.19981325863678806,
+        "source_id": "84958b47-d15b-4073-adc6-d6af5affab5d",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-052",
+      "normalized_characters": 898
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23915343915343915,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-053",
+      "normalized_characters": 757
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22875131164742918,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-054",
+      "normalized_characters": 766
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23753976670201485,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-055",
+      "normalized_characters": 766
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.054901960784313725,
+        "source_id": "5f54e2a8-1d69-4cae-a1e1-81697ebc124d",
+        "token_trigram_containment": 0.3333333333333333
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-056",
+      "normalized_characters": 990
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20018709073900842,
+        "source_id": "dbfed639-9c3a-403e-973f-41c60f03f6e5",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-057",
+      "normalized_characters": 905
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "pmr_reddit",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2194616977225673,
+        "source_id": "2e5db5533fbb",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-058",
+      "normalized_characters": 781
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22569832402234638,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-059",
+      "normalized_characters": 728
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.19030520646319568,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-060",
+      "normalized_characters": 937
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21145374449339208,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-061",
+      "normalized_characters": 950
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.0518018018018018,
+        "source_id": "5f54e2a8-1d69-4cae-a1e1-81697ebc124d",
+        "token_trigram_containment": 0.16666666666666666
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-062",
+      "normalized_characters": 858
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21915103652517276,
+        "source_id": "c1fb4daf-2a19-412b-8918-5f3258725cbc",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-063",
+      "normalized_characters": 841
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2343268242548818,
+        "source_id": "5b05fcac-cada-4ac1-b546-3ead42332592",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-064",
+      "normalized_characters": 775
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "pmr_reddit",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20943396226415095,
+        "source_id": "288ffbc35600",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-065",
+      "normalized_characters": 862
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23757575757575758,
+        "source_id": "bbadc660-ba32-40ab-bd22-19e1df5e0221",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-066",
+      "normalized_characters": 687
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2112321877619447,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-067",
+      "normalized_characters": 1008
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24058769513314968,
+        "source_id": "5b05fcac-cada-4ac1-b546-3ead42332592",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-068",
+      "normalized_characters": 891
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2317948717948718,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-069",
+      "normalized_characters": 790
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22931206380857427,
+        "source_id": "83458f3a-d9bc-4585-8c4a-489a6ecaea9e",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-070",
+      "normalized_characters": 824
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22200584225900682,
+        "source_id": "2cdfafc6-aeb6-46cc-bb11-cd8fc754bef4",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-071",
+      "normalized_characters": 838
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22115384615384615,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-072",
+      "normalized_characters": 853
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24142011834319527,
+        "source_id": "229fdef0-70b6-401c-b538-6cf265692310",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-073",
+      "normalized_characters": 659
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22136669874879691,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-074",
+      "normalized_characters": 852
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20178041543026706,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-075",
+      "normalized_characters": 826
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24036281179138322,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-076",
+      "normalized_characters": 698
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.205607476635514,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-077",
+      "normalized_characters": 883
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.13186813186813187,
+        "source_id": "c5f6bb12-a633-4ee4-b6a8-e6f9539472dc",
+        "token_trigram_containment": 0.21428571428571427
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-078",
+      "normalized_characters": 749
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2123510292524377,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-079",
+      "normalized_characters": 756
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.09503695881731784,
+        "source_id": "cff1bbb3-cdbb-4777-aa2f-fca8cacdaa9e",
+        "token_trigram_containment": 0.18181818181818182
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-080",
+      "normalized_characters": 883
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23326133909287258,
+        "source_id": "ef570c1c-6dee-48b2-b15e-53bbb202dd76",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-081",
+      "normalized_characters": 733
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23648648648648649,
+        "source_id": "bfbb6aa4-c056-4377-97a9-d9e5e6cdfcf5",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-082",
+      "normalized_characters": 727
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22606924643584522,
+        "source_id": "b6946587-63c0-4be2-996f-1992685aaa45",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-083",
+      "normalized_characters": 808
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23593073593073594,
+        "source_id": "ef570c1c-6dee-48b2-b15e-53bbb202dd76",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-084",
+      "normalized_characters": 731
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2192622950819672,
+        "source_id": "41588961-5381-4c38-98b3-979674790681",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-085",
+      "normalized_characters": 777
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21288014311270126,
+        "source_id": "2cdfafc6-aeb6-46cc-bb11-cd8fc754bef4",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-086",
+      "normalized_characters": 929
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2276243093922652,
+        "source_id": "41588961-5381-4c38-98b3-979674790681",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-087",
+      "normalized_characters": 706
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23164426059979318,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-088",
+      "normalized_characters": 782
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.222011385199241,
+        "source_id": "ef570c1c-6dee-48b2-b15e-53bbb202dd76",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-089",
+      "normalized_characters": 861
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24910179640718563,
+        "source_id": "c1fb4daf-2a19-412b-8918-5f3258725cbc",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-090",
+      "normalized_characters": 663
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21503330161750714,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-091",
+      "normalized_characters": 867
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20708955223880596,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-092",
+      "normalized_characters": 887
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.11907654921020656,
+        "source_id": "c5f6bb12-a633-4ee4-b6a8-e6f9539472dc",
+        "token_trigram_containment": 0.21428571428571427
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-093",
+      "normalized_characters": 753
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.18945487042001788,
+        "source_id": "a86f39c9-dc61-4194-afa2-23ac4830908c",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-094",
+      "normalized_characters": 955
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2349137931034483,
+        "source_id": "ceaf092b-aa46-4bb8-aca2-fffafd1bf34a",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-095",
+      "normalized_characters": 782
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2123222748815166,
+        "source_id": "ef570c1c-6dee-48b2-b15e-53bbb202dd76",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-096",
+      "normalized_characters": 862
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22012578616352202,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-097",
+      "normalized_characters": 769
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21421421421421422,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-098",
+      "normalized_characters": 814
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22371364653243847,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-099",
+      "normalized_characters": 709
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24476987447698745,
+        "source_id": "15b80728-f476-4793-95ea-567cab354a46",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-100",
+      "normalized_characters": 757
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2276595744680851,
+        "source_id": "41588961-5381-4c38-98b3-979674790681",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-101",
+      "normalized_characters": 741
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23555070883315157,
+        "source_id": "132af28a-20fa-4aba-80e4-b7a4f946966c",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-102",
+      "normalized_characters": 755
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.26550598476605003,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-103",
+      "normalized_characters": 734
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21780104712041884,
+        "source_id": "83458f3a-d9bc-4585-8c4a-489a6ecaea9e",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-104",
+      "normalized_characters": 776
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2296983758700696,
+        "source_id": "a86f39c9-dc61-4194-afa2-23ac4830908c",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-105",
+      "normalized_characters": 698
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.26618705035971224,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-106",
+      "normalized_characters": 649
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21657250470809794,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-107",
+      "normalized_characters": 885
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24881516587677724,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-108",
+      "normalized_characters": 677
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24053452115812918,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-109",
+      "normalized_characters": 713
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24615384615384617,
+        "source_id": "15b80728-f476-4793-95ea-567cab354a46",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-110",
+      "normalized_characters": 776
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20776874435411022,
+        "source_id": "45d04695-7a99-409e-acd4-f3446daaebf6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-111",
+      "normalized_characters": 930
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.1944209636517329,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-112",
+      "normalized_characters": 1010
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2534854245880862,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-113",
+      "normalized_characters": 604
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23157894736842105,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-114",
+      "normalized_characters": 860
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21484375,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-115",
+      "normalized_characters": 851
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20530367835757057,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-116",
+      "normalized_characters": 985
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22705771050141912,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.03125
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-117",
+      "normalized_characters": 872
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2302158273381295,
+        "source_id": "9ceb78fd-4575-43a1-84b7-90a3f912bee9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-118",
+      "normalized_characters": 806
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22136669874879691,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.03225806451612903
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-119",
+      "normalized_characters": 851
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20948970456580127,
+        "source_id": "616e980f-7d80-4bd6-864e-6be62ac20d18",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-120",
+      "normalized_characters": 925
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2616136919315403,
+        "source_id": "34",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-121",
+      "normalized_characters": 620
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23764458464773922,
+        "source_id": "8c96d728-e8c9-45bf-b3ac-a06dd4801d85",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-122",
+      "normalized_characters": 758
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "pmr_reddit",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2322435174746336,
+        "source_id": "2e5db5533fbb",
+        "token_trigram_containment": 0.024390243902439025
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-123",
+      "normalized_characters": 702
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2402745995423341,
+        "source_id": "2cdfafc6-aeb6-46cc-bb11-cd8fc754bef4",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-124",
+      "normalized_characters": 685
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24757804090419805,
+        "source_id": "34",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-125",
+      "normalized_characters": 731
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2194871794871795,
+        "source_id": "2cdfafc6-aeb6-46cc-bb11-cd8fc754bef4",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-126",
+      "normalized_characters": 786
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23384615384615384,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-127",
+      "normalized_characters": 788
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22018348623853212,
+        "source_id": "34",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-128",
+      "normalized_characters": 783
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.25027932960893856,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-129",
+      "normalized_characters": 707
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2420091324200913,
+        "source_id": "36b11a8c-8a54-4c7d-8cc0-49d5f2d6b541",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-130",
+      "normalized_characters": 701
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.12428078250863062,
+        "source_id": "c5f6bb12-a633-4ee4-b6a8-e6f9539472dc",
+        "token_trigram_containment": 0.21428571428571427
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-131",
+      "normalized_characters": 799
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2060931899641577,
+        "source_id": "d37e44e5-f965-4e99-aeb2-9f8ac0d35967",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-132",
+      "normalized_characters": 932
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21851542952460384,
+        "source_id": "ef570c1c-6dee-48b2-b15e-53bbb202dd76",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-133",
+      "normalized_characters": 1006
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.218214607754734,
+        "source_id": "15b80728-f476-4793-95ea-567cab354a46",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-134",
+      "normalized_characters": 910
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2334322453016815,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-135",
+      "normalized_characters": 826
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23293172690763053,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-136",
+      "normalized_characters": 804
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20300751879699247,
+        "source_id": "616e980f-7d80-4bd6-864e-6be62ac20d18",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-137",
+      "normalized_characters": 872
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.19861830742659758,
+        "source_id": "15b80728-f476-4793-95ea-567cab354a46",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-138",
+      "normalized_characters": 959
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2273201251303441,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-139",
+      "normalized_characters": 767
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24308300395256918,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-140",
+      "normalized_characters": 825
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20821917808219179,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-141",
+      "normalized_characters": 903
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2505175983436853,
+        "source_id": "07ed45ab-d51a-4914-b836-5019168288a6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-142",
+      "normalized_characters": 768
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21267893660531698,
+        "source_id": "36b11a8c-8a54-4c7d-8cc0-49d5f2d6b541",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-143",
+      "normalized_characters": 803
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.208,
+        "source_id": "1cb87cee-d2e5-4dea-a9ee-b2c578e8874b",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-144",
+      "normalized_characters": 816
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2523076923076923,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-145",
+      "normalized_characters": 790
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21526418786692758,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-146",
+      "normalized_characters": 837
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20037453183520598,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-147",
+      "normalized_characters": 881
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2524271844660194,
+        "source_id": "41588961-5381-4c38-98b3-979674790681",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-148",
+      "normalized_characters": 728
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2033898305084746,
+        "source_id": "36b11a8c-8a54-4c7d-8cc0-49d5f2d6b541",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-149",
+      "normalized_characters": 887
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2808842652795839,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-150",
+      "normalized_characters": 584
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2805194805194805,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.029411764705882353
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-151",
+      "normalized_characters": 597
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.26715686274509803,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.058823529411764705
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-152",
+      "normalized_characters": 643
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.058759521218716,
+        "source_id": "5f54e2a8-1d69-4cae-a1e1-81697ebc124d",
+        "token_trigram_containment": 0.3333333333333333
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-153",
+      "normalized_characters": 889
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2812089356110381,
+        "source_id": "2cdfafc6-aeb6-46cc-bb11-cd8fc754bef4",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-154",
+      "normalized_characters": 572
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2579881656804734,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-155",
+      "normalized_characters": 660
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.26506024096385544,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-156",
+      "normalized_characters": 740
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23037716615698267,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.058823529411764705
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-157",
+      "normalized_characters": 808
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24437299035369775,
+        "source_id": "8c96d728-e8c9-45bf-b3ac-a06dd4801d85",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-158",
+      "normalized_characters": 740
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21489161168708765,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-159",
+      "normalized_characters": 874
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21865596790371114,
+        "source_id": "33b3ecdc-0071-4583-9897-eddde65e7359",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-160",
+      "normalized_characters": 805
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2490272373540856,
+        "source_id": "84958b47-d15b-4073-adc6-d6af5affab5d",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-161",
+      "normalized_characters": 598
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.20976491862567812,
+        "source_id": "5b05fcac-cada-4ac1-b546-3ead42332592",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-162",
+      "normalized_characters": 908
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2524752475247525,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-163",
+      "normalized_characters": 623
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24072216649949849,
+        "source_id": "34",
+        "token_trigram_containment": 0.027777777777777776
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-164",
+      "normalized_characters": 799
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2367816091954023,
+        "source_id": "34",
+        "token_trigram_containment": 0.027777777777777776
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-165",
+      "normalized_characters": 672
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2467065868263473,
+        "source_id": "83458f3a-d9bc-4585-8c4a-489a6ecaea9e",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-166",
+      "normalized_characters": 656
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21684414327202323,
+        "source_id": "616e980f-7d80-4bd6-864e-6be62ac20d18",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-167",
+      "normalized_characters": 841
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.25962596259625964,
+        "source_id": "616e980f-7d80-4bd6-864e-6be62ac20d18",
+        "token_trigram_containment": 0.06060606060606061
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-168",
+      "normalized_characters": 717
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2543478260869565,
+        "source_id": "5b05fcac-cada-4ac1-b546-3ead42332592",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-169",
+      "normalized_characters": 722
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.25882352941176473,
+        "source_id": "34",
+        "token_trigram_containment": 0.027777777777777776
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-170",
+      "normalized_characters": 652
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21244635193133046,
+        "source_id": "bfbb6aa4-c056-4377-97a9-d9e5e6cdfcf5",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-171",
+      "normalized_characters": 771
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21908893709327548,
+        "source_id": "Meningitis_9",
+        "token_trigram_containment": 0.041666666666666664
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-172",
+      "normalized_characters": 771
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21421215242018538,
+        "source_id": "b7c02de0-d2c9-4800-a95d-429bc67baa32",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-173",
+      "normalized_characters": 785
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2318840579710145,
+        "source_id": "84958b47-d15b-4073-adc6-d6af5affab5d",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-174",
+      "normalized_characters": 793
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "structured_triage",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22329162656400384,
+        "source_id": "34",
+        "token_trigram_containment": 0.08333333333333333
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-175",
+      "normalized_characters": 841
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22766217870257038,
+        "source_id": "9769ea1d-a87f-4560-bd64-e0d17478ca6a",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-176",
+      "normalized_characters": 646
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2375296912114014,
+        "source_id": "d366434d-8c66-41ff-aae6-5382f8d662b7",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-177",
+      "normalized_characters": 672
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23933649289099526,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-178",
+      "normalized_characters": 659
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21208907741251326,
+        "source_id": "9769ea1d-a87f-4560-bd64-e0d17478ca6a",
+        "token_trigram_containment": 0.06666666666666667
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-179",
+      "normalized_characters": 772
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2299794661190965,
+        "source_id": "65df9df8-3899-401b-bbd5-f5cf9a870231",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-180",
+      "normalized_characters": 787
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23692636072572038,
+        "source_id": "1cb87cee-d2e5-4dea-a9ee-b2c578e8874b",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-181",
+      "normalized_characters": 753
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2656641604010025,
+        "source_id": "9769ea1d-a87f-4560-bd64-e0d17478ca6a",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-182",
+      "normalized_characters": 627
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2164009111617312,
+        "source_id": "576e1777-b12b-48b6-b167-6005fb1066e1",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-183",
+      "normalized_characters": 721
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2423580786026201,
+        "source_id": "576e1777-b12b-48b6-b167-6005fb1066e1",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-184",
+      "normalized_characters": 759
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22693531283138918,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-185",
+      "normalized_characters": 770
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24879227053140096,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-186",
+      "normalized_characters": 643
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2219804134929271,
+        "source_id": "Meningitis_9",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-187",
+      "normalized_characters": 768
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.24366471734892786,
+        "source_id": "07ed45ab-d51a-4914-b836-5019168288a6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-188",
+      "normalized_characters": 828
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23319327731092437,
+        "source_id": "5a115734-1080-4849-ae51-8566c98610af",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-189",
+      "normalized_characters": 779
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2377142857142857,
+        "source_id": "07ed45ab-d51a-4914-b836-5019168288a6",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-190",
+      "normalized_characters": 677
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22125813449023862,
+        "source_id": "8c96d728-e8c9-45bf-b3ac-a06dd4801d85",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-191",
+      "normalized_characters": 729
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.23529411764705882,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-192",
+      "normalized_characters": 764
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.19870009285051068,
+        "source_id": "83458f3a-d9bc-4585-8c4a-489a6ecaea9e",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-193",
+      "normalized_characters": 898
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22587268993839835,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.03225806451612903
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-194",
+      "normalized_characters": 786
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2326086956521739,
+        "source_id": "d0c85e24-2775-4040-9f32-f1acca783725",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-195",
+      "normalized_characters": 732
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.22717622080679406,
+        "source_id": "36b11a8c-8a54-4c7d-8cc0-49d5f2d6b541",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-196",
+      "normalized_characters": 767
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21654749744637386,
+        "source_id": "616e980f-7d80-4bd6-864e-6be62ac20d18",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-197",
+      "normalized_characters": 787
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "healthbench",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.21566632756866735,
+        "source_id": "7fbf335a-08c3-4547-a6b5-5622d456c66e",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-198",
+      "normalized_characters": 827
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.1936056838365897,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.03125
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-199",
+      "normalized_characters": 941
+    },
+    {
+      "best_benchmark_match": {
+        "dataset": "semigran",
+        "exact_normalized_match": false,
+        "sequence_similarity": 0.2260343087790111,
+        "source_id": "Cellulitis_20",
+        "token_trigram_containment": 0.0
+      },
+      "blocked": false,
+      "blocked_reasons": [],
+      "case_id": "fictional-static-v1-200",
+      "normalized_characters": 806
+    }
+  ],
+  "schema_version": "synthetic-contamination-report/v0",
+  "thresholds": {
+    "minimum_normalized_characters": 40,
+    "sequence_similarity": 0.82,
+    "token_trigram_containment": 0.65
+  }
+}

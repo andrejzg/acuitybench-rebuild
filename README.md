@@ -89,6 +89,36 @@ The paid plan is 20 generation plus 40 independent label calls. The
 terms and a cost ceiling are recorded. See the
 [fictional-pilot contract](docs/knowledge/synthetic-pilot.md).
 
+### Fictional 200-case v1 run
+
+The immutable v1 contract scales the same static task to 200 balanced cases
+(160 train candidates and 40 development candidates). Claude Fable 5 at
+`medium` effort generates each case through the Anthropic standard Messages
+API; GPT-5.6 Terra at `low` effort and GPT-5.4 at `none` independently label
+each vignette without seeing generator intent. The 600 planned calls use
+provider-native JSON-schema output and append-only attempt logs with usage,
+cost, end-to-end latency, TTFT availability, model fingerprints and refusal
+metadata.
+
+```bash
+uv run python -m acuitybench synthetic-plan \
+  --config configs/static/synthetic_pilot.v1.yaml
+uv run python -m acuitybench synthetic-validate \
+  --config configs/static/synthetic_pilot.v1.yaml --allow-incomplete
+```
+
+All v1 outputs remain `training_allowed: false`. AcuityBench text is never
+sent to a generator or labeler; it is used only after generation for held-out
+contamination screening. Manual clinical review and semantic screening remain
+required before any candidate may enter training.
+
+The completed run produced 200/200 generations and 400/400 valid blinded
+labels for an estimated $11.3987. The strict machine screen retained 131
+candidates, rejected 69 (mostly because a teacher reported an ambiguity), and
+found zero configured lexical-contamination blocks. See the
+[v1 data README](data/static/synthetic_pilot_v1/README.md) for costs, latency,
+rejection breakdown and artifact semantics.
+
 ## Later interactive triage pilot
 
 The repository now includes an executable v1 contract for the proposed

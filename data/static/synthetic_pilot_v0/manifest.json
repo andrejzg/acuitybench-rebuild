@@ -28,11 +28,11 @@
   "prompts": {
     "generation": {
       "path": "prompts/synthetic_case_generator.v0.md",
-      "sha256": "806c0da840f5340c7153263c2a2fd815d7da05604c998ae8d2cf6216d458904e"
+      "sha256": "cdfaec027c7fbe4d8e6f4788d1a8606d0c3f71fe4e27f42ea84cf29259dbe85e"
     },
     "labeling": {
       "path": "prompts/synthetic_labeler.v0.md",
-      "sha256": "d6a83ef136be57114dc82f2439d7703efffb3779cb7a8368e1cc6e19d69519f9"
+      "sha256": "b75b919251b015ed670e5af64a4845e5d1b015f09f2947b34bf0eee7a1eeb2d0"
     }
   },
   "schema_version": "synthetic-pilot-manifest/v0",
@@ -43,7 +43,7 @@
     },
     "generation": {
       "path": "schemas/synthetic-generation-v0.schema.json",
-      "sha256": "89821e712f726c7b46e38cd334062a0aa27423c30330f44f463bb41baefc8c96"
+      "sha256": "0a6107d085cbc7db74e57bdd4cc529569a0d3035e11703a4181a8a4fe5fb0aa3"
     },
     "labeling": {
       "path": "schemas/synthetic-label-v0.schema.json",
