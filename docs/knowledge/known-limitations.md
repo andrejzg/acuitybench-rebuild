@@ -59,10 +59,14 @@ language variation or production consultation latency.
 # Missing experiment and training components
 
 The repository has a static-student plan/schema/validator/evaluation wrapper,
-an OpenAI-compatible serving adapter, deterministic scripted simulation,
-trajectory scoring and a cost calculator. It does **not** yet have:
+an OpenAI-compatible serving adapter, a zero-call 20-case fictional-pilot
+scaffold, deterministic scripted simulation, trajectory scoring and a cost
+calculator. It does **not** yet have:
 
 - a separately sourced static training pool or accepted teacher targets;
+- a completed paid fictional generation/label run or manually approved
+  fictional candidates;
+- a semantic/paraphrase contamination screen suitable for scaling;
 - a student-training pipeline or trained static checkpoint;
 - a provider-neutral autonomous multi-turn policy runner;
 - a completed teacher-policy benchmark on the interactive seed;
@@ -108,10 +112,10 @@ using streaming, concurrency 20 and the default service tier.
 # Historical artifact versions
 
 `data/processed/build_report.json` records core benchmark builder version
-`0.2.0`. The current local package and interactive seed manifest identify
-version `0.4.0`. This is provenance, not evidence that the core benchmark was
-rebuilt by the newer interactive code. Read the version embedded in each
-artifact and do not silently rewrite historical reports.
+`0.2.0`, while the interactive seed manifest and current package identify
+version `0.4.0`. This is provenance, not evidence that historical artifacts
+were rebuilt by newer code. Read the version embedded in each artifact and do
+not silently rewrite historical reports.
 
 # Licensing and public visibility
 
@@ -139,6 +143,8 @@ rewrite files merely to make the tree look clean.
 - that required-question/red-flag coverage is clinically exhaustive;
 - that static one-shot latency predicts a multi-turn production consultation;
 - that exact source-identity checks alone rule out semantic benchmark leakage;
+- that lexical fictional-pilot screening establishes semantic independence or
+  clinical safety;
 - that a specialised student has been trained or measured; or
 - that public visibility authorises third-party data reuse or commercial use.
 

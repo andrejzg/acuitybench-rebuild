@@ -62,6 +62,14 @@ the benchmark is explicitly evaluation-only. **Status: complete locally.**
 Start with 500–1,000 unique cases as a pipeline and learning-curve pilot. This
 is a planning heuristic, not a sample-size guarantee.
 
+Before that paid build, use the implemented
+[20-case fictional pilot](synthetic-pilot.md) to verify the mechanics. Its
+deterministic zero-call scaffold is complete. The next decision is to select
+the generator and independent labeler profiles, review provider terms,
+calculate a 60-call cost ceiling and obtain explicit spend authorization.
+Every generated candidate must then be inspected manually; the scaffold alone
+does not satisfy Gate S2.
+
 For every case:
 
 - preserve source revision, source identity, source-text SHA-256, label basis
@@ -216,6 +224,7 @@ choose them in code.
 # Related concepts
 
 - [Static-first contract](static-first.md)
+- [Fictional static pilot](synthetic-pilot.md)
 - [Training strategy](training-strategy.md)
 - [Model evaluation](model-evaluation.md)
 - [Clinical-review protocol](clinical-review-protocol.md)

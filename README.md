@@ -70,6 +70,25 @@ No training corpus, training loop or student checkpoint is included yet. The
 held-out evaluation only. The detailed contract and progression gate are in
 the [static-first OKF concept](docs/knowledge/static-first.md).
 
+### Fictional 20-case pipeline check
+
+Before assembling the larger pool, the repository now provides a versioned,
+zero-call fictional pilot: five presentation groups crossed with A/B/C/D,
+with two blinded label calls planned per case. It has made **zero paid calls**
+and is explicitly not training-ready.
+
+```bash
+uv run python -m acuitybench synthetic-plan
+uv run python -m acuitybench synthetic-init
+uv run python -m acuitybench synthetic-validate --allow-incomplete
+```
+
+The paid plan is 20 generation plus 40 independent label calls. The
+`synthetic-generate` and `synthetic-label` commands require both
+`--confirm-spend` and `--terms-reviewed`; no run should start until models,
+terms and a cost ceiling are recorded. See the
+[fictional-pilot contract](docs/knowledge/synthetic-pilot.md).
+
 ## Later interactive triage pilot
 
 The repository now includes an executable v1 contract for the proposed
@@ -375,8 +394,10 @@ mappings, 450 physician-consensus cases, and 217 physician-confirmed ambiguous
 cases. The validation step checks every released reference case ID as well as
 all published source, split, method, and label distributions.
 
-The build commands do not call a model API. Only the explicit `infer`, `judge`,
-`evaluate`, or `static-evaluate` commands can spend provider credits.
+The build, validation, `static-plan`, `synthetic-plan` and `synthetic-init`
+commands do not call a model API. Only explicit `infer`, `judge`, `evaluate`,
+`static-evaluate`, `synthetic-generate`, or `synthetic-label` commands can
+spend provider credits.
 
 See [NOTICE.md](NOTICE.md) before publishing or using the generated artifacts
 commercially. [AUDIT.md](AUDIT.md) records inconsistencies found between the

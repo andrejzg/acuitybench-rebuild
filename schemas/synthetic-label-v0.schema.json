@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:acuitybench:schema:synthetic-label:v0",
+  "title": "Independent fictional static-acuity label v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "acuity",
+    "rationale",
+    "confidence",
+    "ambiguity_flags"
+  ],
+  "properties": {
+    "schema_version": {"const": "synthetic-acuity-label/v0"},
+    "acuity": {"type": "string", "enum": ["A", "B", "C", "D"]},
+    "rationale": {"type": "string", "minLength": 10, "maxLength": 3000, "pattern": "\\S"},
+    "confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+    "ambiguity_flags": {
+      "type": "array",
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 2, "maxLength": 300, "pattern": "\\S"}
+    }
+  }
+}

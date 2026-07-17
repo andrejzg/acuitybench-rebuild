@@ -17,6 +17,7 @@ from acuitybench.evaluation import (
     run_judge_async,
 )
 from acuitybench.models import ModelRegistry
+from acuitybench.providers import get_provider
 from acuitybench.interactive.costing import write_cost_report
 from acuitybench.interactive.seed import (
     build_seed_set,
@@ -40,6 +41,13 @@ from acuitybench.static_student import (
     load_static_plan,
     static_evaluation_contract,
     validate_static_examples,
+)
+from acuitybench.synthetic import (
+    generate_synthetic_cases,
+    initialize_synthetic_pilot,
+    inspect_synthetic_plan,
+    label_synthetic_cases,
+    validate_synthetic_pilot,
 )
 
 
@@ -419,6 +427,109 @@ def _run_static_evaluate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _run_synthetic_plan(args: argparse.Namespace) -> int:
+    report = inspect_synthetic_plan(
+        Path(args.config).expanduser().resolve() if args.config else None
+    )
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+def _run_synthetic_init(args: argparse.Namespace) -> int:
+    paths = initialize_synthetic_pilot(
+        config_path=(
+            Path(args.config).expanduser().resolve() if args.config else None
+        ),
+        output_dir=(
+            Path(args.output_dir).expanduser().resolve()
+            if args.output_dir
+            else None
+        ),
+    )
+    report = validate_synthetic_pilot(
+        config_path=(
+            Path(args.config).expanduser().resolve() if args.config else None
+        ),
+        output_dir=paths.output_dir,
+        allow_incomplete=True,
+    )
+    print(json.dumps(report, indent=2, sort_keys=True))
+    print(f"\nRequests: {paths.generation_requests}")
+    print(f"Manifest: {paths.manifest}")
+    return 0
+
+
+def _require_paid_synthetic_confirmation(args: argparse.Namespace) -> None:
+    if not args.confirm_spend:
+        raise ValueError(
+            "Paid synthetic calls require --confirm-spend after reviewing the "
+            "synthetic-plan call count and expected cost"
+        )
+    if not args.terms_reviewed:
+        raise ValueError(
+            "Paid synthetic calls require --terms-reviewed after reviewing "
+            "provider data-handling and output-use terms"
+        )
+
+
+async def _run_synthetic_provider_phase(
+    args: argparse.Namespace, *, phase: str
+) -> dict[str, object]:
+    registry = ModelRegistry()
+    model = registry.get(args.model)
+    provider = get_provider(model.provider)
+    kwargs = {
+        "provider": provider,
+        "model": model,
+        "config_path": (
+            Path(args.config).expanduser().resolve() if args.config else None
+        ),
+        "output_dir": (
+            Path(args.output_dir).expanduser().resolve()
+            if args.output_dir
+            else None
+        ),
+    }
+    try:
+        if phase == "generate":
+            return await generate_synthetic_cases(**kwargs)
+        if phase == "label":
+            return await label_synthetic_cases(**kwargs)
+        raise ValueError(f"Unknown synthetic phase: {phase}")
+    finally:
+        await provider.close()
+
+
+def _run_synthetic_generate(args: argparse.Namespace) -> int:
+    _require_paid_synthetic_confirmation(args)
+    result = asyncio.run(_run_synthetic_provider_phase(args, phase="generate"))
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def _run_synthetic_label(args: argparse.Namespace) -> int:
+    _require_paid_synthetic_confirmation(args)
+    result = asyncio.run(_run_synthetic_provider_phase(args, phase="label"))
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def _run_synthetic_validate(args: argparse.Namespace) -> int:
+    result = validate_synthetic_pilot(
+        config_path=(
+            Path(args.config).expanduser().resolve() if args.config else None
+        ),
+        output_dir=(
+            Path(args.output_dir).expanduser().resolve()
+            if args.output_dir
+            else None
+        ),
+        allow_incomplete=args.allow_incomplete,
+    )
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
 def _run_interactive_build(args: argparse.Namespace) -> int:
     result = build_seed_set(
         config_path=Path(args.config).expanduser().resolve() if args.config else None,
@@ -636,6 +747,64 @@ def make_parser() -> argparse.ArgumentParser:
     )
     _add_static_evaluation_options(static_evaluate_parser)
     static_evaluate_parser.set_defaults(handler=_run_static_evaluate)
+
+    synthetic_plan_parser = subparsers.add_parser(
+        "synthetic-plan",
+        help="Inspect the free, fictional 20-case pilot plan and paid call count",
+    )
+    synthetic_plan_parser.add_argument("--config")
+    synthetic_plan_parser.set_defaults(handler=_run_synthetic_plan)
+
+    synthetic_init_parser = subparsers.add_parser(
+        "synthetic-init",
+        help="Write the deterministic fictional-pilot scaffold without API calls",
+    )
+    synthetic_init_parser.add_argument("--config")
+    synthetic_init_parser.add_argument("--output-dir")
+    synthetic_init_parser.set_defaults(handler=_run_synthetic_init)
+
+    for command, help_text, handler in (
+        (
+            "synthetic-generate",
+            "Run or resume paid fictional-vignette generation",
+            _run_synthetic_generate,
+        ),
+        (
+            "synthetic-label",
+            "Run or resume paid blinded labeling and machine screening",
+            _run_synthetic_label,
+        ),
+    ):
+        synthetic_paid_parser = subparsers.add_parser(command, help=help_text)
+        synthetic_paid_parser.add_argument(
+            "--model", required=True, help="Model ID from configs/models.yaml"
+        )
+        synthetic_paid_parser.add_argument("--config")
+        synthetic_paid_parser.add_argument("--output-dir")
+        synthetic_paid_parser.add_argument(
+            "--confirm-spend",
+            action="store_true",
+            help="Confirm the paid call count and estimated cost were reviewed",
+        )
+        synthetic_paid_parser.add_argument(
+            "--terms-reviewed",
+            action="store_true",
+            help="Confirm provider data-handling/output terms were reviewed",
+        )
+        synthetic_paid_parser.set_defaults(handler=handler)
+
+    synthetic_validate_parser = subparsers.add_parser(
+        "synthetic-validate",
+        help="Validate the fictional-pilot scaffold or completed artifacts",
+    )
+    synthetic_validate_parser.add_argument("--config")
+    synthetic_validate_parser.add_argument("--output-dir")
+    synthetic_validate_parser.add_argument(
+        "--allow-incomplete",
+        action="store_true",
+        help="Validate the free scaffold before paid generation is complete",
+    )
+    synthetic_validate_parser.set_defaults(handler=_run_synthetic_validate)
 
     interactive_build_parser = subparsers.add_parser(
         "interactive-build",

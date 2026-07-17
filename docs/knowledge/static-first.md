@@ -55,8 +55,10 @@ cases, or teacher outputs derived from them.
 | Evaluate an OpenAI-hosted model | Implemented. |
 | Evaluate a local/self-hosted OpenAI-compatible student | Implemented through `provider: openai_compatible`. |
 | Validate provenance/grouping and AcuityBench contamination for a separate JSONL pool | Implemented: `static-data-validate`. |
+| Initialize and validate a balanced 20-case fictional pipeline check | Implemented with zero provider calls: `synthetic-plan`, `synthetic-init`, `synthetic-validate`. |
+| Resumable fictional generation and double-blinded labelling | Implemented and fake-provider tested; no paid run has occurred. |
 | Separate training pool | **Not built.** |
-| Teacher-labelling pipeline | **Not built.** |
+| Accepted, manually reviewed teacher targets | **Not built.** |
 | SFT/Tinker training loop or trained student | **Not implemented.** |
 
 # Commands
@@ -137,7 +139,13 @@ documented amortized serving cost before placing it on the cost frontier.
 
 # First pilot
 
-The smallest credible implementation experiment is:
+First run the 20-case fictional pipeline check described in
+[`synthetic-pilot.md`](synthetic-pilot.md). It is intended to expose prompt,
+schema, resumption, provenance, rejection and review failures cheaply. It is
+not a training corpus and does not replace the 500–1,000-case learning-curve
+pilot.
+
+The smallest credible learning experiment is:
 
 1. clear source terms for the intended training use;
 2. build 500–1,000 **separate** unique static cases as a pipeline/learning-curve
@@ -173,6 +181,7 @@ traces.
 # Related concepts
 
 - [Training strategy](training-strategy.md)
+- [Fictional static pilot](synthetic-pilot.md)
 - [Prioritised next steps](next-steps.md)
 - [Model evaluation](model-evaluation.md)
 - [Interactive triage](interactive-triage.md)
