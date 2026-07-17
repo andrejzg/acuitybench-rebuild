@@ -1,0 +1,93 @@
+README.md
+  s_3f5e58f5c753ff::t_8f0b823ee29d23 73-91,397-400
+docs/knowledge/next-steps.md
+  s_3f5e58f5c753ff::t_378d88ff392d95 65-72,227
+docs/knowledge/static-first.md
+  s_3f5e58f5c753ff::t_378d88ff392d95 58-59,61,142-148,184
+docs/knowledge/known-limitations.md
+  s_3f5e58f5c753ff::t_edea13617b4df6 115-118
+  s_3f5e58f5c753ff::t_143d16df401dd1 62-64,67-69,146-147
+docs/knowledge/log.md
+  s_3f5e58f5c753ff::t_afac7d5a7a5e7f 15
+  s_3f5e58f5c753ff::t_143d16df401dd1 5-7
+schemas/synthetic-candidate-v0.schema.json
+  s_3f5e58f5c753ff::t_9963acb5a8f2d0 1-71
+docs/knowledge/repository-map.md
+  s_3f5e58f5c753ff::t_c58ba576cdf0c8 16,22-23,51,65-67,91-92
+data/README.md
+  s_3f5e58f5c753ff::t_cf6f85caa043ef 38-44
+docs/knowledge/synthetic-pilot.md
+  s_3f5e58f5c753ff::t_e8e4cd19357f94 96-97,99-100
+  s_3f5e58f5c753ff::t_1e04a829f1c333 1-95,98,101-125
+HANDOVER.md
+  s_3f5e58f5c753ff::t_a611f5cfa0bba3 34-36,45-55,70,74,107
+  s_3f5e58f5c753ff::t_afac7d5a7a5e7f 78
+tests/test_synthetic_pilot.py
+  s_3f5e58f5c753ff::t_c4dafdc9e7deb9 1-177,184-226
+  s_3f5e58f5c753ff::t_e8e4cd19357f94 178-183
+docs/knowledge/training-strategy.md
+  s_3f5e58f5c753ff::t_378d88ff392d95 25-32,35-36,204-206,209,212,214,217,219,221,223,225
+ARTIFACTS.sha256
+  s_3f5e58f5c753ff::t_1eeaa6e218546a 5
+  s_3f5e58f5c753ff::t_b17f9fc6d75d78 1,6-8
+docs/knowledge/runbook.md
+  s_3f5e58f5c753ff::t_c58ba576cdf0c8 180-206,214-216
+prompts/synthetic_case_generator.v0.md
+  s_3f5e58f5c753ff::t_56e66f97e84bc8 1-43
+data/static/synthetic_pilot_v0/manifest.json
+  s_3f5e58f5c753ff::t_5388374702e9a4 1-62
+docs/knowledge/current-state.md
+  s_3f5e58f5c753ff::t_afac7d5a7a5e7f 26
+  s_3f5e58f5c753ff::t_edea13617b4df6 25
+  s_3f5e58f5c753ff::t_e8e4cd19357f94 101-102
+  s_3f5e58f5c753ff::t_a611f5cfa0bba3 23,28-31,86-100,103,121-122,128-133,142
+acuitybench/synthetic.py
+  s_3f5e58f5c753ff::t_927d370735b290 119-120,834-839
+  s_3f5e58f5c753ff::t_dfd7d6a5055fcd 350-353,357-369,379-395,984-987,996-998
+  s_3f5e58f5c753ff::t_2735da67aae806 860-861,863-866,869,874-876,1038-1044,1061-1065
+  s_3f5e58f5c753ff::t_9963acb5a8f2d0 28,138
+  s_3f5e58f5c753ff::t_dfd091bc3e84ef 1-27,29-69,77-118,121-137,139-281,285-299,301-304,306-308,310-312,327,329-334,336-349,396-833,840-859,862,867-868,870-873,877-944,948-961,963-983,999-1037,1045,1047-1060,1066-1071
+  s_3f5e58f5c753ff::t_03532a4ca6da6e 962
+  s_3f5e58f5c753ff::t_559da359c8c278 1046
+  s_3f5e58f5c753ff::t_6dd5aa91aabc63 70-76,300,305,309,328,335,945-947
+  s_3f5e58f5c753ff::t_a8bcd1570b2b40 282-284,313-326,354-356,370-378,988-995
+prompts/synthetic_labeler.v0.md
+  s_3f5e58f5c753ff::t_56e66f97e84bc8 1-32
+AGENTS.md
+  s_3f5e58f5c753ff::t_8f0b823ee29d23 71,80-84
+schemas/synthetic-label-v0.schema.json
+  s_3f5e58f5c753ff::t_56e66f97e84bc8 1-26
+acuitybench/cli.py
+  s_3f5e58f5c753ff::t_6db0ae2c3cef49 20,45-51,430-532,751-807
+  s_3f5e58f5c753ff::t_51ebac35d4950b 808
+data/static/README.md
+  s_3f5e58f5c753ff::t_cf6f85caa043ef 1-10
+data/static/synthetic_pilot_v0/README.md
+  s_3f5e58f5c753ff::t_e8e4cd19357f94 18-19
+  s_3f5e58f5c753ff::t_cf6f85caa043ef 1-17,20-37
+docs/knowledge/index.md
+  s_3f5e58f5c753ff::t_8f0b823ee29d23 13
+configs/static/synthetic_pilot.v0.yaml
+  s_3f5e58f5c753ff::t_9963acb5a8f2d0 70
+  s_3f5e58f5c753ff::t_56e66f97e84bc8 1-69,71-82
+schemas/synthetic-generation-v0.schema.json
+  s_3f5e58f5c753ff::t_56e66f97e84bc8 1-55
+data/static/synthetic_pilot_v0/generation_requests.jsonl
+  s_3f5e58f5c753ff::t_1027aacea85259 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "4194e20f80fd4b4175c482f5bb782c72d751d704",
+  "prompts": {},
+  "sessions": {
+    "s_3f5e58f5c753ff": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f4ccf-5784-7080-8064-64e0dec9bf5e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Andrej Zukov Gregoric <5131823+andrejzg@users.noreply.github.com>"
+    }
+  }
+}
